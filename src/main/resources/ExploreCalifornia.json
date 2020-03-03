@@ -1,0 +1,219 @@
+[
+  {
+    "packageType": "Backpack Cal",
+    "title": "Big Sur Retreat",
+   "length": "3 days",
+    "price": "750",
+    "region": "East"
+  },
+  {
+    "packageType": "Backpack Cal",
+    "title": "Big Sur Retreat",
+    "length": "3 days",
+    "price": "750",
+    "region": "East"
+  },
+  {
+    "packageType": "Backpack Cal",
+    "title": "In the Steps of John Muir",
+    "length": "3 days",
+    "price": "600",
+    "region": "North"
+  },
+  {
+    "packageType": "Backpack Cal",
+    "title": "The Death Valley Survivor's Trek",
+    "length": "2 days",
+    "price": "250",
+    "region": "West"
+  },
+  {
+    "packageType": "Backpack Cal",
+    "title": "The Mt. Whitney Climbers Tour",
+    "length": "4 days",
+    "price": "650",
+    "region": "North"
+  },
+  {
+    "packageType": "Backpack Cal",
+    "title": "Channel Islands Excursion",
+    "length": "1 day",
+    "price": "150",
+    "region": "South"
+  },
+  {
+    "packageType": "California Calm",
+    "title": "Day Spa Package",
+    "length": "1 day",
+    "price": "550",
+    "region": "South"
+  },
+  {
+    "packageType": "California Calm",
+    "title": "Restoration Package",
+    "length": "2 days",
+    "price": "900",
+    "region": "North"
+  },
+  {
+    "packageType": "California Calm",
+    "title": "Huntington Library and Pasadena Retreat Tour",
+    "length": "1 day",
+    "price": "225",
+    "region": "South"
+  },
+  {
+    "packageType": "California Hot springs",
+    "title": "Avila Beach Hot springs",
+    "length": "3 days",
+    "price": "1000",
+    "region": "East"
+  },
+  {
+    "packageType": "California Hot springs",
+    "title": "Matilija Hot springs",
+    "length": "3 days",
+    "price": "1000",
+    "region": "East"
+  },
+  {
+    "packageType": "California Hot springs",
+    "title": "Paso Robles Artesian Spring",
+    "length": "2 days",
+    "price": "750",
+    "region": "East"
+  },
+  {
+    "packageType": "Cycle California",
+    "title": "Amgen Tour of California Special",
+    "length": "14 days",
+    "price": "6000",
+    "region": "North"
+  },
+  {
+    "packageType": "Cycle California",
+    "title": "Monterey to Santa Barbara Tour",
+    "length": "6 days",
+    "price": "2500",
+    "region": "North"
+  },
+  {
+    "packageType": "Cycle California",
+    "title": "Cycle California: My Way",
+    "length": "Varies",
+    "price": "1200",
+    "region": "North"
+  },
+  {
+    "packageType": "From Desert to Sea",
+    "title": "2 Days Adrift the Salton Sea",
+    "length": "2 days",
+    "price": "350",
+    "region": "South"
+  },
+  {
+    "packageType": "From Desert to Sea",
+    "title": "Mojave to Malibu",
+    "length": "1 day",
+    "price": "200",
+    "region": "South"
+  },
+  {
+    "packageType": "From Desert to Sea",
+    "title": "Joshua Tree: Best of the West Tour",
+    "length": "1 day",
+    "price": "150",
+    "region": "South"
+  },
+  {
+    "packageType": "Kids California",
+    "title": "Kids L.A. Tour",
+    "length": "3 days",
+    "price": "1200",
+    "region": "South"
+  },
+  {
+    "packageType": "Kids California",
+    "title": "Islands of the Blue Dolphins Tour",
+    "length": "1 day",
+    "price": "200",
+    "region": "South"
+  },
+  {
+    "packageType": "Kids California",
+    "title": "Eco-Tour",
+    "length": "3 days",
+    "price": "750",
+    "region": "South"
+  },
+  {
+    "packageType": "Nature Watch",
+    "title": "Endangered Species Expedition",
+    "length": "3 days",
+    "price": "600",
+    "region": "East"
+  },
+  {
+    "packageType": "Nature Watch",
+    "title": "Fossil Tour",
+    "length": "2 days",
+    "price": "500",
+    "region": "East"
+  },
+  {
+    "packageType": "Nature Watch",
+    "title": "Coastal Experience",
+    "length": "4 days",
+    "price": "1500",
+    "region": "East"
+  },
+  {
+    "packageType": "Snowboard Cali",
+    "title": "Mammoth Mountain Adventure",
+    "length": "4 days",
+    "price": "800",
+    "region": "South"
+  },
+  {
+    "packageType": "Snowboard Cali",
+    "title": "Mountain High Lift-off",
+    "length": "3 days",
+    "price": "800",
+    "region": "South"
+  },
+  {
+    "packageType": "Snowboard Cali",
+    "title": "Ski Lake Tahoe",
+    "length": "4 days",
+    "price": "1100",
+    "region": "North"
+  },
+  {
+    "packageType": "Taste of California",
+    "title": "Olive Garden Tour",
+    "length": "1 day",
+    "price": "75",
+    "region": "South"
+  },
+  {
+    "packageType": "Taste of California",
+    "title": "Oranges & Apples Tour",
+    "length": "3 days",
+    "price": "350",
+    "region": "South"
+  },
+  {
+    "packageType": "Taste of California",
+    "title": "Hot Salsa Tour",
+    "length": "3 days",
+    "price": "400",
+    "region": "South"
+  },
+  {
+    "packageType": "Taste of California",
+    "title": "A Week of Wine",
+    "length": "5 days",
+    "price": "850",
+    "region": "North"
+  }
+]
