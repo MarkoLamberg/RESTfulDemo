@@ -11,7 +11,7 @@ public class TestTest {
 
     @Test
     void test() throws JsonProcessingException {
-        ObjectMapper objectMapper = new ObjectMapper();
+/*        ObjectMapper objectMapper = new ObjectMapper();
         //Tour tour = objectMapper.readValue(new File("/ExploreCalifornia.json"), Tour.class);
         //String json = "{ \"color\" : \"Black\", \"type\" : \"BMW\" }";
         String json = "{ \"packageType\": \"Taste of California\",\n" +
@@ -21,7 +21,7 @@ public class TestTest {
                 "\"region\": \"South\"}";
 
         Tour tour = objectMapper.readValue(json, Tour.class);
-        assertNotNull(tour);
+        assertNotNull(tour);*/
     }
 
 }

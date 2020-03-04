@@ -2,6 +2,7 @@ package com.bookinggo.RESTfulDemo.repository;
 
 import com.bookinggo.RESTfulDemo.entity.TourPackage;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.data.rest.core.annotation.RestResource;
 
@@ -9,29 +10,37 @@ import java.util.Optional;
 
 @RepositoryRestResource(collectionResourceRel = "packages", path = "packages")
 public interface TourPackageRepository extends CrudRepository<TourPackage, String> {
-    Optional<TourPackage> findByName(String name);
 
+    Optional<TourPackage> findByName(@Param("name") String name);
+
+    //Not exposed by Spring Data REST
     @Override
     @RestResource(exported = false)
-    <S extends TourPackage> S save(S entity);
+    <S extends TourPackage> S save(S s);
 
+    //Not exposed by Spring Data REST
     @Override
     @RestResource(exported = false)
-    <S extends TourPackage> Iterable<S> saveAll(Iterable<S> entities);
+    <S extends TourPackage> Iterable<S> saveAll(Iterable<S> iterable);
 
+    //Not exposed by Spring Data REST
     @Override
     @RestResource(exported = false)
     void deleteById(String s);
 
+    //Not exposed by Spring Data REST
     @Override
     @RestResource(exported = false)
-    void delete(TourPackage entity);
+    void delete(TourPackage tourPackage);
 
+    //Not exposed by Spring Data REST
     @Override
     @RestResource(exported = false)
-    void deleteAll(Iterable<? extends TourPackage> entities);
+    void deleteAll(Iterable<? extends TourPackage> iterable);
 
+    //Not exposed by Spring Data REST
     @Override
     @RestResource(exported = false)
     void deleteAll();
 }
+

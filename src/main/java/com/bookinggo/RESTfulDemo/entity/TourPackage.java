@@ -1,17 +1,18 @@
 package com.bookinggo.RESTfulDemo.entity;
 
-import lombok.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Table;
 import java.io.Serializable;
 import java.util.Objects;
 
+@Table(name="tour_package")
 @Entity
 @Data
-@Builder
-@AllArgsConstructor
 @NoArgsConstructor
 public class TourPackage implements Serializable {
     @Id
@@ -19,6 +20,11 @@ public class TourPackage implements Serializable {
 
     @Column
     private String name;
+
+    public TourPackage(String code, String name) {
+        this.code = code;
+        this.name = name;
+    }
 
     @Override
     public String toString() {
@@ -30,11 +36,11 @@ public class TourPackage implements Serializable {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
+        if (this == o){
             return true;
         }
 
-        if (o == null || getClass() != o.getClass()) {
+        if (o == null || getClass() != o.getClass()){
             return false;
         }
 

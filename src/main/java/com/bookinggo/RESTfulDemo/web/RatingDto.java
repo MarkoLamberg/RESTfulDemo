@@ -1,22 +1,17 @@
 package com.bookinggo.RESTfulDemo.web;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-/**
- * Data Transfer Object for Rating a Tour.
- *
- * Created by Mary Ellen Bowman
- */
 @Data
-@Builder
 @AllArgsConstructor
+@NoArgsConstructor
 public class RatingDto {
 
     @Min(0)
@@ -28,7 +23,4 @@ public class RatingDto {
 
     @NotNull
     private Integer customerId;
-
-    protected RatingDto() {}
-
 }
