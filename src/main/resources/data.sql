@@ -65,12 +65,12 @@ insert into tour_package (code, name, location ) values
     '4 hour',
     '75'
   );
-  insert into tour_booking (tour_id, customer_id, pickup_date, pickup_location) values
-  (1, 4, '20-03-2020', 'Hotel Intercontinental');
-  insert into tour_booking (tour_id, customer_id, pickup_date, pickup_location) values
-  (1, 5, '21-03-2020', 'Hotel Intercontinental');
-  insert into tour_booking (tour_id, customer_id, pickup_date, pickup_location) values
-  (2, 6, '22-03-2020', 'Hotel Ibis');
-  insert into tour_booking (tour_id, customer_id, pickup_date, pickup_location) values
-  (2, 7, '22-03-2020', 'Hotel President');
+  insert into tour_booking (tour_id, customer_id, pickup_date, pickup_location, num_of_partisipants) values
+  (1, 4, '20-03-2020', 'Hotel Intercontinental', 1);
+  insert into tour_booking (tour_id, customer_id, pickup_date, pickup_location, num_of_partisipants) values
+  (1, 5, '21-03-2020', 'Hotel Intercontinental', 2);
+  insert into tour_booking (tour_id, customer_id, pickup_date, pickup_location, num_of_partisipants) values
+  (2, 6, '22-03-2020', 'Hotel Ibis', 1);
+  insert into tour_booking (tour_id, customer_id, pickup_date, pickup_location, num_of_partisipants) values
+  (2, 7, '22-03-2020', 'Hotel President', 3);
 

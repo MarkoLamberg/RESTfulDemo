@@ -33,7 +33,8 @@ public class TourBookingsController {
     @ResponseStatus(HttpStatus.CREATED)
     public void createTourBooking(@PathVariable(value = "tourId") int tourId, @RequestBody @Validated BookingDto bookingDto) {
         LOGGER.info("POST /tours/{}/bookings", tourId);
-        tourBookingService.createNew(tourId, bookingDto.getCustomerId(), bookingDto.getDate(), bookingDto.getPickupLocation());
+        tourBookingService.createNew(tourId, bookingDto.getCustomerId(), bookingDto.getDate(),
+                bookingDto.getPickupLocation(), bookingDto.getPartisipants());
     }
 
     @GetMapping
@@ -67,7 +68,8 @@ public class TourBookingsController {
     }
 
     private BookingDto toDto(TourBooking tourBooking) {
-        return new BookingDto(tourBooking.getDate(), tourBooking.getPickupLocation(), tourBooking.getCustomerId());
+        return new BookingDto(tourBooking.getDate(), tourBooking.getPickupLocation(), tourBooking.getCustomerId(),
+                tourBooking.getPartisipants(), tourBooking.getTotalPriceString());
     }
 
     @ResponseStatus(HttpStatus.NOT_FOUND)

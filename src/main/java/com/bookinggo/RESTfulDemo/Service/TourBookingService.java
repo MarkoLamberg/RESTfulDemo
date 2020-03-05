@@ -20,9 +20,9 @@ public class TourBookingService {
     private TourBookingRepository tourBookingRepository;
     private TourRepository tourRepository;
 
-    public void createNew(int tourId, Integer customerId, String date, String comment) throws NoSuchElementException {
+    public void createNew(int tourId, Integer customerId, String date, String location, Integer partisipants) throws NoSuchElementException {
         TourBooking tourBooking = new TourBooking(verifyTour(tourId), customerId,
-                date, comment);
+                date, location, partisipants);
         tourBookingRepository.save(tourBooking);
     }
 
@@ -65,6 +65,14 @@ public class TourBookingService {
         tourBookingRepository.delete(booking);
     }
 
+    public void delete(Integer customerId) throws NoSuchElementException {
+        List<TourBooking> bookings = verifyTourBooking(customerId);
+
+        for(TourBooking booking : bookings) {
+            tourBookingRepository.delete(booking);
+        }
+    }
+
     public void deleteAll() throws NoSuchElementException {
         tourBookingRepository.deleteAll();
     }
@@ -77,7 +85,12 @@ public class TourBookingService {
 
     private TourBooking verifyTourBooking(int tourId, int customerId) throws NoSuchElementException {
         return tourBookingRepository.findByTourIdAndCustomerId(tourId, customerId).orElseThrow(() ->
-                new NoSuchElementException("Tour-Booking pair for request("
-                        + tourId + " for customer" + customerId));
+                new NoSuchElementException("Tour-Booking pair for request "
+                        + tourId + " for customer " + customerId));
+    }
+
+    private List<TourBooking> verifyTourBooking(int customerId) throws NoSuchElementException {
+        return tourBookingRepository.findByCustomerId(customerId).orElseThrow(() ->
+                new NoSuchElementException("Tour-Booking request for customer " + customerId));
     }
 }

@@ -18,5 +18,7 @@ public interface TourBookingRepository extends CrudRepository<TourBooking, Integ
 
     Optional<TourBooking> findByTourIdAndCustomerId(Integer tourId, Integer customerId);
 
+    Optional<List<TourBooking>> findByCustomerId(Integer customerId);
+
     Page<TourBooking> findAllByCustomerIdAfter(Integer tourId, Pageable pageable);
 }

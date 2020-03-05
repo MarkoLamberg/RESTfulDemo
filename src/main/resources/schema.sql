@@ -20,7 +20,8 @@ CREATE TABLE tour_booking (
     tour_id BIGINT,
     customer_id BIGINT,
     pickup_date VARCHAR(32),
-    pickup_location VARCHAR(100));
-
+    pickup_location VARCHAR(100),
+    num_of_partisipants BIGINT
+);
 ALTER TABLE tour_booking ADD FOREIGN KEY (tour_id) REFERENCES tour(id);
 ALTER TABLE tour_booking ADD UNIQUE MyConstraint (tour_id, customer_id);

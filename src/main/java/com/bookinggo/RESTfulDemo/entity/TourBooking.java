@@ -2,6 +2,7 @@ package com.bookinggo.RESTfulDemo.entity;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Formula;
 
 import javax.persistence.*;
 import java.util.Objects;
@@ -28,11 +29,15 @@ public class TourBooking {
     @Column(nullable = false)
     private String pickupLocation;
 
-    public TourBooking(Tour tour, Integer customerId, String date, String pickupLocation) {
+    @Column(name="num_of_partisipants")
+    private Integer partisipants;
+
+    public TourBooking(Tour tour, Integer customerId, String date, String pickupLocation, Integer partisipants) {
         this.tour = tour;
         this.customerId = customerId;
         this.date = date;
         this.pickupLocation = pickupLocation;
+        this.partisipants = partisipants;
     }
 
     @Override
@@ -51,11 +56,18 @@ public class TourBooking {
                 Objects.equals(tour, that.tour) &&
                 Objects.equals(customerId, that.customerId) &&
                 Objects.equals(date, that.date) &&
-                Objects.equals(pickupLocation, that.pickupLocation);
+                Objects.equals(pickupLocation, that.pickupLocation) &&
+                Objects.equals(partisipants, that.partisipants);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, tour, customerId, date, pickupLocation);
+        return Objects.hash(id, tour, customerId, date, pickupLocation, partisipants);
+    }
+
+    public String getTotalPriceString(){
+        int total = getPartisipants() * getTour().getPrice();
+
+        return "£" + total + ".00";
     }
 }

@@ -37,14 +37,21 @@ public class TourAllBookingsController {
         return new PageImpl<ExpandedBookingDto>(expandedBookingDtoList, pageable, tourBookingPage.getTotalPages());
     }
 
-    /*@DeleteMapping
+    @DeleteMapping("/{customerId}")
+    public void delete(@PathVariable(value = "customerId") int customerId) {
+        LOGGER.info("DELETE /tours/bookings/{}", customerId);
+        tourBookingService.delete(customerId);
+    }
+
+    @DeleteMapping
     public void delete() {
         LOGGER.info("DELETE /tours/bookings/");
         tourBookingService.deleteAll();
-    }*/
+    }
 
     private ExpandedBookingDto toExpandedDto(TourBooking tourBooking) {
-        return new ExpandedBookingDto(tourBooking.getDate(), tourBooking.getPickupLocation(), tourBooking.getTour().getId(), tourBooking.getCustomerId());
+        return new ExpandedBookingDto(tourBooking.getDate(), tourBooking.getPickupLocation(), tourBooking.getTour().getId(),
+                tourBooking.getCustomerId(), tourBooking.getPartisipants(), tourBooking.getTotalPriceString());
     }
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
