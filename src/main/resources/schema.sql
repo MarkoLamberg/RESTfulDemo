@@ -1,7 +1,8 @@
 
 CREATE TABLE tour_package(
   code CHAR(2) NOT NULL UNIQUE,
-  name VARCHAR(50) NOT NULL
+  name VARCHAR(50) NOT NULL,
+  location VARCHAR(20) NOT NULL
 );
 
 CREATE TABLE tour (
@@ -9,18 +10,17 @@ CREATE TABLE tour (
   tour_package_code CHAR(2) NOT NULL,
   title VARCHAR(100) NOT NULL,
   price VARCHAR(10) not null,
-  duration VARCHAR(32) NOT NULL,
-  region VARCHAR(20) NOT NULL
+  duration VARCHAR(32) NOT NULL
 );
 ALTER TABLE tour ADD FOREIGN KEY (tour_package_code) REFERENCES tour_package(code);
 
 
-CREATE TABLE tour_rating (
+CREATE TABLE tour_booking (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     tour_id BIGINT,
     customer_id BIGINT,
-    score INT,
-    comment VARCHAR(100));
+    pickup_date VARCHAR(32),
+    pickup_location VARCHAR(100));
 
-ALTER TABLE tour_rating ADD FOREIGN KEY (tour_id) REFERENCES tour(id);
-ALTER TABLE tour_rating ADD UNIQUE MyConstraint (tour_id, customer_id);
+ALTER TABLE tour_booking ADD FOREIGN KEY (tour_id) REFERENCES tour(id);
+ALTER TABLE tour_booking ADD UNIQUE MyConstraint (tour_id, customer_id);

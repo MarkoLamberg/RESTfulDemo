@@ -1,18 +1,18 @@
 package com.bookinggo.RESTfulDemo.entity;
 
 
-public enum Region {
-    South("South"), West("West"), North("North"), East("East");
+public enum Location {
+    London("London"), Paris("Paris"), Rome("Rome"), Barcelona("Barcelona");
 
     private String label;
 
-    private Region(String label) {
+    private Location(String label) {
 
         this.label = label;
     }
 
-    public static Region findByLabel(String byLabel) {
-        for(Region r:Region.values()) {
+    public static Location findByLabel(String byLabel) {
+        for(Location r: Location.values()) {
             if (r.label.equalsIgnoreCase(byLabel)) {
                 return r;
             }

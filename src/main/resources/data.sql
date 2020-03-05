@@ -1,59 +1,76 @@
 
-insert into tour_package (code, name) values
-('BC', 'Backpack Cal'),
-('CC', 'California Calm'),
-('CH', 'California Hot springs'),
-('CY', 'Cycle California'),
-('DS', 'From Desert to Sea'),
-('KC', 'Kids California'),
-('NW', 'Nature Watch'),
-('SC', 'Snowboard Cali'),
-('TC', 'Taste of California');
+insert into tour_package (code, name, location ) values
+('LS', 'London Sightseeing', 'London'),
+('LF', 'London Football', 'London'),
+('PS', 'Paris Sightseeing', 'Paris'),
+('PF', 'Paris Fashion', 'Paris'),
+('RS', 'Rome Sightseeing', 'Rome'),
+('RH', 'Rome History', 'Rome'),
+('BS', 'Barcelona Sightseeing', 'Barcelona'),
+('BW', 'Barcelona Wine Tasting', 'Barcelona');
 
-insert into tour  (tour_package_code, title, duration, price, region) values
+  insert into tour  (tour_package_code, title, duration, price) values
   (
-    'BC',
-    'Big Sur Retreat',
-    '3 days',
-    '750',
-    'North'
+    'LS',
+    'London City Sightseeing Tour',
+    '2 hours',
+    '45'
   );
-  insert into tour  (tour_package_code, title, duration, price, region) values
-
+  insert into tour  (tour_package_code, title, duration, price) values
   (
-   'BC',
-    'In the Steps of John Muir',
-    '3 days',
-    '600',
-    'West'
+   'LF',
+    'Arsenal Football Tour',
+    '2 hours',
+    '50'
   );
-  insert into tour  (tour_package_code, title, duration, price, region) values
-
+  insert into tour  (tour_package_code, title, duration, price) values
   (
-   'BC',
-    'The Death Valley Survivor''s Trek',
-    '2 days',
-    '250',
-    'East'
+   'PS',
+    'Paris Sightseeing Tour',
+    '2 hours',
+    '40'
   );
-  insert into tour  (tour_package_code, title, duration, price, region) values
-
+  insert into tour  (tour_package_code, title, duration, price) values
   (
-   'BC',
-    'The Mt. Whitney Climbers Tour',
-    '4 days',
-    '650',
-    'North'
-  ),
-  (
-   'BC',
-    'Channel Islands Excursion',
-    '1 day',
-    '150',
-    'South'
+   'PF',
+    'Paris Fashion Experience',
+    '4 hours',
+    '65'
   );
-
-  insert into tour_rating (tour_id, customer_id, score, comment) values
-  (1, 4, 5, 'I loved it'),
-  (2, 100, 5, 'I really thought it could have been better');
+  insert into tour  (tour_package_code, title, duration, price) values
+  (
+   'RS',
+    'Rome Sightseeing Tour',
+    '2 hour',
+    '35'
+  );
+  insert into tour  (tour_package_code, title, duration, price) values
+    (
+   'RH',
+    'Roman History Excursion',
+    '3 hour',
+    '45'
+  );
+  insert into tour  (tour_package_code, title, duration, price) values
+  (
+   'BS',
+    'Barcelona Sightseeing Tour',
+    '2 hour',
+    '25'
+  );
+  insert into tour  (tour_package_code, title, duration, price) values
+  (
+   'BW',
+    'Spanish Wine Excursion',
+    '4 hour',
+    '75'
+  );
+  insert into tour_booking (tour_id, customer_id, pickup_date, pickup_location) values
+  (1, 4, '20-03-2020', 'Hotel Intercontinental');
+  insert into tour_booking (tour_id, customer_id, pickup_date, pickup_location) values
+  (1, 5, '21-03-2020', 'Hotel Intercontinental');
+  insert into tour_booking (tour_id, customer_id, pickup_date, pickup_location) values
+  (2, 6, '22-03-2020', 'Hotel Ibis');
+  insert into tour_booking (tour_id, customer_id, pickup_date, pickup_location) values
+  (2, 7, '22-03-2020', 'Hotel President');
 

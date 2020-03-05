@@ -4,22 +4,22 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class RatingDto {
-
-    @Min(0)
-    @Max(5)
-    private Integer score;
+public class ExpandedBookingDto {
 
     @Size(max = 255)
-    private String comment;
+    private String date;
+
+    @Size(max = 255)
+    private String pickupLocation;
+
+    @NotNull
+    private Integer tourId;
 
     @NotNull
     private Integer customerId;

@@ -8,7 +8,6 @@ public class RestfulDemoApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(RestfulDemoApplication.class, args);
 	}
-
 }
 
 

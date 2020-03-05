@@ -21,9 +21,13 @@ public class TourPackage implements Serializable {
     @Column
     private String name;
 
-    public TourPackage(String code, String name) {
+    @Column
+    private Location location;
+
+    public TourPackage(String code, String name, Location location) {
         this.code = code;
         this.name = name;
+        this.location = location;
     }
 
     @Override
@@ -31,6 +35,7 @@ public class TourPackage implements Serializable {
         return "TourPackage{" +
                 "code='" + code + '\'' +
                 ", name='" + name + '\'' +
+                ", region=" + location +
                 '}';
     }
 
@@ -47,11 +52,12 @@ public class TourPackage implements Serializable {
         TourPackage that = (TourPackage) o;
 
         return Objects.equals(code, that.code) &&
-                Objects.equals(name, that.name);
+                Objects.equals(name, that.name) &&
+                Objects.equals(location, that.location);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(code, name);
+        return Objects.hash(code, name, location);
     }
 }

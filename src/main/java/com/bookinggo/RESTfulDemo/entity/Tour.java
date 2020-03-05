@@ -7,11 +7,6 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Objects;
 
-/**
- * The Tour contains all attributes of an Explore California Tour.
- *
- * Created by Mary Ellen Bowman
- */
 @Entity
 @Data
 @NoArgsConstructor
@@ -30,15 +25,12 @@ public class Tour implements Serializable{
     @JoinColumn(name="tour_package_code")
     private TourPackage tourPackage;
 
-    @Column
-    private Region region;
 
     public Tour(String title, Integer price, String duration,
-                com.bookinggo.RESTfulDemo.entity.TourPackage tourPackage, Region region) {
+                com.bookinggo.RESTfulDemo.entity.TourPackage tourPackage) {
         this.title = title;
         this.price = price;
         this.tourPackage = tourPackage;
-        this.region = region;
     }
 
     @Override
@@ -48,24 +40,29 @@ public class Tour implements Serializable{
                 ", title='" + title + '\'' +
                 ", price=" + price +
                 ", tourPackage=" + tourPackage +
-                ", region=" + region +
                 '}';
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
         Tour tour = (Tour) o;
+
         return Objects.equals(id, tour.id) &&
                 Objects.equals(title, tour.title) &&
                 Objects.equals(price, tour.price) &&
-                Objects.equals(tourPackage, tour.tourPackage) &&
-                region == tour.region;
+                Objects.equals(tourPackage, tour.tourPackage);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, price, tourPackage, region);
+        return Objects.hash(id, title, price, tourPackage);
     }
 }
