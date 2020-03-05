@@ -1,12 +1,10 @@
-package com.bookinggo.RESTfulDemo.Service;
+package com.bookinggo.RESTfulDemo.service;
 
 import com.bookinggo.RESTfulDemo.entity.Tour;
 import com.bookinggo.RESTfulDemo.entity.TourBooking;
 import com.bookinggo.RESTfulDemo.repository.TourBookingRepository;
 import com.bookinggo.RESTfulDemo.repository.TourRepository;
 import lombok.AllArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -26,12 +24,12 @@ public class TourBookingService {
         tourBookingRepository.save(tourBooking);
     }
 
-    public Page<TourBooking> lookupBookings(int tourId, Pageable pageable) throws NoSuchElementException  {
-        return tourBookingRepository.findByTourId(verifyTour(tourId).getId(), pageable);
+    public List<TourBooking> lookupBookings(int tourId) throws NoSuchElementException  {
+        return tourBookingRepository.findByTourId(verifyTour(tourId).getId());
     }
 
-    public Page<TourBooking> lookupBookingsAfter(int tourId, Pageable pageable) throws NoSuchElementException {
-        return tourBookingRepository.findAllByCustomerIdAfter (tourId, pageable);
+    public List<TourBooking> lookupBookingsAfter(int tourId) throws NoSuchElementException {
+        return tourBookingRepository.findAllByCustomerIdAfter (tourId);
     }
 
     public Iterable<TourBooking> lookupAll()  {

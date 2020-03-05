@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 
 @Data
@@ -14,17 +15,22 @@ import javax.validation.constraints.Size;
 public class BookingDto {
 
     @Size(max = 255)
+    @NotNull
     private String date;
 
     @Size(max = 255)
+    @NotNull
     private String pickupLocation;
 
     @NotNull
+    @Positive
     private Integer customerId;
 
     @NotNull
-    @Min(1)
+    @Positive
     private Integer partisipants;
 
+    @NotNull
+    @Positive
     private String totalPrice;
 }

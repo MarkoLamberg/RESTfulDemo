@@ -1,6 +1,6 @@
-package com.bookinggo.RESTfulDemo.Controller;
+package com.bookinggo.RESTfulDemo.controller;
 
-import com.bookinggo.RESTfulDemo.Service.TourBookingService;
+import com.bookinggo.RESTfulDemo.service.TourBookingService;
 import com.bookinggo.RESTfulDemo.entity.TourBooking;
 import com.bookinggo.RESTfulDemo.web.BookingDto;
 import lombok.AllArgsConstructor;
@@ -8,9 +8,6 @@ import lombok.NoArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -38,13 +35,10 @@ public class TourBookingsController {
     }
 
     @GetMapping
-    public Page<BookingDto> getAllBookingsForTour(@PathVariable(value = "tourId") int tourId, Pageable pageable) {
+    public List<BookingDto> getAllBookingsForTour(@PathVariable(value = "tourId") int tourId) {
         LOGGER.info("GET /tours/{}/bookings", tourId);
-        Page<TourBooking> tourBookingPage = tourBookingService.lookupBookings(tourId, pageable);
-        List<BookingDto> bookingDtoList = tourBookingPage.getContent()
-                .stream().map(tourBooking -> toDto(tourBooking)).collect(Collectors.toList());
-
-        return new PageImpl<BookingDto>(bookingDtoList, pageable, tourBookingPage.getTotalPages());
+        List<TourBooking> tourBookings = tourBookingService.lookupBookings(tourId);
+        return tourBookings.stream().map(tourBooking -> toDto(tourBooking)).collect(Collectors.toList());
     }
 
     @PutMapping

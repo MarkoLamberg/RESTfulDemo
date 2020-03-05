@@ -1,6 +1,6 @@
-package com.bookinggo.RESTfulDemo.Controller;
+package com.bookinggo.RESTfulDemo.controller;
 
-import com.bookinggo.RESTfulDemo.Service.TourBookingService;
+import com.bookinggo.RESTfulDemo.service.TourBookingService;
 import com.bookinggo.RESTfulDemo.entity.TourBooking;
 import com.bookinggo.RESTfulDemo.web.ExpandedBookingDto;
 import lombok.AllArgsConstructor;
@@ -8,11 +8,8 @@ import lombok.NoArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -28,13 +25,10 @@ public class TourAllBookingsController {
     private TourBookingService tourBookingService;
 
     @GetMapping
-    public Page<ExpandedBookingDto> getAllBookings(Pageable pageable) {
+    public List<ExpandedBookingDto> getAllBookings() {
         LOGGER.info("GET /tours/bookings/");
-        Page<TourBooking> tourBookingPage = tourBookingService.lookupBookingsAfter(0, pageable);
-        List<ExpandedBookingDto> expandedBookingDtoList = tourBookingPage.getContent()
-                .stream().map(tourBooking -> toExpandedDto(tourBooking)).collect(Collectors.toList());
-
-        return new PageImpl<ExpandedBookingDto>(expandedBookingDtoList, pageable, tourBookingPage.getTotalPages());
+        List<TourBooking> tourBookings = tourBookingService.lookupBookingsAfter(0);
+        return tourBookings.stream().map(tourBooking -> toExpandedDto(tourBooking)).collect(Collectors.toList());
     }
 
     @DeleteMapping("/{customerId}")
@@ -50,8 +44,8 @@ public class TourAllBookingsController {
     }
 
     private ExpandedBookingDto toExpandedDto(TourBooking tourBooking) {
-        return new ExpandedBookingDto(tourBooking.getDate(), tourBooking.getPickupLocation(), tourBooking.getTour().getId(),
-                tourBooking.getCustomerId(), tourBooking.getPartisipants(), tourBooking.getTotalPriceString());
+        return new ExpandedBookingDto(tourBooking.getDate(), tourBooking.getPickupLocation(), tourBooking.getCustomerId(),
+                tourBooking.getPartisipants(), tourBooking.getTotalPriceString(), tourBooking.getTour().getId());
     }
 
     @ResponseStatus(HttpStatus.NOT_FOUND)

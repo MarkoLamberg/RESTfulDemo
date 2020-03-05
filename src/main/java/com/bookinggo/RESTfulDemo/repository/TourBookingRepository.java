@@ -1,8 +1,6 @@
 package com.bookinggo.RESTfulDemo.repository;
 
 import com.bookinggo.RESTfulDemo.entity.TourBooking;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
@@ -14,11 +12,9 @@ public interface TourBookingRepository extends CrudRepository<TourBooking, Integ
 
     List<TourBooking> findByTourId(Integer tourId);
 
-    Page<TourBooking> findByTourId(Integer tourId, Pageable pageable);
-
     Optional<TourBooking> findByTourIdAndCustomerId(Integer tourId, Integer customerId);
 
     Optional<List<TourBooking>> findByCustomerId(Integer customerId);
 
-    Page<TourBooking> findAllByCustomerIdAfter(Integer tourId, Pageable pageable);
+    List<TourBooking> findAllByCustomerIdAfter(Integer tourId);
 }
