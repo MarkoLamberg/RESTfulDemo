@@ -1,15 +1,16 @@
 package com.bookinggo.RESTfulDemo.repository;
 
 import com.bookinggo.RESTfulDemo.entity.Tour;
-import org.springframework.data.repository.PagingAndSortingRepository;
+import com.bookinggo.RESTfulDemo.entity.TourPackage;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.query.Param;
+import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.data.rest.core.annotation.RestResource;
 
 import java.util.List;
 
-public interface TourRepository extends PagingAndSortingRepository<Tour,Integer> {
-
-    List<Tour> findByTourPackageCode(@Param("code") String code);
+@RepositoryRestResource(collectionResourceRel = "tours", path = "tours")
+public interface TourRepository extends JpaRepository<Tour,Integer> {
 
     //Not exposed by Spring Data REST
     @Override
@@ -19,7 +20,7 @@ public interface TourRepository extends PagingAndSortingRepository<Tour,Integer>
     //Not exposed by Spring Data REST
     @Override
     @RestResource(exported = false)
-    <S extends Tour> Iterable<S> saveAll(Iterable<S> iterable);
+    <S extends Tour> List<S> saveAll(Iterable<S> iterable);
 
     //Not exposed by Spring Data REST
     @Override

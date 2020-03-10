@@ -2,6 +2,9 @@ package com.bookinggo.RESTfulDemo.entity;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -10,6 +13,7 @@ import java.util.Objects;
 @Entity
 @Data
 @NoArgsConstructor
+@Slf4j
 public class Tour implements Serializable{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,6 +32,8 @@ public class Tour implements Serializable{
 
     public Tour(String title, Integer price, String duration,
                 com.bookinggo.RESTfulDemo.entity.TourPackage tourPackage) {
+        log.info("constructor - title: {}, price: {}, duration: {}", title, price, duration);
+
         this.title = title;
         this.price = price;
         this.tourPackage = tourPackage;

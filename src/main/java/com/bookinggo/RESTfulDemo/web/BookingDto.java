@@ -30,7 +30,5 @@ public class BookingDto {
     @Positive
     private Integer partisipants;
 
-    @NotNull
-    @Positive
     private String totalPrice;
 }

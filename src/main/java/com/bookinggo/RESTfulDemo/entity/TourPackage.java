@@ -2,6 +2,9 @@ package com.bookinggo.RESTfulDemo.entity;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -14,6 +17,7 @@ import java.util.Objects;
 @Entity
 @Data
 @NoArgsConstructor
+@Slf4j
 public class TourPackage implements Serializable {
     @Id
     private String code;
@@ -25,6 +29,8 @@ public class TourPackage implements Serializable {
     private Location location;
 
     public TourPackage(String code, String name, Location location) {
+        log.info("constructor - code: {}, name: {}, location: {}", code, name, location);
+
         this.code = code;
         this.name = name;
         this.location = location;

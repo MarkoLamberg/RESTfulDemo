@@ -2,7 +2,9 @@ package com.bookinggo.RESTfulDemo.entity;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.Formula;
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.persistence.*;
 import java.util.Objects;
@@ -10,6 +12,7 @@ import java.util.Objects;
 @Entity
 @Data
 @NoArgsConstructor
+@Slf4j
 @Table(name="tour_booking")
 public class TourBooking {
     @Id
@@ -33,6 +36,8 @@ public class TourBooking {
     private Integer partisipants;
 
     public TourBooking(Tour tour, Integer customerId, String date, String pickupLocation, Integer partisipants) {
+        log.info("constructor - tour: {}, customerId: {}, date: {}, pickupLocation{}, partisipants{}", tour, date, pickupLocation, partisipants);
+
         this.tour = tour;
         this.customerId = customerId;
         this.date = date;
