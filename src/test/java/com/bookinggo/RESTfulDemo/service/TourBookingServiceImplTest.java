@@ -8,11 +8,12 @@ import com.bookinggo.RESTfulDemo.repository.TourRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
+import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -21,22 +22,24 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
+@SpringBootTest
 @ExtendWith(MockitoExtension.class)
-public class TourBookingServiceTest {
+public class TourBookingServiceImplTest {
     private static final int CUSTOMER_ID = 123;
-    private static final int TOUR_ID = 123;
-    private static final int TOUR_BOOKING_ID = 123;
+    private static final int TOUR_ID = 234;
+    private static final int TOUR_BOOKING_ID = 345;
     private static final String DATE = "20-03-2020";
     private static final String LOCATION = "Hotel Ibis";
     private static final int PARTISIPANTS = 1;
 
-    @Mock
+    @MockBean
     private TourRepository tourRepositoryMock;
-    @Mock
+
+    @MockBean
     private TourBookingRepository tourBookingRepositoryMock;
 
-    @InjectMocks
-    private TourBookingService service;
+    @Autowired
+    private TourBookingServiceImpl service;
 
     @Mock
     private Tour tourMock;
@@ -62,16 +65,9 @@ public class TourBookingServiceTest {
     }
 
     @Test
-    public void lookupBookingsAfter_TourWithIdNonExisting_NothingToReturn() {
-        List<TourBooking> bookings = service.lookupBookingsAfter(TOUR_ID);
-        verify(tourBookingRepositoryMock, times(1)).findAllByCustomerIdAfter(TOUR_ID);
-        assertEquals(bookings.size(), 0);
-    }
-
-    @Test
-    public void lookupBookingById_TourBookingWithIdNonExisting_NothingToReturn() {
-        List<TourBooking> bookings = service.lookupBookings(TOUR_BOOKING_ID);
-        verify(tourBookingRepositoryMock, times(1)).findByTourId(TOUR_BOOKING_ID);
+    public void lookupBookingByTourId_TourBookingWithIdNonExisting_NothingToReturn() {
+        List<TourBooking> bookings = service.lookupTourBookings(TOUR_ID);
+        verify(tourBookingRepositoryMock, times(1)).findByTourId(TOUR_ID);
         assertEquals(bookings.size(), 0);
     }
 
@@ -89,7 +85,7 @@ public class TourBookingServiceTest {
         verify(tourBookingRepositoryMock, times(1)).findByTourIdAndCustomerId(TOUR_ID, CUSTOMER_ID);
         verify(tourBookingMock, times(0)).setDate(DATE);
         verify(tourBookingMock, times(0)).setPickupLocation(LOCATION);
-        verify(tourBookingRepositoryMock, times(1)).save(null);
+        verify(tourBookingRepositoryMock, times(1)).saveAndFlush(null);
         assertEquals(booking, null);
     }
 
@@ -100,7 +96,7 @@ public class TourBookingServiceTest {
         verify(tourBookingRepositoryMock, times(1)).findByTourIdAndCustomerId(TOUR_ID, CUSTOMER_ID);
         verify(tourBookingMock, times(0)).setDate(DATE);
         verify(tourBookingMock, times(0)).setPickupLocation(LOCATION);
-        verify(tourBookingRepositoryMock, times(1)).save(null);
+        verify(tourBookingRepositoryMock, times(1)).saveAndFlush(null);
         assertEquals(booking, null);
     }
 
