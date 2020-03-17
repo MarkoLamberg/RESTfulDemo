@@ -46,19 +46,20 @@ public class TourBookingServiceImpl implements TourBookingService {
         return tourBookingRepository.findAll();
     }
 
-    public TourBooking update(int tourId, Integer customerId, String date, String location) throws NoSuchElementException {
+    public TourBooking update(int tourId, Integer customerId, String date, String location, Integer partisipants) throws NoSuchElementException {
         log.info("update - tourId: {}, customerId: {}, date: {}, location {}", tourId, customerId, date, location);
         TourBooking booking = tourBookingRepository.findByTourIdAndCustomerId(tourId, customerId);
 
         if(booking != null) {
             booking.setDate(date);
             booking.setPickupLocation(location);
+            booking.setPartisipants(partisipants);
         }
 
         return tourBookingRepository.saveAndFlush(booking);
     }
 
-    public TourBooking updateSome(int tourId, Integer customerId, String date, String location)
+    public TourBooking updateSome(int tourId, Integer customerId, String date, String location, Integer partisipants)
             throws NoSuchElementException {
         log.info("updateSome - tourId: {}, customerId: {}, date: {}, location {}", tourId, customerId, date, location);
 
@@ -71,6 +72,10 @@ public class TourBookingServiceImpl implements TourBookingService {
 
             if (location != null) {
                 booking.setPickupLocation(location);
+            }
+
+            if (partisipants != null) {
+                booking.setPartisipants(partisipants);
             }
         }
 

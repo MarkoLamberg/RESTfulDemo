@@ -14,6 +14,4 @@ public interface TourBookingRepository extends JpaRepository<TourBooking, Intege
     TourBooking findByTourIdAndCustomerId(Integer tourId, Integer customerId);
 
     List<TourBooking> findByCustomerId(Integer customerId);
-
-    List<TourBooking> findAllByCustomerIdAfter(Integer tourId);
 }

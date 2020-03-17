@@ -42,8 +42,8 @@ public class TourBookingServiceImplIT extends AbstractRESTfulDemoIT {
        assertEquals(PARTISIPANTS, booking.getPartisipants().intValue());
     }
 
-   @Test
-   @Sql
+    @Test
+    @Sql
     public void lookupBookingByTourId_BookingWithTourIdExists_ReturnBooking() {
        List<TourBooking> bookings = service.lookupTourBookings(TOUR_ID);
        assertEquals(1, bookings.size());
@@ -69,7 +69,7 @@ public class TourBookingServiceImplIT extends AbstractRESTfulDemoIT {
         assertNotEquals(DATE, filteredBookingsBefore.get(0).getDate());
         assertNotEquals(LOCATION, filteredBookingsBefore.get(0).getPickupLocation());
 
-        service.update(TOUR_ID, CUSTOMER_ID, DATE, LOCATION);
+        service.update(TOUR_ID, CUSTOMER_ID, DATE, LOCATION, PARTISIPANTS);
 
         List<TourBooking> filteredBookingsAfter = service.lookupTourBookings(TOUR_ID)
                 .stream()
@@ -91,7 +91,7 @@ public class TourBookingServiceImplIT extends AbstractRESTfulDemoIT {
         assertNotEquals(DATE, filteredBookingsBefore.get(0).getDate());
         assertNotEquals(LOCATION, filteredBookingsBefore.get(0).getPickupLocation());
 
-        service.updateSome(TOUR_ID, CUSTOMER_ID, DATE, LOCATION);
+        service.updateSome(TOUR_ID, CUSTOMER_ID, DATE, LOCATION, PARTISIPANTS);
 
         List<TourBooking> filteredBookingsAfter = service.lookupTourBookings(TOUR_ID)
                 .stream()

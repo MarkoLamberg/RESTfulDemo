@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,7 +25,7 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @Slf4j
 @RequestMapping(path = "/tours")
-public class TourBookingsController {
+public class TourBookingController {
     @Autowired
     private TourBookingServiceImpl tourBookingServiceImpl;
 
@@ -46,7 +47,7 @@ public class TourBookingsController {
     }
 
     @GetMapping(path = "/{tourId}")
-    public Tour getToursByPackage(@PathVariable(value = "tourId") int tourId) {
+    public Tour getToursById(@PathVariable(value = "tourId") int tourId) {
         log.info("GET /tours/{}", tourId);
         Optional<Tour> tour = tourService.lookupTourById(tourId);
 
@@ -75,14 +76,14 @@ public class TourBookingsController {
     public BookingDto updateWithPut(@PathVariable(value = "tourId") int tourId, @RequestBody @Validated BookingDto bookingDto) {
         log.info("PUT /tours/{}/bookings", tourId);
         return toDto(tourBookingServiceImpl.update(tourId, bookingDto.getCustomerId(),
-                 bookingDto.getDate(), bookingDto.getPickupLocation()));
+                 bookingDto.getDate(), bookingDto.getPickupLocation(), bookingDto.getPartisipants()));
     }
 
     @PatchMapping(path = "/{tourId}/bookings")
     public BookingDto updateWithPatch(@PathVariable(value = "tourId") int tourId, @RequestBody @Validated BookingDto bookingDto) {
         log.info("PATCH /tours/{}/bookings", tourId);
         return toDto(tourBookingServiceImpl.updateSome(tourId, bookingDto.getCustomerId(),
-                 bookingDto.getDate(), bookingDto.getPickupLocation()));
+                 bookingDto.getDate(), bookingDto.getPickupLocation(), bookingDto.getPartisipants()));
     }
 
     @DeleteMapping("/{tourId}/bookings/{customerId}")

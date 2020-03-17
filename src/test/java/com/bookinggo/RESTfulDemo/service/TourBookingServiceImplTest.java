@@ -80,7 +80,7 @@ public class TourBookingServiceImplTest {
 
     @Test
     public void update_BookingNonExisting_NothingToUpdate() throws NoSuchElementException {
-        TourBooking booking = service.update(TOUR_ID, CUSTOMER_ID, DATE, LOCATION);
+        TourBooking booking = service.update(TOUR_ID, CUSTOMER_ID, DATE, LOCATION, PARTISIPANTS);
 
         verify(tourBookingRepositoryMock, times(1)).findByTourIdAndCustomerId(TOUR_ID, CUSTOMER_ID);
         verify(tourBookingMock, times(0)).setDate(DATE);
@@ -91,7 +91,7 @@ public class TourBookingServiceImplTest {
 
     @Test
     public void updateSome_BookingNonExisting_NothingToUpdate() throws NoSuchElementException {
-        TourBooking booking = service.updateSome(TOUR_ID, CUSTOMER_ID, DATE, LOCATION);
+        TourBooking booking = service.updateSome(TOUR_ID, CUSTOMER_ID, DATE, LOCATION, PARTISIPANTS);
 
         verify(tourBookingRepositoryMock, times(1)).findByTourIdAndCustomerId(TOUR_ID, CUSTOMER_ID);
         verify(tourBookingMock, times(0)).setDate(DATE);
