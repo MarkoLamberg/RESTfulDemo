@@ -4,14 +4,13 @@ import com.bookinggo.RESTfulDemo.entity.Tour;
 import com.bookinggo.RESTfulDemo.service.TourBookingServiceImpl;
 import com.bookinggo.RESTfulDemo.entity.TourBooking;
 import com.bookinggo.RESTfulDemo.service.TourServiceImpl;
-import com.bookinggo.RESTfulDemo.web.BookingDto;
-import com.bookinggo.RESTfulDemo.web.ExpandedBookingDto;
+import com.bookinggo.RESTfulDemo.dto.BookingDto;
+import com.bookinggo.RESTfulDemo.dto.ExpandedBookingDto;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 

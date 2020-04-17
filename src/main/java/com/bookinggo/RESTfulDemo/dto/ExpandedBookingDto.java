@@ -1,6 +1,5 @@
-package com.bookinggo.RESTfulDemo.web;
+package com.bookinggo.RESTfulDemo.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -14,6 +13,7 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper=false)
 public class ExpandedBookingDto extends BookingDto{
+
     @NotNull
     @Positive
     private Integer tourId;

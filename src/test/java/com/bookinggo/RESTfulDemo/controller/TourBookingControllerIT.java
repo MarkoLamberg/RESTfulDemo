@@ -1,10 +1,9 @@
 package com.bookinggo.RESTfulDemo.controller;
 
-import com.bookinggo.RESTfulDemo.RestfulDemoApplication;
+import com.bookinggo.RESTfulDemo.util.RestfulDemoApplication;
 import com.bookinggo.RESTfulDemo.entity.Tour;
 import com.bookinggo.RESTfulDemo.entity.TourBooking;
-import com.bookinggo.RESTfulDemo.web.BookingDto;
-import net.minidev.json.JSONObject;
+import com.bookinggo.RESTfulDemo.dto.BookingDto;
 import org.junit.Before;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +15,6 @@ import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -29,6 +27,7 @@ import static org.junit.Assert.assertNotEquals;
 @ActiveProfiles("integTest")
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class TourBookingControllerIT{
+
     private static final int CUSTOMER_ID = 4;
     private static final int TOUR_ID = 1;
     private static final int PARTISIPANTS = 1;
