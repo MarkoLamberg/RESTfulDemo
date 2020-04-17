@@ -18,6 +18,7 @@ import static com.wix.mysql.distribution.Version.v5_7_27;
 @Profile("integTest")
 @Configuration
 public class MySQLConfig {
+
     @Bean
     public EmbeddedMysql embeddedMySql() throws IOException {
         MysqldConfig mysqldConfig = aMysqldConfig(v5_7_27)

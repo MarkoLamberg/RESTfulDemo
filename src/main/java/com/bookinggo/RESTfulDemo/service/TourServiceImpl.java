@@ -4,7 +4,6 @@ import com.bookinggo.RESTfulDemo.entity.Tour;
 import com.bookinggo.RESTfulDemo.repository.TourRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -12,10 +11,11 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@Slf4j
 @Transactional
 @AllArgsConstructor
-@Slf4j
 public class TourServiceImpl implements TourService {
+
     private final TourRepository tourRepository;
 
     @Override

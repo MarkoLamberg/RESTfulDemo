@@ -1,16 +1,12 @@
 package com.bookinggo.RESTfulDemo.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Positive;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 
-@Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Data
 public class BookingDto {
 
     @Size(max = 255)
@@ -27,7 +23,7 @@ public class BookingDto {
 
     @NotNull
     @Positive
-    private Integer partisipants;
+    private Integer participants;
 
     private String totalPrice;
 }

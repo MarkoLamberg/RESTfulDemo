@@ -1,17 +1,12 @@
 package com.bookinggo.RESTfulDemo.dto;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Positive;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 
-@Data
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper=false)
+@EqualsAndHashCode(callSuper = false)
+@Data
 public class ExpandedBookingDto extends BookingDto{
 
     @NotNull

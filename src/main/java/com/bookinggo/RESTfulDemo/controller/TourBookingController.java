@@ -1,11 +1,11 @@
 package com.bookinggo.RESTfulDemo.controller;
 
-import com.bookinggo.RESTfulDemo.entity.Tour;
-import com.bookinggo.RESTfulDemo.service.TourBookingServiceImpl;
-import com.bookinggo.RESTfulDemo.entity.TourBooking;
-import com.bookinggo.RESTfulDemo.service.TourServiceImpl;
 import com.bookinggo.RESTfulDemo.dto.BookingDto;
 import com.bookinggo.RESTfulDemo.dto.ExpandedBookingDto;
+import com.bookinggo.RESTfulDemo.entity.Tour;
+import com.bookinggo.RESTfulDemo.entity.TourBooking;
+import com.bookinggo.RESTfulDemo.service.TourBookingServiceImpl;
+import com.bookinggo.RESTfulDemo.service.TourServiceImpl;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,17 +14,16 @@ import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
+@RequestMapping(path = "/tours")
+@Slf4j
 @AllArgsConstructor
 @NoArgsConstructor
-@Slf4j
-@RequestMapping(path = "/tours")
 public class TourBookingController {
+
     @Autowired
     private TourBookingServiceImpl tourBookingServiceImpl;
 
@@ -33,10 +32,10 @@ public class TourBookingController {
 
     @PostMapping(path = "/{tourId}/bookings")
     @ResponseStatus(HttpStatus.CREATED)
-    public void createTourBooking(@PathVariable(value = "tourId") int tourId, @RequestBody @Validated BookingDto bookingDto) {
+    public TourBooking createTourBooking(@PathVariable(value = "tourId") int tourId, @RequestBody @Validated BookingDto bookingDto) {
         log.info("POST /tours/{}/bookings", tourId);
-        tourBookingServiceImpl.createNew(tourId, bookingDto.getCustomerId(), bookingDto.getDate(),
-                bookingDto.getPickupLocation(), bookingDto.getPartisipants());
+        return tourBookingServiceImpl.createNew(tourId, bookingDto.getCustomerId(), bookingDto.getDate(),
+                bookingDto.getPickupLocation(), bookingDto.getParticipants());
     }
 
     @GetMapping
@@ -50,7 +49,7 @@ public class TourBookingController {
         log.info("GET /tours/{}", tourId);
         Optional<Tour> tour = tourService.lookupTourById(tourId);
 
-        if(tour.isPresent()){
+        if (tour.isPresent()) {
             return tour.get();
         }
 
@@ -75,14 +74,14 @@ public class TourBookingController {
     public BookingDto updateWithPut(@PathVariable(value = "tourId") int tourId, @RequestBody @Validated BookingDto bookingDto) {
         log.info("PUT /tours/{}/bookings", tourId);
         return toDto(tourBookingServiceImpl.update(tourId, bookingDto.getCustomerId(),
-                 bookingDto.getDate(), bookingDto.getPickupLocation(), bookingDto.getPartisipants()));
+                bookingDto.getDate(), bookingDto.getPickupLocation(), bookingDto.getParticipants()));
     }
 
     @PatchMapping(path = "/{tourId}/bookings")
     public BookingDto updateWithPatch(@PathVariable(value = "tourId") int tourId, @RequestBody @Validated BookingDto bookingDto) {
         log.info("PATCH /tours/{}/bookings", tourId);
         return toDto(tourBookingServiceImpl.updateSome(tourId, bookingDto.getCustomerId(),
-                 bookingDto.getDate(), bookingDto.getPickupLocation(), bookingDto.getPartisipants()));
+                bookingDto.getDate(), bookingDto.getPickupLocation(), bookingDto.getParticipants()));
     }
 
     @DeleteMapping("/{tourId}/bookings/{customerId}")

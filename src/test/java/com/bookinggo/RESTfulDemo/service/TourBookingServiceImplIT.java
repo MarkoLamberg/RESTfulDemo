@@ -1,6 +1,5 @@
 package com.bookinggo.RESTfulDemo.service;
 
-import com.bookinggo.RESTfulDemo.entity.Tour;
 import com.bookinggo.RESTfulDemo.entity.TourBooking;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +14,7 @@ import static org.junit.Assert.assertNotEquals;
 
 @SpringBootTest
 public class TourBookingServiceImplIT extends AbstractRESTfulDemoIT {
+
     private static final int CUSTOMER_ID = 4;
     private static final int TOUR_ID = 1;
     private static final int PARTISIPANTS = 1;
@@ -24,42 +24,42 @@ public class TourBookingServiceImplIT extends AbstractRESTfulDemoIT {
     @Autowired
     private TourBookingServiceImpl service;
 
-    @Test
     @Sql
+    @Test
     public void createNew_NoBookingsExist_CreatesABooking() {
-       List<TourBooking> bookingsBefore = service.lookupAllBookings();
-       assertEquals(0, bookingsBefore.size());
+        List<TourBooking> bookingsBefore = service.lookupAllBookings();
+        assertEquals(0, bookingsBefore.size());
 
-       service.createNew(TOUR_ID, CUSTOMER_ID, DATE, LOCATION, PARTISIPANTS);
+        service.createNew(TOUR_ID, CUSTOMER_ID, DATE, LOCATION, PARTISIPANTS);
 
-       List<TourBooking> bookingsAfter = service.lookupAllBookings();
-       TourBooking booking = bookingsAfter.get(0);
+        List<TourBooking> bookingsAfter = service.lookupAllBookings();
+        TourBooking booking = bookingsAfter.get(0);
 
-       assertEquals(1, bookingsAfter.size());
-       assertEquals(TOUR_ID, booking.getTour().getId().intValue());
-       assertEquals(CUSTOMER_ID, booking.getCustomerId().intValue());
-       assertEquals(LOCATION, booking.getPickupLocation());
-       assertEquals(PARTISIPANTS, booking.getPartisipants().intValue());
+        assertEquals(1, bookingsAfter.size());
+        assertEquals(TOUR_ID, booking.getTour().getId().intValue());
+        assertEquals(CUSTOMER_ID, booking.getCustomerId().intValue());
+        assertEquals(LOCATION, booking.getPickupLocation());
+        assertEquals(PARTISIPANTS, booking.getPartisipants().intValue());
     }
 
-    @Test
     @Sql
+    @Test
     public void lookupBookingByTourId_BookingWithTourIdExists_ReturnBooking() {
-       List<TourBooking> bookings = service.lookupTourBookings(TOUR_ID);
-       assertEquals(1, bookings.size());
-       int tourId = bookings.get(0).getTour().getId();
-       assertEquals(TOUR_ID, bookings.get(0).getTour().getId().intValue());
+        List<TourBooking> bookings = service.lookupTourBookings(TOUR_ID);
+        assertEquals(1, bookings.size());
+        int tourId = bookings.get(0).getTour().getId();
+        assertEquals(TOUR_ID, bookings.get(0).getTour().getId().intValue());
     }
 
-    @Test
     @Sql
+    @Test
     public void lookupAllBookings_BookingsExist_ReturnBookings() {
         List<TourBooking> bookings = service.lookupAllBookings();
         assertEquals(2, bookings.size());
     }
 
-    @Test
     @Sql
+    @Test
     public void update_BookingExisting_BookingUpdated() {
         List<TourBooking> filteredBookingsBefore = service.lookupTourBookings(TOUR_ID)
                 .stream()
@@ -80,8 +80,8 @@ public class TourBookingServiceImplIT extends AbstractRESTfulDemoIT {
         assertEquals(LOCATION, filteredBookingsAfter.get(0).getPickupLocation());
     }
 
-    @Test
     @Sql
+    @Test
     public void updateSome_BookingExisting_BookingUpdated() {
         List<TourBooking> filteredBookingsBefore = service.lookupTourBookings(TOUR_ID)
                 .stream()
@@ -102,9 +102,9 @@ public class TourBookingServiceImplIT extends AbstractRESTfulDemoIT {
         assertEquals(LOCATION, filteredBookingsAfter.get(0).getPickupLocation());
     }
 
-    @Test
     @Sql
-    public void deleteByTourIdAndCustomerId_BookingExisting_BookingDeleted(){
+    @Test
+    public void deleteByTourIdAndCustomerId_BookingExisting_BookingDeleted() {
         List<TourBooking> filteredBookingsBefore = service.lookupTourBookings(TOUR_ID)
                 .stream()
                 .filter(booking -> booking.getCustomerId().equals(CUSTOMER_ID))
@@ -122,8 +122,8 @@ public class TourBookingServiceImplIT extends AbstractRESTfulDemoIT {
         assertEquals(0, filteredBookingsAfter.size());
     }
 
-    @Test
     @Sql
+    @Test
     public void deleteByCustomerId_BookingExisting_BookingDeleted() {
         List<TourBooking> filteredBookingsBefore = service.lookupAllBookings()
                 .stream()
@@ -142,8 +142,8 @@ public class TourBookingServiceImplIT extends AbstractRESTfulDemoIT {
         assertEquals(0, filteredBookingsAfter.size());
     }
 
-    @Test
     @Sql
+    @Test
     public void deleteAll_BookingsExisting_AllBookingsDeleted() {
         List<TourBooking> bookingsBefore = service.lookupAllBookings();
         assertEquals(3, bookingsBefore.size());

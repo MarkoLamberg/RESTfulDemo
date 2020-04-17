@@ -1,7 +1,6 @@
 package com.bookinggo.RESTfulDemo.service;
 
 import com.bookinggo.RESTfulDemo.entity.Tour;
-import com.bookinggo.RESTfulDemo.entity.TourBooking;
 import com.bookinggo.RESTfulDemo.repository.TourRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -9,7 +8,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Profile;
 
 import java.util.List;
 import java.util.Optional;
@@ -21,6 +19,7 @@ import static org.mockito.Mockito.verify;
 @SpringBootTest
 @ExtendWith(MockitoExtension.class)
 public class TourServiceImplTest {
+
     private static final int TOUR_ID = 234;
 
     @Autowired

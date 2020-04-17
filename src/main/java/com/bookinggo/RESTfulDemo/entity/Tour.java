@@ -1,6 +1,7 @@
 package com.bookinggo.RESTfulDemo.entity;
 
-import lombok.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.persistence.*;
@@ -11,7 +12,8 @@ import java.util.Objects;
 @Data
 @NoArgsConstructor
 @Slf4j
-public class Tour implements Serializable{
+public class Tour implements Serializable {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -23,7 +25,7 @@ public class Tour implements Serializable{
     private Integer price;
 
     @ManyToOne
-    @JoinColumn(name="tour_package_code")
+    @JoinColumn(name = "tour_package_code")
     private TourPackage tourPackage;
 
 

@@ -5,34 +5,35 @@ import com.bookinggo.RESTfulDemo.entity.TourBooking;
 import com.bookinggo.RESTfulDemo.repository.TourBookingRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.*;
 
 @Service
+@Slf4j
 @Transactional
 @AllArgsConstructor
-@Slf4j
 public class TourBookingServiceImpl implements TourBookingService {
 
     private final TourBookingRepository tourBookingRepository;
     private final TourService tourService;
 
     @Override
-    public void createNew(int tourId, Integer customerId, String date, String location, Integer partisipants) throws NoSuchElementException {
+    public TourBooking createNew(int tourId, Integer customerId, String date, String location, Integer partisipants) throws NoSuchElementException {
         log.info("createNew - tourId: {}, customerId: {}, date: {}, location {}, partisipants {}", tourId, customerId, date, location, partisipants);
 
         Optional<Tour> tour = tourService.lookupTourById(tourId);
 
-        if(tour.isPresent()) {
+        if (tour.isPresent()) {
             TourBooking tourBooking = new TourBooking(tour.get(), customerId,
                     date, location, partisipants);
             tourBookingRepository.save(tourBooking);
+
+            return tourBooking;
         }
+
+        return null;
     }
 
     @Override

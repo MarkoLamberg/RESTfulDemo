@@ -1,4 +1,3 @@
-
 package com.bookinggo.RESTfulDemo.service;
 
 import com.bookinggo.RESTfulDemo.entity.Tour;
@@ -8,7 +7,7 @@ import com.bookinggo.RESTfulDemo.repository.TourRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.*;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -17,14 +16,15 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 @SpringBootTest
 @ExtendWith(MockitoExtension.class)
 public class TourBookingServiceImplTest {
+
     private static final int CUSTOMER_ID = 123;
     private static final int TOUR_ID = 234;
     private static final int TOUR_BOOKING_ID = 345;
@@ -101,7 +101,7 @@ public class TourBookingServiceImplTest {
     }
 
     @Test()
-    public void deleteByTourIdAndCustomerId_BookingWithTourIdAndCustomerIdNonExisting_NothingToDelete() throws NoSuchElementException{
+    public void deleteByTourIdAndCustomerId_BookingWithTourIdAndCustomerIdNonExisting_NothingToDelete() throws NoSuchElementException {
         service.delete(TOUR_ID, CUSTOMER_ID);
 
         verify(tourBookingRepositoryMock, times(1)).findByTourIdAndCustomerId(TOUR_ID, CUSTOMER_ID);
