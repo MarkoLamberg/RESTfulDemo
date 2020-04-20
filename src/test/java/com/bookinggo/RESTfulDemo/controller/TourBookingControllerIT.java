@@ -50,7 +50,7 @@ public class TourBookingControllerIT {
 
     @Sql
     @Test
-    public void getAllTours_ToursExisting_ToursReturned() {
+    public void shouldReturnAllTours_whenGetAllTours_givenToursExist() {
         Tour[] tours = restTemplate
                 .getForEntity(LOCAL_HOST + port + "/tours", Tour[].class)
                 .getBody();
@@ -59,7 +59,7 @@ public class TourBookingControllerIT {
 
     @Sql
     @Test
-    public void getTourById_TourExists_TourReturned() {
+    public void shouldReturnTour_whenGetTourById_givenTourExists() {
         Tour tour = restTemplate
                 .getForEntity(LOCAL_HOST + port + "/tours/" + TOUR_ID, Tour.class)
                 .getBody();
@@ -68,7 +68,7 @@ public class TourBookingControllerIT {
 
     @Sql
     @Test
-    public void getBookingsForTourId_BookingsExist_BookingsReturned() {
+    public void shouldReturnBookings_whenGetBookingsForTourId_givenBookingsExist() {
         TourBooking[] tourBookings = restTemplate
                 .getForEntity(LOCAL_HOST + port + "/tours/" + TOUR_ID + "/bookings", TourBooking[].class)
                 .getBody();
@@ -77,7 +77,7 @@ public class TourBookingControllerIT {
 
     @Sql
     @Test
-    public void getAllBookings_BookingsExist_BookingsReturned() {
+    public void shouldReturnAllBookings_BookingsExist_BookingsReturned() {
         TourBooking[] tourBookings = restTemplate
                 .getForEntity(LOCAL_HOST + port + "/tours/bookings", TourBooking[].class)
                 .getBody();
@@ -86,7 +86,7 @@ public class TourBookingControllerIT {
 
     @Sql
     @Test
-    public void postABooking_ValidBooking_BookingCreated() {
+    public void shouldReturn201_whenBookingCreated_givenValidBooking() {
         BookingDto bookingDto = new BookingDto(DATE, LOCATION, CUSTOMER_ID, PARTICIPANTS, TOTAL_PRICE);
 
         ResponseEntity<BookingDto> response = restTemplate.postForEntity(LOCAL_HOST + port + "/tours/" + TOUR_ID + "/bookings", bookingDto, BookingDto.class);
@@ -95,9 +95,8 @@ public class TourBookingControllerIT {
     }
 
     @Sql
-
     @Test
-    public void updateBooking_ValidBooking_BookingUpdated() {
+    public void shouldReturn200_whenBookingUpdated_givenValidBooking() {
         BookingDto bookingDto = new BookingDto(DATE, LOCATION, CUSTOMER_ID, PARTICIPANTS, TOTAL_PRICE);
 
         HttpEntity<BookingDto> entity = new HttpEntity<>(bookingDto);
@@ -110,7 +109,7 @@ public class TourBookingControllerIT {
 
     @Sql
     @Test
-    public void deleteBookingsByTourIdAndCustomerId_bookingExists_BookingDeleted() {
+    public void shouldDeleteBookingsByTourIdAndCustomerId_whenBookingDeleted_givenBookingExists() {
         TourBooking[] tourBookingsBefore = restTemplate
                 .getForEntity("http://localhost:" + port + "/tours/" + TOUR_ID + "/bookings", TourBooking[].class)
                 .getBody();
@@ -135,7 +134,7 @@ public class TourBookingControllerIT {
 
     @Sql
     @Test
-    public void deleteBookingsByCustomerId_bookingsExist_BookingsDeleted() {
+    public void shouldDeleteBookingsByCustomerId_whenBookingsDeleted_givenBookingsExist() {
         TourBooking[] tourBookingsBefore = restTemplate
                 .getForEntity(LOCAL_HOST + port + "/tours/bookings", TourBooking[].class)
                 .getBody();
@@ -159,7 +158,7 @@ public class TourBookingControllerIT {
 
     @Sql
     @Test
-    public void deleteAllBookings_bookingsExist_allBookingsDeleted() {
+    public void shouldDeleteAllBookings_whenAllBookingsDeleted_givenBookingsExist() {
         TourBooking[] tourBookingsBefore = restTemplate
                 .getForEntity(LOCAL_HOST + port + "/tours/bookings", TourBooking[].class)
                 .getBody();

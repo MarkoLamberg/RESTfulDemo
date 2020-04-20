@@ -30,7 +30,7 @@ public class TourBookingServiceImplTest {
     private static final int TOUR_BOOKING_ID = 345;
     private static final String DATE = "20-03-2020";
     private static final String LOCATION = "Hotel Ibis";
-    private static final int PARTISIPANTS = 1;
+    private static final int PARTICIPANTS = 1;
 
     @MockBean
     private TourRepository tourRepositoryMock;
@@ -58,7 +58,7 @@ public class TourBookingServiceImplTest {
 
     @Test
     public void createNew_TourWithIdNonExisting_FailsToCreate() {
-        service.createNew(TOUR_ID, CUSTOMER_ID, DATE, LOCATION, PARTISIPANTS);
+        service.createNew(TOUR_ID, CUSTOMER_ID, DATE, LOCATION, PARTICIPANTS);
 
         verify(tourRepositoryMock, times(1)).findById(TOUR_ID);
         verify(tourRepositoryMock, times(0)).save(any());
@@ -80,7 +80,7 @@ public class TourBookingServiceImplTest {
 
     @Test
     public void update_BookingNonExisting_NothingToUpdate() throws NoSuchElementException {
-        TourBooking booking = service.update(TOUR_ID, CUSTOMER_ID, DATE, LOCATION, PARTISIPANTS);
+        TourBooking booking = service.update(TOUR_ID, CUSTOMER_ID, DATE, LOCATION, PARTICIPANTS);
 
         verify(tourBookingRepositoryMock, times(1)).findByTourIdAndCustomerId(TOUR_ID, CUSTOMER_ID);
         verify(tourBookingMock, times(0)).setDate(DATE);
@@ -91,7 +91,7 @@ public class TourBookingServiceImplTest {
 
     @Test
     public void updateSome_BookingNonExisting_NothingToUpdate() throws NoSuchElementException {
-        TourBooking booking = service.updateSome(TOUR_ID, CUSTOMER_ID, DATE, LOCATION, PARTISIPANTS);
+        TourBooking booking = service.updateSome(TOUR_ID, CUSTOMER_ID, DATE, LOCATION, PARTICIPANTS);
 
         verify(tourBookingRepositoryMock, times(1)).findByTourIdAndCustomerId(TOUR_ID, CUSTOMER_ID);
         verify(tourBookingMock, times(0)).setDate(DATE);

@@ -17,7 +17,7 @@ public class TourBookingServiceImplIT extends AbstractRESTfulDemoIT {
 
     private static final int CUSTOMER_ID = 4;
     private static final int TOUR_ID = 1;
-    private static final int PARTISIPANTS = 1;
+    private static final int PARTICIPANTS = 1;
     private static final String DATE = "20-03-2020";
     private static final String LOCATION = "Hotel Ibis";
 
@@ -30,7 +30,7 @@ public class TourBookingServiceImplIT extends AbstractRESTfulDemoIT {
         List<TourBooking> bookingsBefore = service.lookupAllBookings();
         assertEquals(0, bookingsBefore.size());
 
-        service.createNew(TOUR_ID, CUSTOMER_ID, DATE, LOCATION, PARTISIPANTS);
+        service.createNew(TOUR_ID, CUSTOMER_ID, DATE, LOCATION, PARTICIPANTS);
 
         List<TourBooking> bookingsAfter = service.lookupAllBookings();
         TourBooking booking = bookingsAfter.get(0);
@@ -39,7 +39,7 @@ public class TourBookingServiceImplIT extends AbstractRESTfulDemoIT {
         assertEquals(TOUR_ID, booking.getTour().getId().intValue());
         assertEquals(CUSTOMER_ID, booking.getCustomerId().intValue());
         assertEquals(LOCATION, booking.getPickupLocation());
-        assertEquals(PARTISIPANTS, booking.getPartisipants().intValue());
+        assertEquals(PARTICIPANTS, booking.getParticipants().intValue());
     }
 
     @Sql
@@ -69,7 +69,7 @@ public class TourBookingServiceImplIT extends AbstractRESTfulDemoIT {
         assertNotEquals(DATE, filteredBookingsBefore.get(0).getDate());
         assertNotEquals(LOCATION, filteredBookingsBefore.get(0).getPickupLocation());
 
-        service.update(TOUR_ID, CUSTOMER_ID, DATE, LOCATION, PARTISIPANTS);
+        service.update(TOUR_ID, CUSTOMER_ID, DATE, LOCATION, PARTICIPANTS);
 
         List<TourBooking> filteredBookingsAfter = service.lookupTourBookings(TOUR_ID)
                 .stream()
@@ -91,7 +91,7 @@ public class TourBookingServiceImplIT extends AbstractRESTfulDemoIT {
         assertNotEquals(DATE, filteredBookingsBefore.get(0).getDate());
         assertNotEquals(LOCATION, filteredBookingsBefore.get(0).getPickupLocation());
 
-        service.updateSome(TOUR_ID, CUSTOMER_ID, DATE, LOCATION, PARTISIPANTS);
+        service.updateSome(TOUR_ID, CUSTOMER_ID, DATE, LOCATION, PARTICIPANTS);
 
         List<TourBooking> filteredBookingsAfter = service.lookupTourBookings(TOUR_ID)
                 .stream()

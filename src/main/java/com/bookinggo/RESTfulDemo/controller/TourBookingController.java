@@ -4,7 +4,7 @@ import com.bookinggo.RESTfulDemo.dto.BookingDto;
 import com.bookinggo.RESTfulDemo.dto.ExpandedBookingDto;
 import com.bookinggo.RESTfulDemo.entity.Tour;
 import com.bookinggo.RESTfulDemo.entity.TourBooking;
-import com.bookinggo.RESTfulDemo.service.TourBookingServiceImpl;
+import com.bookinggo.RESTfulDemo.service.TourBookingService;
 import com.bookinggo.RESTfulDemo.service.TourServiceImpl;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 public class TourBookingController {
 
     @Autowired
-    private TourBookingServiceImpl tourBookingServiceImpl;
+    private TourBookingService tourBookingService;
 
     @Autowired
     private TourServiceImpl tourService;
@@ -34,7 +34,7 @@ public class TourBookingController {
     @ResponseStatus(HttpStatus.CREATED)
     public TourBooking createTourBooking(@PathVariable(value = "tourId") int tourId, @RequestBody @Validated BookingDto bookingDto) {
         log.info("POST /tours/{}/bookings", tourId);
-        return tourBookingServiceImpl.createNew(tourId, bookingDto.getCustomerId(), bookingDto.getDate(),
+        return tourBookingService.createNew(tourId, bookingDto.getCustomerId(), bookingDto.getDate(),
                 bookingDto.getPickupLocation(), bookingDto.getParticipants());
     }
 
@@ -59,57 +59,57 @@ public class TourBookingController {
     @GetMapping(path = "/{tourId}/bookings")
     public List<BookingDto> getAllBookingsForTour(@PathVariable(value = "tourId") int tourId) {
         log.info("GET /tours/{}/bookings", tourId);
-        List<TourBooking> tourBookings = tourBookingServiceImpl.lookupTourBookings(tourId);
+        List<TourBooking> tourBookings = tourBookingService.lookupTourBookings(tourId);
         return tourBookings.stream().map(tourBooking -> toDto(tourBooking)).collect(Collectors.toList());
     }
 
     @GetMapping(path = "/bookings")
     public List<ExpandedBookingDto> getAllBookings() {
         log.info("GET /tours/bookings/");
-        List<TourBooking> tourBookings = tourBookingServiceImpl.lookupAllBookings();
+        List<TourBooking> tourBookings = tourBookingService.lookupAllBookings();
         return tourBookings.stream().map(tourBooking -> toExpandedDto(tourBooking)).collect(Collectors.toList());
     }
 
     @PutMapping(path = "/{tourId}/bookings")
     public BookingDto updateWithPut(@PathVariable(value = "tourId") int tourId, @RequestBody @Validated BookingDto bookingDto) {
         log.info("PUT /tours/{}/bookings", tourId);
-        return toDto(tourBookingServiceImpl.update(tourId, bookingDto.getCustomerId(),
+        return toDto(tourBookingService.update(tourId, bookingDto.getCustomerId(),
                 bookingDto.getDate(), bookingDto.getPickupLocation(), bookingDto.getParticipants()));
     }
 
     @PatchMapping(path = "/{tourId}/bookings")
     public BookingDto updateWithPatch(@PathVariable(value = "tourId") int tourId, @RequestBody @Validated BookingDto bookingDto) {
         log.info("PATCH /tours/{}/bookings", tourId);
-        return toDto(tourBookingServiceImpl.updateSome(tourId, bookingDto.getCustomerId(),
+        return toDto(tourBookingService.updateSome(tourId, bookingDto.getCustomerId(),
                 bookingDto.getDate(), bookingDto.getPickupLocation(), bookingDto.getParticipants()));
     }
 
     @DeleteMapping("/{tourId}/bookings/{customerId}")
     public void delete(@PathVariable(value = "tourId") int tourId, @PathVariable(value = "customerId") int customerId) {
         log.info("DELETE /tours/{}/bookings", tourId);
-        tourBookingServiceImpl.delete(tourId, customerId);
+        tourBookingService.delete(tourId, customerId);
     }
 
     @DeleteMapping("/bookings/{customerId}")
     public void delete(@PathVariable(value = "customerId") int customerId) {
         log.info("DELETE /tours/bookings/{}", customerId);
-        tourBookingServiceImpl.delete(customerId);
+        tourBookingService.delete(customerId);
     }
 
     @DeleteMapping("/bookings")
     public void delete() {
         log.info("DELETE /tours/bookings/");
-        tourBookingServiceImpl.deleteAll();
+        tourBookingService.deleteAll();
     }
 
     private BookingDto toDto(TourBooking tourBooking) {
         return new BookingDto(tourBooking.getDate(), tourBooking.getPickupLocation(), tourBooking.getCustomerId(),
-                tourBooking.getPartisipants(), tourBooking.getTotalPriceString());
+                tourBooking.getParticipants(), tourBooking.getTotalPriceString());
     }
 
     private ExpandedBookingDto toExpandedDto(TourBooking tourBooking) {
         return new ExpandedBookingDto(tourBooking.getDate(), tourBooking.getPickupLocation(), tourBooking.getCustomerId(),
-                tourBooking.getPartisipants(), tourBooking.getTotalPriceString(), tourBooking.getTour().getId());
+                tourBooking.getParticipants(), tourBooking.getTotalPriceString(), tourBooking.getTour().getId());
     }
 
     @ResponseStatus(HttpStatus.NOT_FOUND)

@@ -1,0 +1,1 @@
+ALTER TABLE `tour_booking` DROP COLUMN `createdWhen`;

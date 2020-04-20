@@ -1,17 +1,16 @@
 package com.bookinggo.RESTfulDemo.entity;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.Objects;
 
 @Entity
 @Data
 @NoArgsConstructor
 @Slf4j
+@EqualsAndHashCode
 public class Tour implements Serializable {
 
     @Id
@@ -36,38 +35,5 @@ public class Tour implements Serializable {
         this.title = title;
         this.price = price;
         this.tourPackage = tourPackage;
-    }
-
-    @Override
-    public String toString() {
-        return "Tour{" +
-                "id=" + id +
-                ", title='" + title + '\'' +
-                ", price=" + price +
-                ", tourPackage=" + tourPackage +
-                '}';
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-
-        Tour tour = (Tour) o;
-
-        return Objects.equals(id, tour.id) &&
-                Objects.equals(title, tour.title) &&
-                Objects.equals(price, tour.price) &&
-                Objects.equals(tourPackage, tour.tourPackage);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, title, price, tourPackage);
     }
 }
