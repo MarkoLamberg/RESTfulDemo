@@ -19,16 +19,15 @@ public class TourServiceImplIT extends AbstractRESTfulDemoIT {
     @Autowired
     private TourServiceImpl service;
 
-
     @Test
-    public void lookupAllTours_ToursAvailable_ReturnTours() {
+    public void shouldReturnAllTours_whenLookupTours_givenToursExist() {
         List<Tour> tours = service.lookupAllTours();
 
         assertEquals(8, tours.size());
     }
 
     @Test
-    public void lookupTourById_TourWithIdExists_ReturnTour() {
+    public void shouldReturnATour_whenLookupTourById_givenTourWithIdExists() {
         Optional<Tour> tour = service.lookupTourById(TOUR_ID);
 
         assertEquals(true, tour.isPresent());

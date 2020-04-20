@@ -4,7 +4,6 @@ import com.bookinggo.RESTfulDemo.entity.Tour;
 import com.bookinggo.RESTfulDemo.entity.TourBooking;
 import com.bookinggo.RESTfulDemo.repository.TourBookingRepository;
 import com.bookinggo.RESTfulDemo.repository.TourRepository;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -47,17 +46,8 @@ public class TourBookingServiceImplTest {
     @Mock
     private TourBooking tourBookingMock;
 
-    @BeforeEach
-    public void setReturnValuesOfMockMethods() {
-/*        when(tourRepositoryMock.findById(TOUR_ID)).thenReturn(Optional.of(tourMock));
-        when(tourMock.getId()).thenReturn(TOUR_ID);
-        when(tourBookingRepositoryMock.findByTourIdAndCustomerId(TOUR_ID, CUSTOMER_ID)).thenReturn(Optional.of(tourBookingMock));
-        when(tourBookingRepositoryMock.findByTourId(TOUR_ID)).thenReturn(Arrays.asList(tourBookingMock));*/
-
-    }
-
     @Test
-    public void createNew_TourWithIdNonExisting_FailsToCreate() {
+    public void shouldNotCreateBooking_whenCreate_givenTourIdDoesNotExist() {
         service.createNew(TOUR_ID, CUSTOMER_ID, DATE, LOCATION, PARTICIPANTS);
 
         verify(tourRepositoryMock, times(1)).findById(TOUR_ID);
@@ -65,21 +55,21 @@ public class TourBookingServiceImplTest {
     }
 
     @Test
-    public void lookupBookingByTourId_TourBookingWithIdNonExisting_NothingToReturn() {
+    public void shouldNotReturnAnyBookings_whenLookupTourBookings_givenNoBookingsWithIdExist() {
         List<TourBooking> bookings = service.lookupTourBookings(TOUR_ID);
         verify(tourBookingRepositoryMock, times(1)).findByTourId(TOUR_ID);
         assertEquals(bookings.size(), 0);
     }
 
     @Test
-    public void lookupAllBookings_NoBookingsAvailable_NothingToReturn() {
+    public void shouldNotReturnAnyBookings_whenLookupAllBookings_givenNoBookingsExist() {
         List<TourBooking> bookings = service.lookupAllBookings();
         verify(tourBookingRepositoryMock, times(1)).findAll();
         assertEquals(bookings.size(), 0);
     }
 
     @Test
-    public void update_BookingNonExisting_NothingToUpdate() throws NoSuchElementException {
+    public void shouldNotUpdateBooking_whenUpdate_givenBookingWithTourIdAndCustomerIdNonExisting() throws NoSuchElementException {
         TourBooking booking = service.update(TOUR_ID, CUSTOMER_ID, DATE, LOCATION, PARTICIPANTS);
 
         verify(tourBookingRepositoryMock, times(1)).findByTourIdAndCustomerId(TOUR_ID, CUSTOMER_ID);
@@ -90,7 +80,7 @@ public class TourBookingServiceImplTest {
     }
 
     @Test
-    public void updateSome_BookingNonExisting_NothingToUpdate() throws NoSuchElementException {
+    public void shouldNotUpdateBooking_whenUpdateSome_givenBookingWithTourIdAndCustomerIdNonExisting() throws NoSuchElementException {
         TourBooking booking = service.updateSome(TOUR_ID, CUSTOMER_ID, DATE, LOCATION, PARTICIPANTS);
 
         verify(tourBookingRepositoryMock, times(1)).findByTourIdAndCustomerId(TOUR_ID, CUSTOMER_ID);
@@ -101,24 +91,24 @@ public class TourBookingServiceImplTest {
     }
 
     @Test()
-    public void deleteByTourIdAndCustomerId_BookingWithTourIdAndCustomerIdNonExisting_NothingToDelete() throws NoSuchElementException {
-        service.delete(TOUR_ID, CUSTOMER_ID);
+    public void shouldNotDeleteAnyBookings_whenDeleteAllBookingsWithTourIdAndCustomerId_givenBookingsWithTourIdAndCustomerIdNonExisting() throws NoSuchElementException {
+        service.deleteAllBookingsWithTourIdAndCustomerId(TOUR_ID, CUSTOMER_ID);
 
         verify(tourBookingRepositoryMock, times(1)).findByTourIdAndCustomerId(TOUR_ID, CUSTOMER_ID);
         verify(tourBookingRepositoryMock, times(1)).delete(any());
     }
 
     @Test
-    public void deleteByCustomerId_BookingWithCustomerIdNonExisting_NothingToDelete() {
-        service.delete(CUSTOMER_ID);
+    public void shouldNotDeleteAnyBookings_whenDeleteAllBookingsWithCustomerId_givenBookingsWithCustomerIdNonExisting() {
+        service.deleteAllBookingsWithCustomerId(CUSTOMER_ID);
 
         verify(tourBookingRepositoryMock, times(1)).findByCustomerId(CUSTOMER_ID);
         verify(tourBookingRepositoryMock, times(0)).delete(any());
     }
 
     @Test
-    public void deleteAll_NoBookingsAvailable_NothingToDelete() {
-        service.deleteAll();
+    public void shouldNotDeleteAnyBookings_whenDeleteAllBookings_givenNoBookings() {
+        service.deleteAllBookings();
         verify(tourBookingRepositoryMock, times(1)).deleteAll();
     }
 }

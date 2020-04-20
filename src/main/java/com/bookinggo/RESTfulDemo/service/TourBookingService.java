@@ -17,10 +17,10 @@ public interface TourBookingService {
 
     public TourBooking updateSome(int tourId, Integer customerId, String date, String location, Integer participants);
 
-    public void delete(int tourId, Integer customerId) throws NoSuchElementException;
+    public void deleteAllBookingsWithTourIdAndCustomerId(int tourId, Integer customerId) throws NoSuchElementException;
 
-    public void delete(Integer customerId) throws NoSuchElementException;
+    public void deleteAllBookingsWithCustomerId(Integer customerId) throws NoSuchElementException;
 
-    public void deleteAll() throws NoSuchElementException;
+    public void deleteAllBookings() throws NoSuchElementException;
 
 }

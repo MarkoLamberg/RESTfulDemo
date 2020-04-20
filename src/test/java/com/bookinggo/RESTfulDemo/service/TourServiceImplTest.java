@@ -29,14 +29,14 @@ public class TourServiceImplTest {
     private TourRepository tourRepositoryMock;
 
     @Test
-    public void lookupAllTours_NoToursAvailable_NothingToReturn() {
+    public void shouldCallFindAll_whenLookupAllTours_givenNoToursExist() {
         List<Tour> tours = service.lookupAllTours();
         verify(tourRepositoryMock, times(1)).findAll();
         assertEquals(0, tours.size());
     }
 
     @Test
-    public void lookupTourById_TourWithIdNonExisting_NothingToReturn() {
+    public void shouldCallFindById_giveLookupTourById_givenNoTourWithIdExists() {
         Optional<Tour> tour = service.lookupTourById(TOUR_ID);
         verify(tourRepositoryMock, times(1)).findById(TOUR_ID);
         assertEquals(Optional.empty(), tour);

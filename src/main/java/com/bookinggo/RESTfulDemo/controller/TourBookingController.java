@@ -87,19 +87,19 @@ public class TourBookingController {
     @DeleteMapping("/{tourId}/bookings/{customerId}")
     public void delete(@PathVariable(value = "tourId") int tourId, @PathVariable(value = "customerId") int customerId) {
         log.info("DELETE /tours/{}/bookings", tourId);
-        tourBookingService.delete(tourId, customerId);
+        tourBookingService.deleteAllBookingsWithTourIdAndCustomerId(tourId, customerId);
     }
 
     @DeleteMapping("/bookings/{customerId}")
     public void delete(@PathVariable(value = "customerId") int customerId) {
         log.info("DELETE /tours/bookings/{}", customerId);
-        tourBookingService.delete(customerId);
+        tourBookingService.deleteAllBookingsWithCustomerId(customerId);
     }
 
     @DeleteMapping("/bookings")
     public void delete() {
         log.info("DELETE /tours/bookings/");
-        tourBookingService.deleteAll();
+        tourBookingService.deleteAllBookings();
     }
 
     private BookingDto toDto(TourBooking tourBooking) {

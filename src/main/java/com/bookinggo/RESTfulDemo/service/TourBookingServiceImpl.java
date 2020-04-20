@@ -86,7 +86,7 @@ public class TourBookingServiceImpl implements TourBookingService {
     }
 
     @Override
-    public void delete(int tourId, Integer customerId) throws NoSuchElementException {
+    public void deleteAllBookingsWithTourIdAndCustomerId(int tourId, Integer customerId) throws NoSuchElementException {
         log.info("delete - tourId: {}, customerId: {}", tourId, customerId);
 
         TourBooking booking = tourBookingRepository.findByTourIdAndCustomerId(tourId, customerId);
@@ -94,18 +94,18 @@ public class TourBookingServiceImpl implements TourBookingService {
     }
 
     @Override
-    public void delete(Integer customerId) throws NoSuchElementException {
+    public void deleteAllBookingsWithCustomerId(Integer customerId) throws NoSuchElementException {
         log.info("delete - tourId: {}", customerId);
 
         List<TourBooking> bookings = tourBookingRepository.findByCustomerId(customerId);
 
-        for(TourBooking booking : bookings) {
+        for (TourBooking booking : bookings) {
             tourBookingRepository.delete(booking);
         }
     }
 
     @Override
-    public void deleteAll() throws NoSuchElementException {
+    public void deleteAllBookings() throws NoSuchElementException {
         log.info("deleteAll");
 
         tourBookingRepository.deleteAll();
