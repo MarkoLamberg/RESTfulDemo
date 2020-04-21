@@ -1,13 +1,12 @@
 package com.bookinggo.RESTfulDemo.entity;
 
-
 public enum Location {
+
     London("London"), Paris("Paris"), Rome("Rome"), Barcelona("Barcelona");
 
     private String label;
 
     private Location(String label) {
-
         this.label = label;
     }
 

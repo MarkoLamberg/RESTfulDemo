@@ -1,6 +1,5 @@
 package com.bookinggo.RESTfulDemo.service;
 
-import com.bookinggo.RESTfulDemo.entity.Tour;
 import com.bookinggo.RESTfulDemo.entity.TourBooking;
 import com.bookinggo.RESTfulDemo.repository.TourBookingRepository;
 import com.bookinggo.RESTfulDemo.repository.TourRepository;
@@ -26,7 +25,6 @@ public class TourBookingServiceImplTest {
 
     private static final int CUSTOMER_ID = 123;
     private static final int TOUR_ID = 234;
-    private static final int TOUR_BOOKING_ID = 345;
     private static final String DATE = "20-03-2020";
     private static final String LOCATION = "Hotel Ibis";
     private static final int PARTICIPANTS = 1;
@@ -39,9 +37,6 @@ public class TourBookingServiceImplTest {
 
     @Autowired
     private TourBookingServiceImpl service;
-
-    @Mock
-    private Tour tourMock;
 
     @Mock
     private TourBooking tourBookingMock;

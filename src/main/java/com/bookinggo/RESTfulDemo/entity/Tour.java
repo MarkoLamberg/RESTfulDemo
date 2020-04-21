@@ -27,7 +27,6 @@ public class Tour implements Serializable {
     @JoinColumn(name = "tour_package_code")
     private TourPackage tourPackage;
 
-
     public Tour(String title, Integer price, String duration,
                 com.bookinggo.RESTfulDemo.entity.TourPackage tourPackage) {
         log.info("constructor - title: {}, price: {}, duration: {}", title, price, duration);

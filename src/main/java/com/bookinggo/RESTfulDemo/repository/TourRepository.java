@@ -10,32 +10,26 @@ import java.util.List;
 @RepositoryRestResource(collectionResourceRel = "tours", path = "tours")
 public interface TourRepository extends JpaRepository<Tour,Integer> {
 
-    //Not exposed by Spring Data REST
     @Override
     @RestResource(exported = false)
     <S extends Tour> S save(S s);
 
-    //Not exposed by Spring Data REST
     @Override
     @RestResource(exported = false)
     <S extends Tour> List<S> saveAll(Iterable<S> iterable);
 
-    //Not exposed by Spring Data REST
     @Override
     @RestResource(exported = false)
     void deleteById(Integer integer);
 
-    //Not exposed by Spring Data REST
     @Override
     @RestResource(exported = false)
     void delete(Tour tour);
 
-    //Not exposed by Spring Data REST
     @Override
     @RestResource(exported = false)
     void deleteAll(Iterable<? extends Tour> iterable);
 
-    //Not exposed by Spring Data REST
     @Override
     @RestResource(exported = false)
     void deleteAll();
