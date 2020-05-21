@@ -2,7 +2,6 @@ package com.bookinggo.RESTfulDemo.controller;
 
 import com.bookinggo.RESTfulDemo.RestfulDemoApplication;
 import com.bookinggo.RESTfulDemo.dto.BookingDto;
-import com.bookinggo.RESTfulDemo.entity.Tour;
 import com.bookinggo.RESTfulDemo.entity.TourBooking;
 import org.junit.Before;
 import org.junit.jupiter.api.Test;
@@ -42,24 +41,6 @@ public class TourBookingControllerIT {
     @Before
     public void setup() {
         restTemplate.getRestTemplate().setRequestFactory(new HttpComponentsClientHttpRequestFactory());
-    }
-
-    @Sql
-    @Test
-    public void shouldReturnAllTours_whenGetAllTours_givenToursExist() {
-        Tour[] tours = restTemplate
-                .getForEntity(LOCAL_HOST + port + "/tours", Tour[].class)
-                .getBody();
-        assertEquals(8, tours.length);
-    }
-
-    @Sql
-    @Test
-    public void shouldReturnTour_whenGetTourById_givenTourExists() {
-        Tour tour = restTemplate
-                .getForEntity(LOCAL_HOST + port + "/tours/" + TOUR_ID, Tour.class)
-                .getBody();
-        assertEquals(1, tour.getId().intValue());
     }
 
     @Sql

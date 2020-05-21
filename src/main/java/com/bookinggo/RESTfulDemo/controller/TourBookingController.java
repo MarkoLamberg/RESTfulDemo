@@ -2,17 +2,16 @@ package com.bookinggo.RESTfulDemo.controller;
 
 import com.bookinggo.RESTfulDemo.dto.BookingDto;
 import com.bookinggo.RESTfulDemo.dto.ExpandedBookingDto;
-import com.bookinggo.RESTfulDemo.entity.Tour;
 import com.bookinggo.RESTfulDemo.entity.TourBooking;
 import com.bookinggo.RESTfulDemo.service.TourBookingService;
-import com.bookinggo.RESTfulDemo.service.TourService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.*;
+import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 @RestController
@@ -22,7 +21,6 @@ import java.util.stream.Collectors;
 public class TourBookingController {
 
     private TourBookingService tourBookingService;
-    private TourService tourService;
 
     @PostMapping(path = "/{tourId}/bookings")
     @ResponseStatus(HttpStatus.CREATED)
@@ -30,32 +28,6 @@ public class TourBookingController {
         log.info("POST /tours/{}/bookings", tourId);
         return tourBookingService.createNew(tourId, bookingDto.getCustomerId(), bookingDto.getDate(),
                 bookingDto.getPickupLocation(), bookingDto.getParticipants());
-    }
-
-    @GetMapping
-    public List<Tour> getAllTours() {
-        log.info("GET /tours");
-        return tourService.lookupAllTours();
-    }
-
-    @GetMapping(path = "/{tourId}")
-    public Tour getToursById(@PathVariable(value = "tourId") int tourId) {
-        log.info("GET /tours/{}", tourId);
-        Optional<Tour> tour = tourService.lookupTourById(tourId);
-
-        if (tour.isPresent()) {
-            return tour.get();
-        }
-
-        return null;
-    }
-
-    @GetMapping(path = "/byLocation/{tourLocation}")
-    public List<Tour> getToursByLocation(@PathVariable(value = "tourLocation") String location) {
-        log.info("GET /tours/{}", location);
-        List<Tour> tours = tourService.lookupToursByLocation(location);
-
-        return tours;
     }
 
     @GetMapping(path = "/{tourId}/bookings")
