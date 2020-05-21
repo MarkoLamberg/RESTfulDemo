@@ -37,7 +37,7 @@ public class TourBookingServiceImplIT extends AbstractRESTfulDemoIT {
 
         assertEquals(1, bookingsAfter.size());
         assertEquals(TOUR_ID, booking.getTour().getId().intValue());
-        assertEquals(CUSTOMER_ID, booking.getCustomerId().intValue());
+        assertEquals(CUSTOMER_ID, booking.getCustomer().getId().intValue());
         assertEquals(LOCATION, booking.getPickupLocation());
         assertEquals(PARTICIPANTS, booking.getParticipants().intValue());
     }
@@ -63,7 +63,7 @@ public class TourBookingServiceImplIT extends AbstractRESTfulDemoIT {
     public void shouldUpdateBooking_whenUpdate_givenBookingWithTourIdAndCustomerIdExists() {
         List<TourBooking> filteredBookingsBefore = service.lookupTourBookings(TOUR_ID)
                 .stream()
-                .filter(booking -> booking.getCustomerId().equals(CUSTOMER_ID))
+                .filter(booking -> booking.getCustomer().getId().equals(CUSTOMER_ID))
                 .collect(Collectors.toList());
 
         assertNotEquals(DATE, filteredBookingsBefore.get(0).getDate());
@@ -73,7 +73,7 @@ public class TourBookingServiceImplIT extends AbstractRESTfulDemoIT {
 
         List<TourBooking> filteredBookingsAfter = service.lookupTourBookings(TOUR_ID)
                 .stream()
-                .filter(booking -> booking.getCustomerId().equals(CUSTOMER_ID))
+                .filter(booking -> booking.getCustomer().getId().equals(CUSTOMER_ID))
                 .collect(Collectors.toList());
 
         assertEquals(DATE, filteredBookingsAfter.get(0).getDate());
@@ -85,7 +85,7 @@ public class TourBookingServiceImplIT extends AbstractRESTfulDemoIT {
     public void shouldUpdateBooking_whenUpdateSome_givenBookingWithTourIdAndCustomerExists() {
         List<TourBooking> filteredBookingsBefore = service.lookupTourBookings(TOUR_ID)
                 .stream()
-                .filter(booking -> booking.getCustomerId().equals(CUSTOMER_ID))
+                .filter(booking -> booking.getCustomer().getId().equals(CUSTOMER_ID))
                 .collect(Collectors.toList());
 
         assertNotEquals(DATE, filteredBookingsBefore.get(0).getDate());
@@ -95,7 +95,7 @@ public class TourBookingServiceImplIT extends AbstractRESTfulDemoIT {
 
         List<TourBooking> filteredBookingsAfter = service.lookupTourBookings(TOUR_ID)
                 .stream()
-                .filter(booking -> booking.getCustomerId().equals(CUSTOMER_ID))
+                .filter(booking -> booking.getCustomer().getId().equals(CUSTOMER_ID))
                 .collect(Collectors.toList());
 
         assertEquals(DATE, filteredBookingsAfter.get(0).getDate());
@@ -107,7 +107,7 @@ public class TourBookingServiceImplIT extends AbstractRESTfulDemoIT {
     public void shouldDeleteBooking_whenDeleteAllBookingsWithTourIdAndCustomerId_givenBookingWithTourIdAndCustomerIdExists() {
         List<TourBooking> filteredBookingsBefore = service.lookupTourBookings(TOUR_ID)
                 .stream()
-                .filter(booking -> booking.getCustomerId().equals(CUSTOMER_ID))
+                .filter(booking -> booking.getCustomer().getId().equals(CUSTOMER_ID))
                 .collect(Collectors.toList());
 
         assertEquals(1, filteredBookingsBefore.size());
@@ -116,7 +116,7 @@ public class TourBookingServiceImplIT extends AbstractRESTfulDemoIT {
 
         List<TourBooking> filteredBookingsAfter = service.lookupTourBookings(TOUR_ID)
                 .stream()
-                .filter(booking -> booking.getCustomerId().equals(CUSTOMER_ID))
+                .filter(booking -> booking.getCustomer().getId().equals(CUSTOMER_ID))
                 .collect(Collectors.toList());
 
         assertEquals(0, filteredBookingsAfter.size());
@@ -127,7 +127,7 @@ public class TourBookingServiceImplIT extends AbstractRESTfulDemoIT {
     public void shouldDeleteAllBookings_whenDeleteAllBookingsWithCustomerId_givenBookingsWithCustomerIdExists() {
         List<TourBooking> filteredBookingsBefore = service.lookupAllBookings()
                 .stream()
-                .filter(booking -> booking.getCustomerId().equals(CUSTOMER_ID))
+                .filter(booking -> booking.getCustomer().getId().equals(CUSTOMER_ID))
                 .collect(Collectors.toList());
 
         assertEquals(2, filteredBookingsBefore.size());
@@ -136,7 +136,7 @@ public class TourBookingServiceImplIT extends AbstractRESTfulDemoIT {
 
         List<TourBooking> filteredBookingsAfter = service.lookupAllBookings()
                 .stream()
-                .filter(booking -> booking.getCustomerId().equals(CUSTOMER_ID))
+                .filter(booking -> booking.getCustomer().getId().equals(CUSTOMER_ID))
                 .collect(Collectors.toList());
 
         assertEquals(0, filteredBookingsAfter.size());

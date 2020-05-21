@@ -2,12 +2,12 @@ version: '3'
 services:
   restfulDemodb:
     image: mysql:latest
-    container_name: restfulDemodb
+    container_name: restfulDemo-db
     ports:
-      - 6604:6604
+      - 3360:3306
     volumes:
       - ./src/main/resources/db/migration:/docker-entrypoint-initdb.d
     environment:
       MYSQL_ROOT_PASSWORD: pass
-      MYSQL_ROOT_USER: restfuldemo_user
-      MYSQL_DATABASE: restfulDemodb
+      MYSQL_ROOT_USER: root
+      MYSQL_DATABASE: restfuldemodb

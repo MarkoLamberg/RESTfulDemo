@@ -4,3 +4,4 @@ VALUES (1, 1, '20-03-2020', 'Hotel Intercontinental', 1),
        (1, 4, '20-03-2020', 'Hotel Intercontinental', 1),
        (2, 4, '20-03-2020', 'Hotel Intercontinental', 1);
 
+

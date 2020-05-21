@@ -7,7 +7,7 @@ CREATE TABLE `tour_booking` (
     `pickup_date`           VARCHAR(32),
     `pickup_location`       VARCHAR(100),
     `num_of_participants`   BIGINT,
-    `createdWhen`           DATETIME             DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`),
-    FOREIGN KEY (tour_id) REFERENCES tour(id)
+    FOREIGN KEY (tour_id) REFERENCES tour(id),
+    FOREIGN KEY (`customer_id`) REFERENCES customer(id)
 );

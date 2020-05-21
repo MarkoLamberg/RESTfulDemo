@@ -16,3 +16,4 @@ public class LocationConverter implements AttributeConverter<Location, String> {
         return Location.findByLabel(s);
     }
 }
+

@@ -20,7 +20,7 @@ public enum Location {
         return null;
     }
 
-    public String getLabel(){
+    public String getLabel() {
         return label;
     }
 }

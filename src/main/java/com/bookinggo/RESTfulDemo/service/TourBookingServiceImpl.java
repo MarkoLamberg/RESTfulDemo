@@ -1,7 +1,7 @@
 package com.bookinggo.RESTfulDemo.service;
 
-import com.bookinggo.RESTfulDemo.entity.Tour;
-import com.bookinggo.RESTfulDemo.entity.TourBooking;
+import com.bookinggo.RESTfulDemo.entity.*;
+import com.bookinggo.RESTfulDemo.repository.CustomerRepository;
 import com.bookinggo.RESTfulDemo.repository.TourBookingRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,7 +18,7 @@ public class TourBookingServiceImpl implements TourBookingService {
 
     private final TourBookingRepository tourBookingRepository;
     private final TourService tourService;
-
+    private final CustomerRepository customerRepository;
     @Override
     public TourBooking createNew(int tourId, Integer customerId, String date, String location, Integer participants) throws NoSuchElementException {
         log.info("createNew - tourId: {}, customerId: {}, date: {}, location {}, participants {}", tourId, customerId, date, location, participants);
@@ -26,11 +26,15 @@ public class TourBookingServiceImpl implements TourBookingService {
         Optional<Tour> tour = tourService.lookupTourById(tourId);
 
         if (tour.isPresent()) {
-            TourBooking tourBooking = new TourBooking(tour.get(), customerId,
-                    date, location, participants);
-            tourBookingRepository.save(tourBooking);
+            Optional<Customer> customer = customerRepository.findById(customerId);
 
-            return tourBooking;
+            if (customer.isPresent()) {
+                TourBooking tourBooking = new TourBooking(tour.get(), customer.get(),
+                        date, location, participants);
+                tourBookingRepository.save(tourBooking);
+
+                return tourBooking;
+            }
         }
 
         return null;

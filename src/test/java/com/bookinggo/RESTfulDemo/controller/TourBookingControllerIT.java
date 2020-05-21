@@ -16,10 +16,6 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 
@@ -111,12 +107,10 @@ public class TourBookingControllerIT {
     @Test
     public void shouldDeleteBookingsByTourIdAndCustomerId_whenBookingDeleted_givenBookingExists() {
         TourBooking[] tourBookingsBefore = restTemplate
-                .getForEntity("http://localhost:" + port + "/tours/" + TOUR_ID + "/bookings", TourBooking[].class)
+                .getForEntity(LOCAL_HOST + port + "/tours/" + TOUR_ID + "/bookings", TourBooking[].class)
                 .getBody();
 
-        List<TourBooking> filteredBookingsBefore = Arrays.stream(tourBookingsBefore)
-                .filter(booking -> booking.getCustomerId().equals(CUSTOMER_ID))
-                .collect(Collectors.toList());
+        assertEquals(2, tourBookingsBefore.length);
 
         restTemplate.delete(LOCAL_HOST + port + "/tours/" + TOUR_ID + "/bookings/" + CUSTOMER_ID);
 
@@ -124,12 +118,7 @@ public class TourBookingControllerIT {
                 .getForEntity(LOCAL_HOST + port + "/tours/" + TOUR_ID + "/bookings", TourBooking[].class)
                 .getBody();
 
-        List<TourBooking> filteredBookingsAfter = Arrays.stream(tourBookingsAfter)
-                .filter(booking -> booking.getCustomerId().equals(CUSTOMER_ID))
-                .collect(Collectors.toList());
-
-        assertNotEquals(filteredBookingsBefore.size(), filteredBookingsAfter.size());
-        assertEquals(0, filteredBookingsAfter.size());
+        assertEquals(1, tourBookingsAfter.length);
     }
 
     @Sql
@@ -139,21 +128,15 @@ public class TourBookingControllerIT {
                 .getForEntity(LOCAL_HOST + port + "/tours/bookings", TourBooking[].class)
                 .getBody();
 
-        List<TourBooking> filteredBookingsBefore = Arrays.stream(tourBookingsBefore)
-                .filter(booking -> booking.getCustomerId().equals(CUSTOMER_ID))
-                .collect(Collectors.toList());
+        assertEquals(3, tourBookingsBefore.length);
 
         restTemplate.delete(LOCAL_HOST + port + "/tours/bookings/" + CUSTOMER_ID);
+
         TourBooking[] tourBookingsAfter = restTemplate
                 .getForEntity(LOCAL_HOST + port + "/tours/bookings", TourBooking[].class)
                 .getBody();
 
-        List<TourBooking> filteredBookingsAfter = Arrays.stream(tourBookingsAfter)
-                .filter(booking -> booking.getCustomerId().equals(CUSTOMER_ID))
-                .collect(Collectors.toList());
-
-        assertNotEquals(filteredBookingsBefore.size(), filteredBookingsAfter.size());
-        assertEquals(0, filteredBookingsAfter.size());
+        assertEquals(1, tourBookingsAfter.length);
     }
 
     @Sql

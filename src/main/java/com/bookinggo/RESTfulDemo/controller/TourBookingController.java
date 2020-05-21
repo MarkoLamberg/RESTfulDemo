@@ -5,7 +5,7 @@ import com.bookinggo.RESTfulDemo.dto.ExpandedBookingDto;
 import com.bookinggo.RESTfulDemo.entity.Tour;
 import com.bookinggo.RESTfulDemo.entity.TourBooking;
 import com.bookinggo.RESTfulDemo.service.TourBookingService;
-import com.bookinggo.RESTfulDemo.service.TourServiceImpl;
+import com.bookinggo.RESTfulDemo.service.TourService;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,7 +28,7 @@ public class TourBookingController {
     private TourBookingService tourBookingService;
 
     @Autowired
-    private TourServiceImpl tourService;
+    private TourService tourService;
 
     @PostMapping(path = "/{tourId}/bookings")
     @ResponseStatus(HttpStatus.CREATED)
@@ -103,12 +103,12 @@ public class TourBookingController {
     }
 
     private BookingDto toDto(TourBooking tourBooking) {
-        return new BookingDto(tourBooking.getDate(), tourBooking.getPickupLocation(), tourBooking.getCustomerId(),
+        return new BookingDto(tourBooking.getDate(), tourBooking.getPickupLocation(), tourBooking.getCustomer().getId(),
                 tourBooking.getParticipants(), tourBooking.getTotalPriceString());
     }
 
     private ExpandedBookingDto toExpandedDto(TourBooking tourBooking) {
-        return new ExpandedBookingDto(tourBooking.getDate(), tourBooking.getPickupLocation(), tourBooking.getCustomerId(),
+        return new ExpandedBookingDto(tourBooking.getDate(), tourBooking.getPickupLocation(), tourBooking.getCustomer().getId(),
                 tourBooking.getParticipants(), tourBooking.getTotalPriceString(), tourBooking.getTour().getId());
     }
 

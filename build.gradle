@@ -41,9 +41,10 @@ test {
 
 flyway {
 	driver = 'com.mysql.cj.jdbc.Driver'
-	url = 'jdbc:mysql://localhost:6604/restfuldemodb'
-	user = 'rd_user'
-	password = 'pass'
+	url = 'jdbc:mysql://localhost:3360/restfuldemodb'
+	user = "root"
+	password = "pass"
 	schemas = ['restfuldemodb']
 	locations = ['filesystem:./src/main/resources/db/migration']
+	outOfOrder = "true"
 }
