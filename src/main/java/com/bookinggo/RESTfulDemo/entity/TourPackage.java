@@ -21,9 +21,9 @@ public class TourPackage implements Serializable {
     private String name;
 
     @Column
-    private Location location;
+    private String location;
 
-    public TourPackage(String code, String name, Location location) {
+    public TourPackage(String code, String name, String location) {
         log.info("constructor - code: {}, name: {}, location: {}", code, name, location);
 
         this.code = code;

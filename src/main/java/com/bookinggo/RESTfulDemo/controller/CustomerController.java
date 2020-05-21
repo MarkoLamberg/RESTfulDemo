@@ -4,7 +4,6 @@ import com.bookinggo.RESTfulDemo.entity.Customer;
 import com.bookinggo.RESTfulDemo.entity.TourBooking;
 import com.bookinggo.RESTfulDemo.service.CustomerService;
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,7 +14,6 @@ import java.util.Optional;
 @RequestMapping(path = "/customers")
 @Slf4j
 @AllArgsConstructor
-@NoArgsConstructor
 public class CustomerController {
 
     private CustomerService customerService;

@@ -7,9 +7,7 @@ import com.bookinggo.RESTfulDemo.entity.TourBooking;
 import com.bookinggo.RESTfulDemo.service.TourBookingService;
 import com.bookinggo.RESTfulDemo.service.TourService;
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -21,13 +19,9 @@ import java.util.stream.Collectors;
 @RequestMapping(path = "/tours")
 @Slf4j
 @AllArgsConstructor
-@NoArgsConstructor
 public class TourBookingController {
 
-    @Autowired
     private TourBookingService tourBookingService;
-
-    @Autowired
     private TourService tourService;
 
     @PostMapping(path = "/{tourId}/bookings")
@@ -54,6 +48,14 @@ public class TourBookingController {
         }
 
         return null;
+    }
+
+    @GetMapping(path = "/byLocation/{tourLocation}")
+    public List<Tour> getToursByLocation(@PathVariable(value = "tourLocation") String location) {
+        log.info("GET /tours/{}", location);
+        List<Tour> tours = tourService.lookupToursByLocation(location);
+
+        return tours;
     }
 
     @GetMapping(path = "/{tourId}/bookings")

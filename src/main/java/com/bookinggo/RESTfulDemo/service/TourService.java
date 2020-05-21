@@ -10,4 +10,6 @@ public interface TourService {
     public List<Tour> lookupAllTours();
 
     public Optional<Tour> lookupTourById(int id);
+
+    public List<Tour> lookupToursByLocation(String location);
 }

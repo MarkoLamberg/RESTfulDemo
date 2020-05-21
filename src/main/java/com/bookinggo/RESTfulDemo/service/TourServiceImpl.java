@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -29,5 +30,16 @@ public class TourServiceImpl implements TourService {
         Optional<Tour> tour = tourRepository.findById(id);
 
         return tour;
+    }
+
+    @Override
+    public List<Tour> lookupToursByLocation(String location) {
+        log.info("lookupTours - packageLocation: {}", location);
+        List<Tour> tours = tourRepository.findAll();
+        List<Tour> toursByLocation = tours.stream()
+                .filter(tour -> tour.getTourPackage().getLocation().equalsIgnoreCase(location))
+                .collect(Collectors.toList());
+
+        return toursByLocation;
     }
 }
