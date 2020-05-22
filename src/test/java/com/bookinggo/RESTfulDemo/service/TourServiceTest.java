@@ -18,12 +18,12 @@ import static org.mockito.Mockito.verify;
 
 @SpringBootTest
 @ExtendWith(MockitoExtension.class)
-public class TourServiceImplTest {
+public class TourServiceTest {
 
     private static final int TOUR_ID = 234;
 
     @Autowired
-    private TourServiceImpl service;
+    private TourService service;
 
     @MockBean
     private TourRepository tourRepositoryMock;
@@ -36,7 +36,7 @@ public class TourServiceImplTest {
     }
 
     @Test
-    public void shouldCallFindById_giveLookupTourById_givenNoTourWithIdExists() {
+    public void shouldCallFindById_whenLookupTourById_givenNoTourWithIdExists() {
         Optional<Tour> tour = service.lookupTourById(TOUR_ID);
         verify(tourRepositoryMock, times(1)).findById(TOUR_ID);
         assertEquals(Optional.empty(), tour);

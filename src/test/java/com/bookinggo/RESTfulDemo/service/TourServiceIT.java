@@ -12,15 +12,15 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
 @SpringBootTest
-public class TourServiceImplIT extends AbstractRESTfulDemoIT {
+public class TourServiceIT extends AbstractRESTfulDemoIT {
 
     private static final int TOUR_ID = 1;
 
     @Autowired
-    private TourServiceImpl service;
+    private TourService service;
 
     @Test
-    public void shouldReturnAllTours_whenLookupTours_givenToursExist() {
+    public void shouldReturnAllTours_whenLookupAllTours_givenToursExist() {
         List<Tour> tours = service.lookupAllTours();
 
         assertEquals(8, tours.size());

@@ -13,7 +13,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 
 @SpringBootTest
-public class TourBookingServiceImplIT extends AbstractRESTfulDemoIT {
+public class TourBookingServiceIT extends AbstractRESTfulDemoIT {
 
     private static final int CUSTOMER_ID = 4;
     private static final int TOUR_ID = 1;
@@ -22,7 +22,7 @@ public class TourBookingServiceImplIT extends AbstractRESTfulDemoIT {
     private static final String LOCATION = "Hotel Ibis";
 
     @Autowired
-    private TourBookingServiceImpl service;
+    private TourBookingService service;
 
     @Test
     public void shouldCreateABooking_whenCreateNew_givenValidBooking() {

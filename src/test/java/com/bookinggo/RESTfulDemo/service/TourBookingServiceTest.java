@@ -21,7 +21,7 @@ import static org.mockito.Mockito.verify;
 
 @SpringBootTest
 @ExtendWith(MockitoExtension.class)
-public class TourBookingServiceImplTest {
+public class TourBookingServiceTest {
 
     private static final int CUSTOMER_ID = 123;
     private static final int TOUR_ID = 234;
@@ -36,7 +36,7 @@ public class TourBookingServiceImplTest {
     private TourBookingRepository tourBookingRepositoryMock;
 
     @Autowired
-    private TourBookingServiceImpl service;
+    private TourBookingService service;
 
     @Mock
     private TourBooking tourBookingMock;
