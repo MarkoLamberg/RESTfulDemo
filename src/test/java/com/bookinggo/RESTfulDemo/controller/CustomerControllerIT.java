@@ -37,7 +37,6 @@ public class CustomerControllerIT {
         restTemplate.getRestTemplate().setRequestFactory(new HttpComponentsClientHttpRequestFactory());
     }
 
-    @Sql
     @Test
     public void shouldReturnAllCustomers_whenGetAllCustomers_givenCustomersExist() {
         Customer[] customers = restTemplate
@@ -46,7 +45,6 @@ public class CustomerControllerIT {
         assertEquals(8, customers.length);
     }
 
-    @Sql
     @Test
     public void shouldReturnCustomer_whenGetCustomerById_givenCustomerExists() {
         Customer customer = restTemplate

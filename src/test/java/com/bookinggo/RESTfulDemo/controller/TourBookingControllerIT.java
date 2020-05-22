@@ -61,7 +61,6 @@ public class TourBookingControllerIT {
         assertEquals(3, tourBookings.length);
     }
 
-    @Sql
     @Test
     public void shouldReturn201_whenBookingCreated_givenValidBooking() {
         BookingDto bookingDto = new BookingDto(DATE, LOCATION, CUSTOMER_ID, PARTICIPANTS, TOTAL_PRICE);

@@ -11,7 +11,6 @@ import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.jdbc.Sql;
 
 import static org.junit.Assert.assertEquals;
 
@@ -37,7 +36,6 @@ public class TourControllerIT {
     }
 
 
-    @Sql
     @Test
     public void shouldReturnAllTours_whenGetAllTours_givenToursExist() {
         Tour[] tours = restTemplate
@@ -46,7 +44,6 @@ public class TourControllerIT {
         assertEquals(8, tours.length);
     }
 
-    @Sql
     @Test
     public void shouldReturnTour_whenGetTourById_givenTourExists() {
         Tour tour = restTemplate
@@ -55,7 +52,6 @@ public class TourControllerIT {
         assertEquals(1, tour.getId().intValue());
     }
 
-    @Sql
     @Test
     public void shouldReturnTours_whenGetToursByLocation_givenToursExist() {
         Tour[] tours = restTemplate

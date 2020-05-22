@@ -24,7 +24,6 @@ public class TourBookingServiceImplIT extends AbstractRESTfulDemoIT {
     @Autowired
     private TourBookingServiceImpl service;
 
-    @Sql
     @Test
     public void shouldCreateABooking_whenCreateNew_givenValidBooking() {
         List<TourBooking> bookingsBefore = service.lookupAllBookings();
