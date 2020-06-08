@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -54,15 +55,22 @@ public class TourBookingServiceImpl implements TourBookingService {
     @Override
     public TourBooking update(int tourId, Integer customerId, String date, String location, Integer participants) throws NoSuchElementException {
         log.info("update - tourId: {}, customerId: {}, date: {}, location {}", tourId, customerId, date, location);
-        TourBooking booking = tourBookingRepository.findByTourIdAndCustomerId(tourId, customerId);
 
-        if (booking != null) {
-            booking.setDate(date);
-            booking.setPickupLocation(location);
-            booking.setParticipants(participants);
+        List<TourBooking> bookings = tourBookingRepository.findByTourId(tourId)
+                .stream()
+                .filter(booking -> booking.getCustomer().getId().equals(customerId))
+                .collect(Collectors.toList());
+
+
+        if (bookings.size() == 1) {
+            bookings.get(0).setDate(date);
+            bookings.get(0).setPickupLocation(location);
+            bookings.get(0).setParticipants(participants);
+
+            return tourBookingRepository.saveAndFlush(bookings.get(0));
         }
 
-        return tourBookingRepository.saveAndFlush(booking);
+        return null;
     }
 
     @Override
@@ -70,31 +78,40 @@ public class TourBookingServiceImpl implements TourBookingService {
             throws NoSuchElementException {
         log.info("updateSome - tourId: {}, customerId: {}, date: {}, location {}", tourId, customerId, date, location);
 
-        TourBooking booking = tourBookingRepository.findByTourIdAndCustomerId(tourId, customerId);
+        List<TourBooking> bookings = tourBookingRepository.findByTourId(tourId)
+                .stream()
+                .filter(booking -> booking.getCustomer().getId().equals(customerId))
+                .collect(Collectors.toList());
 
-        if (booking != null) {
+        if (bookings.size() == 1) {
             if (date != null) {
-                booking.setDate(date);
+                bookings.get(0).setDate(date);
             }
 
             if (location != null) {
-                booking.setPickupLocation(location);
+                bookings.get(0).setPickupLocation(location);
             }
 
             if (participants != null) {
-                booking.setParticipants(participants);
+                bookings.get(0).setParticipants(participants);
             }
+
+            return tourBookingRepository.saveAndFlush(bookings.get(0));
         }
 
-        return tourBookingRepository.saveAndFlush(booking);
+        return null;
     }
 
     @Override
     public void deleteAllBookingsWithTourIdAndCustomerId(int tourId, Integer customerId) throws NoSuchElementException {
         log.info("delete - tourId: {}, customerId: {}", tourId, customerId);
 
-        TourBooking booking = tourBookingRepository.findByTourIdAndCustomerId(tourId, customerId);
-        tourBookingRepository.delete(booking);
+        List<TourBooking> bookings = tourBookingRepository.findByTourId(tourId)
+                .stream()
+                .filter(booking -> booking.getCustomer().getId().equals(customerId))
+                .collect(Collectors.toList());
+
+        bookings.forEach(booking -> tourBookingRepository.delete(booking));
     }
 
     @Override

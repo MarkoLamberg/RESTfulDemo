@@ -67,10 +67,10 @@ public class TourBookingServiceTest {
     public void shouldNotUpdateBooking_whenUpdate_givenBookingWithTourIdAndCustomerIdNonExisting() throws NoSuchElementException {
         TourBooking booking = service.update(TOUR_ID, CUSTOMER_ID, DATE, LOCATION, PARTICIPANTS);
 
-        verify(tourBookingRepositoryMock, times(1)).findByTourIdAndCustomerId(TOUR_ID, CUSTOMER_ID);
+        verify(tourBookingRepositoryMock, times(1)).findByTourId(TOUR_ID);
         verify(tourBookingMock, times(0)).setDate(DATE);
         verify(tourBookingMock, times(0)).setPickupLocation(LOCATION);
-        verify(tourBookingRepositoryMock, times(1)).saveAndFlush(null);
+        verify(tourBookingRepositoryMock, times(0)).saveAndFlush(null);
         assertEquals(booking, null);
     }
 
@@ -78,10 +78,10 @@ public class TourBookingServiceTest {
     public void shouldNotUpdateBooking_whenUpdateSome_givenBookingWithTourIdAndCustomerIdNonExisting() throws NoSuchElementException {
         TourBooking booking = service.updateSome(TOUR_ID, CUSTOMER_ID, DATE, LOCATION, PARTICIPANTS);
 
-        verify(tourBookingRepositoryMock, times(1)).findByTourIdAndCustomerId(TOUR_ID, CUSTOMER_ID);
+        verify(tourBookingRepositoryMock, times(1)).findByTourId(TOUR_ID);
         verify(tourBookingMock, times(0)).setDate(DATE);
         verify(tourBookingMock, times(0)).setPickupLocation(LOCATION);
-        verify(tourBookingRepositoryMock, times(1)).saveAndFlush(null);
+        verify(tourBookingRepositoryMock, times(0)).saveAndFlush(null);
         assertEquals(booking, null);
     }
 
@@ -89,8 +89,8 @@ public class TourBookingServiceTest {
     public void shouldNotDeleteAnyBookings_whenDeleteAllBookingsWithTourIdAndCustomerId_givenBookingsWithTourIdAndCustomerIdNonExisting() throws NoSuchElementException {
         service.deleteAllBookingsWithTourIdAndCustomerId(TOUR_ID, CUSTOMER_ID);
 
-        verify(tourBookingRepositoryMock, times(1)).findByTourIdAndCustomerId(TOUR_ID, CUSTOMER_ID);
-        verify(tourBookingRepositoryMock, times(1)).delete(any());
+        verify(tourBookingRepositoryMock, times(1)).findByTourId(TOUR_ID);
+        verify(tourBookingRepositoryMock, times(0)).delete(any());
     }
 
     @Test

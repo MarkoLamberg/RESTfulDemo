@@ -25,6 +25,6 @@ public class Customer {
     private String name;
 
     @JsonManagedReference
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "customer")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "customer")
     private List<TourBooking> bookings;
 }

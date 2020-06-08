@@ -3,15 +3,13 @@ package com.bookinggo.RESTfulDemo.controller;
 import com.bookinggo.RESTfulDemo.RestfulDemoApplication;
 import com.bookinggo.RESTfulDemo.dto.BookingDto;
 import com.bookinggo.RESTfulDemo.entity.TourBooking;
-import org.junit.Before;
+import com.bookinggo.RESTfulDemo.service.AbstractRESTfulDemoIT;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.*;
-import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 
@@ -21,8 +19,7 @@ import static org.junit.Assert.assertNotEquals;
 @SpringBootTest(classes = RestfulDemoApplication.class,
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("integTest")
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-public class TourBookingControllerIT {
+public class TourBookingControllerIT extends AbstractRESTfulDemoIT {
 
     private static final int CUSTOMER_ID = 4;
     private static final int TOUR_ID = 1;
@@ -37,11 +34,6 @@ public class TourBookingControllerIT {
 
     @Autowired
     private TestRestTemplate restTemplate;
-
-    @Before
-    public void setup() {
-        restTemplate.getRestTemplate().setRequestFactory(new HttpComponentsClientHttpRequestFactory());
-    }
 
     @Sql
     @Test

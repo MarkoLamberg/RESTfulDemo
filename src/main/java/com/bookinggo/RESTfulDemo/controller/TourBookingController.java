@@ -7,9 +7,10 @@ import com.bookinggo.RESTfulDemo.service.TourBookingService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.validation.annotation.Validated;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
@@ -24,7 +25,7 @@ public class TourBookingController {
 
     @PostMapping(path = "/{tourId}/bookings")
     @ResponseStatus(HttpStatus.CREATED)
-    public TourBooking createTourBooking(@PathVariable(value = "tourId") int tourId, @RequestBody @Validated BookingDto bookingDto) {
+    public TourBooking createTourBooking(@PathVariable(value = "tourId") int tourId, @Valid @RequestBody BookingDto bookingDto) {
         log.info("POST /tours/{}/bookings", tourId);
         return tourBookingService.createNew(tourId, bookingDto.getCustomerId(), bookingDto.getDate(),
                 bookingDto.getPickupLocation(), bookingDto.getParticipants());
@@ -45,17 +46,34 @@ public class TourBookingController {
     }
 
     @PutMapping(path = "/{tourId}/bookings")
-    public BookingDto updateWithPut(@PathVariable(value = "tourId") int tourId, @RequestBody @Validated BookingDto bookingDto) {
+    public ResponseEntity<BookingDto> updateWithPut(@PathVariable(value = "tourId") int tourId, @Valid @RequestBody BookingDto bookingDto) {
         log.info("PUT /tours/{}/bookings", tourId);
-        return toDto(tourBookingService.update(tourId, bookingDto.getCustomerId(),
-                bookingDto.getDate(), bookingDto.getPickupLocation(), bookingDto.getParticipants()));
+        TourBooking response = tourBookingService.update(tourId, bookingDto.getCustomerId(),
+                bookingDto.getDate(), bookingDto.getPickupLocation(), bookingDto.getParticipants());
+
+        if (response == null) {
+            return ResponseEntity.badRequest().body(bookingDto);
+        }
+
+        return ResponseEntity
+                .ok()
+                .body(toDto(response));
     }
 
     @PatchMapping(path = "/{tourId}/bookings")
-    public BookingDto updateWithPatch(@PathVariable(value = "tourId") int tourId, @RequestBody @Validated BookingDto bookingDto) {
+    public ResponseEntity<BookingDto> updateWithPatch(@PathVariable(value = "tourId") int tourId, @Valid @RequestBody BookingDto bookingDto) {
         log.info("PATCH /tours/{}/bookings", tourId);
-        return toDto(tourBookingService.updateSome(tourId, bookingDto.getCustomerId(),
-                bookingDto.getDate(), bookingDto.getPickupLocation(), bookingDto.getParticipants()));
+
+        TourBooking response = tourBookingService.updateSome(tourId, bookingDto.getCustomerId(),
+                bookingDto.getDate(), bookingDto.getPickupLocation(), bookingDto.getParticipants());
+
+        if (response == null) {
+            return ResponseEntity.badRequest().body(bookingDto);
+        }
+
+        return ResponseEntity
+                .ok()
+                .body(toDto(response));
     }
 
     @DeleteMapping("/{tourId}/bookings/{customerId}")
