@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class TourBookingController {
 
-    private TourBookingService tourBookingService;
+    private final TourBookingService tourBookingService;
 
     @PostMapping(path = "/{tourId}/bookings")
     @ResponseStatus(HttpStatus.CREATED)

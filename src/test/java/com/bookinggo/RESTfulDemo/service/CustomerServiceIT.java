@@ -23,7 +23,7 @@ public class CustomerServiceIT extends AbstractRESTfulDemoIT {
 
     @Sql
     @Test
-    public void shouldReturnAllCustomers_whenLookupAllCustomers_givenCustomersExist() {
+    public void shouldReturnEightCustomers_whenLookupAllCustomers_givenCustomersExist() {
         List<Customer> customers = customerService.lookupAllCustomers();
 
         assertEquals(8, customers.size());
@@ -39,7 +39,7 @@ public class CustomerServiceIT extends AbstractRESTfulDemoIT {
 
     @Sql
     @Test
-    public void shouldReturnBookings_whenLookupBookingsByCustomerId_givenCustomerWithIdExistsAndBookingsExist() {
+    public void shouldReturnTwoBookings_whenLookupBookingsByCustomerId_givenCustomerWithIdExistsAndBookingsExist() {
         List<TourBooking> tourBookings = customerService.lookupBookingsByCustomerId(CUSTOMER_ID);
 
         assertEquals(2, tourBookings.size());

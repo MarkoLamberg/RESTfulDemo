@@ -19,15 +19,22 @@ public class TourBookingRepositoryIT extends AbstractRepositoryIT {
 
     @Sql
     @Test
-    public void shouldReturnBookings_whenFindBookingsByTourId_givenBookingsExist() {
+    public void shouldReturnTwoBookings_whenFindBookingsByTourId_givenBookingsExist() {
         List<TourBooking> bookings = tourBookingRepository.findByTourId(TOUR_ID);
         assertEquals(2, bookings.size());
     }
 
     @Sql
     @Test
-    public void shouldReturnBookings_whenFindBookingsByCustomerId_givenBookingsExists() {
+    public void shouldReturnTwoBookings_whenFindBookingsByCustomerId_givenBookingsExists() {
         List<TourBooking> bookings = tourBookingRepository.findByCustomerId(CUSTOMER_ID);
+        assertEquals(2, bookings.size());
+    }
+
+    @Sql
+    @Test
+    public void shouldReturnTwoBookings_whenFindBookingsByTourIdAndCustomerId_givenBookingsExists() {
+        List<TourBooking> bookings = tourBookingRepository.findByTourIdAndCustomerId(TOUR_ID, CUSTOMER_ID);
         assertEquals(2, bookings.size());
     }
 }

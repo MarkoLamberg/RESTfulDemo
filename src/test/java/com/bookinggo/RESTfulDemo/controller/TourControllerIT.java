@@ -35,7 +35,7 @@ public class TourControllerIT {
 
 
     @Test
-    public void shouldReturnAllTours_whenGetAllTours_givenToursExist() {
+    public void shouldReturnEightTours_whenGetAllTours_givenToursExist() {
         Tour[] tours = restTemplate
                 .getForEntity(LOCAL_HOST + port + "/tours", Tour[].class)
                 .getBody();
@@ -51,7 +51,7 @@ public class TourControllerIT {
     }
 
     @Test
-    public void shouldReturnTours_whenGetToursByLocation_givenToursExist() {
+    public void shouldReturnTwoTours_whenGetToursByLocation_givenToursExist() {
         Tour[] tours = restTemplate
                 .getForEntity(LOCAL_HOST + port + "/tours/byLocation/" + TOUR_LOCATION, Tour[].class)
                 .getBody();

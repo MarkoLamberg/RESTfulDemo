@@ -15,7 +15,7 @@ import java.util.*;
 @AllArgsConstructor
 public class TourController {
 
-    private TourService tourService;
+    private final TourService tourService;
 
     @GetMapping
     public List<Tour> getAllTours() {

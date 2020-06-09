@@ -36,7 +36,7 @@ public class CustomerControllerIT {
     }
 
     @Test
-    public void shouldReturnAllCustomers_whenGetAllCustomers_givenCustomersExist() {
+    public void shouldReturnEightCustomers_whenGetAllCustomers_givenCustomersExist() {
         Customer[] customers = restTemplate
                 .getForEntity(LOCAL_HOST + port + "/customers", Customer[].class)
                 .getBody();
@@ -54,7 +54,7 @@ public class CustomerControllerIT {
 
     @Sql
     @Test
-    public void shouldReturnBookings_whenGetCustomersBookingsById_givenBookingsExist() {
+    public void shouldReturnTwoBookings_whenGetCustomersBookingsById_givenBookingsExist() {
         TourBooking[] tourBookings = restTemplate
                 .getForEntity(LOCAL_HOST + port + "/customers/" + CUSTOMER_ID + "/bookings", TourBooking[].class)
                 .getBody();

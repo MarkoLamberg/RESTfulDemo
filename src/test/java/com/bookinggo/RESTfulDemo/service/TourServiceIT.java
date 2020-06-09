@@ -20,7 +20,7 @@ public class TourServiceIT extends AbstractRESTfulDemoIT {
     private TourService tourService;
 
     @Test
-    public void shouldReturnAllTours_whenLookupAllTours_givenToursExist() {
+    public void shouldReturnEightTours_whenLookupAllTours_givenToursExist() {
         List<Tour> tours = tourService.lookupAllTours();
 
         assertEquals(8, tours.size());

@@ -1,6 +1,7 @@
 package com.bookinggo.RESTfulDemo.service;
 
 import com.bookinggo.RESTfulDemo.entity.Customer;
+import com.bookinggo.RESTfulDemo.entity.TourBooking;
 import com.bookinggo.RESTfulDemo.repository.CustomerRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -30,9 +31,9 @@ public class CustomerServiceTest {
 
     @Test
     public void shouldCallFindAll_whenLookupAllCustomers_givenNoCustomersExist() {
-        List<Customer> tours = customerService.lookupAllCustomers();
+        List<Customer> customers = customerService.lookupAllCustomers();
         verify(customerRepository, times(1)).findAll();
-        assertEquals(0, tours.size());
+        assertEquals(0, customers.size());
     }
 
     @Test
@@ -44,8 +45,8 @@ public class CustomerServiceTest {
 
     @Test
     public void shouldCallFindById_whenLookupBookingByCustomerId_givenNoCustomersWithIdExists() {
-        Optional<Customer> customer = customerService.lookupCustomerById(CUSTOMER_ID);
+        List<TourBooking> bookings = customerService.lookupBookingsByCustomerId(CUSTOMER_ID);
         verify(customerRepository, times(1)).findById(CUSTOMER_ID);
-        assertEquals(Optional.empty(), customer);
+        assertEquals(null, bookings);
     }
 }

@@ -14,6 +14,7 @@ import org.springframework.test.context.jdbc.Sql;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
+import static org.springframework.http.HttpStatus.*;
 
 @SpringBootTest(classes = RestfulDemoApplication.class,
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -35,7 +36,7 @@ public class TourBookingControllerIT extends AbstractRESTfulDemoIT {
 
     @Sql
     @Test
-    public void shouldReturnBookings_whenGetBookingsForTourId_givenBookingsExist() {
+    public void shouldReturnTwoBookings_whenGetBookingsForTourId_givenBookingsExist() {
         TourBooking[] tourBookings = restTemplate
                 .getForEntity(LOCAL_HOST + port + "/tours/" + TOUR_ID + "/bookings", TourBooking[].class)
                 .getBody();
@@ -44,7 +45,7 @@ public class TourBookingControllerIT extends AbstractRESTfulDemoIT {
 
     @Sql
     @Test
-    public void shouldReturnAllBookings_BookingsExist_BookingsReturned() {
+    public void shouldReturnThreeBookings_whenGetTourBookings_givenBookingsExist() {
         TourBooking[] tourBookings = restTemplate
                 .getForEntity(LOCAL_HOST + port + "/tours/bookings", TourBooking[].class)
                 .getBody();
@@ -57,7 +58,7 @@ public class TourBookingControllerIT extends AbstractRESTfulDemoIT {
 
         ResponseEntity<BookingDto> response = restTemplate.postForEntity(LOCAL_HOST + port + "/tours/" + TOUR_ID + "/bookings", bookingDto, BookingDto.class);
 
-        assertEquals(201, response.getStatusCodeValue());
+        assertEquals(CREATED.value(), response.getStatusCodeValue());
     }
 
     @Sql
@@ -68,9 +69,20 @@ public class TourBookingControllerIT extends AbstractRESTfulDemoIT {
         HttpEntity<BookingDto> entity = new HttpEntity<>(bookingDto);
         ResponseEntity<BookingDto> response = restTemplate.exchange(LOCAL_HOST + port + "/tours/" + TOUR_ID + "/bookings", HttpMethod.PUT, entity, BookingDto.class);
 
-        assertEquals(200, response.getStatusCodeValue());
+        assertEquals(OK.value(), response.getStatusCodeValue());
         assertEquals(LOCATION, response.getBody().getPickupLocation());
         assertEquals(PARTICIPANTS, response.getBody().getParticipants().intValue());
+    }
+
+    @Sql
+    @Test
+    public void shouldReturn400_whenBookingUpdated_givenValidBookingButMoreThanOneBookingsWithSameCustomerAndSameLocation() {
+        BookingDto bookingDto = new BookingDto(DATE, LOCATION, CUSTOMER_ID, PARTICIPANTS, TOTAL_PRICE);
+
+        HttpEntity<BookingDto> entity = new HttpEntity<>(bookingDto);
+        ResponseEntity<BookingDto> response = restTemplate.exchange(LOCAL_HOST + port + "/tours/" + TOUR_ID + "/bookings", HttpMethod.PUT, entity, BookingDto.class);
+
+        assertEquals(BAD_REQUEST.value(), response.getStatusCodeValue());
     }
 
     @Sql
@@ -93,7 +105,7 @@ public class TourBookingControllerIT extends AbstractRESTfulDemoIT {
 
     @Sql
     @Test
-    public void shouldDeleteBookingsByCustomerId_whenBookingsDeleted_givenBookingsExist() {
+    public void shouldDeleteTwoBookingsByCustomerId_whenBookingsDeleted_givenBookingsExist() {
         TourBooking[] tourBookingsBefore = restTemplate
                 .getForEntity(LOCAL_HOST + port + "/tours/bookings", TourBooking[].class)
                 .getBody();

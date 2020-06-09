@@ -16,7 +16,7 @@ import java.util.*;
 @AllArgsConstructor
 public class CustomerController {
 
-    private CustomerService customerService;
+    private final CustomerService customerService;
 
     @GetMapping
     public List<Customer> getAllCustomers() {

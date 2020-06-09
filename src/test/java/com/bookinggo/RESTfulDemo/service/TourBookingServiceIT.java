@@ -9,8 +9,7 @@ import org.springframework.test.context.jdbc.Sql;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.*;
 
 @SpringBootTest
 public class TourBookingServiceIT extends AbstractRESTfulDemoIT {
@@ -44,7 +43,7 @@ public class TourBookingServiceIT extends AbstractRESTfulDemoIT {
 
     @Sql
     @Test
-    public void shouldReturnBooking_whenLookupBooking_givenBookingWithTourIdExists() {
+    public void shouldReturnBooking_whenLookupTourBookings_givenBookingWithTourIdExists() {
         List<TourBooking> bookings = tourBookingService.lookupTourBookings(TOUR_ID);
         assertEquals(1, bookings.size());
         int tourId = bookings.get(0).getTour().getId();
@@ -53,7 +52,7 @@ public class TourBookingServiceIT extends AbstractRESTfulDemoIT {
 
     @Sql
     @Test
-    public void shouldReturnBookings_whenLookupAllBookings_givenBookingsExist() {
+    public void shouldReturnTwoBookings_whenLookupAllBookings_givenBookingsExist() {
         List<TourBooking> bookings = tourBookingService.lookupAllBookings();
         assertEquals(2, bookings.size());
     }
@@ -82,6 +81,26 @@ public class TourBookingServiceIT extends AbstractRESTfulDemoIT {
 
     @Sql
     @Test
+    public void shouldNotUpdateBooking_whenUpdate_givenMoreThanOneBookingsWithTourIdAndCustomerIdExist() {
+        List<TourBooking> filteredBookingsBefore = tourBookingService.lookupTourBookings(TOUR_ID)
+                .stream()
+                .filter(booking -> booking.getCustomer().getId().equals(CUSTOMER_ID))
+                .collect(Collectors.toList());
+
+        assertFalse(filteredBookingsBefore.size() == 1);
+
+        tourBookingService.update(TOUR_ID, CUSTOMER_ID, DATE, LOCATION, PARTICIPANTS);
+
+        List<TourBooking> filteredBookingsAfter = tourBookingService.lookupTourBookings(TOUR_ID)
+                .stream()
+                .filter(booking -> booking.getPickupLocation().equals(LOCATION))
+                .collect(Collectors.toList());
+
+        assertEquals(0, filteredBookingsAfter.size());
+    }
+
+    @Sql
+    @Test
     public void shouldUpdateBooking_whenUpdateSome_givenBookingWithTourIdAndCustomerExists() {
         List<TourBooking> filteredBookingsBefore = tourBookingService.lookupTourBookings(TOUR_ID)
                 .stream()
@@ -100,6 +119,26 @@ public class TourBookingServiceIT extends AbstractRESTfulDemoIT {
 
         assertEquals(DATE, filteredBookingsAfter.get(0).getDate());
         assertEquals(LOCATION, filteredBookingsAfter.get(0).getPickupLocation());
+    }
+
+    @Sql
+    @Test
+    public void shouldNotUpdateBooking_whenUpdateSome_givenMoreThanOneBookingWithTourIdAndCustomerExist() {
+        List<TourBooking> filteredBookingsBefore = tourBookingService.lookupTourBookings(TOUR_ID)
+                .stream()
+                .filter(booking -> booking.getCustomer().getId().equals(CUSTOMER_ID))
+                .collect(Collectors.toList());
+
+        assertFalse(filteredBookingsBefore.size() == 1);
+
+        tourBookingService.updateSome(TOUR_ID, CUSTOMER_ID, DATE, LOCATION, PARTICIPANTS);
+
+        List<TourBooking> filteredBookingsAfter = tourBookingService.lookupTourBookings(TOUR_ID)
+                .stream()
+                .filter(booking -> booking.getPickupLocation().equals(LOCATION))
+                .collect(Collectors.toList());
+
+        assertEquals(0, filteredBookingsAfter.size());
     }
 
     @Sql

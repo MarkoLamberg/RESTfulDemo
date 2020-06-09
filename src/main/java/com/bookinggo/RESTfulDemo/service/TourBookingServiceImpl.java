@@ -20,6 +20,7 @@ public class TourBookingServiceImpl implements TourBookingService {
     private final TourBookingRepository tourBookingRepository;
     private final TourService tourService;
     private final CustomerRepository customerRepository;
+
     @Override
     public TourBooking createNew(int tourId, Integer customerId, String date, String location, Integer participants) throws NoSuchElementException {
         log.info("createNew - tourId: {}, customerId: {}, date: {}, location {}, participants {}", tourId, customerId, date, location, participants);
