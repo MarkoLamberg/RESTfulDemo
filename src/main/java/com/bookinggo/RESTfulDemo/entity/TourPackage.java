@@ -17,10 +17,8 @@ public class TourPackage implements Serializable {
     @Id
     private String code;
 
-    @Column
     private String name;
-
-    @Column
+    
     private String location;
 
     public TourPackage(String code, String name, String location) {

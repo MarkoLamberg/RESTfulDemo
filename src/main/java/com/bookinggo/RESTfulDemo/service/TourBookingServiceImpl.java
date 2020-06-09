@@ -56,11 +56,7 @@ public class TourBookingServiceImpl implements TourBookingService {
     public TourBooking update(int tourId, Integer customerId, String date, String location, Integer participants) throws NoSuchElementException {
         log.info("update - tourId: {}, customerId: {}, date: {}, location {}", tourId, customerId, date, location);
 
-        List<TourBooking> bookings = tourBookingRepository.findByTourId(tourId)
-                .stream()
-                .filter(booking -> booking.getCustomer().getId().equals(customerId))
-                .collect(Collectors.toList());
-
+        List<TourBooking> bookings = tourBookingRepository.findByTourIdAndCustomerId(tourId, customerId);
 
         if (bookings.size() == 1) {
             bookings.get(0).setDate(date);
@@ -78,10 +74,7 @@ public class TourBookingServiceImpl implements TourBookingService {
             throws NoSuchElementException {
         log.info("updateSome - tourId: {}, customerId: {}, date: {}, location {}", tourId, customerId, date, location);
 
-        List<TourBooking> bookings = tourBookingRepository.findByTourId(tourId)
-                .stream()
-                .filter(booking -> booking.getCustomer().getId().equals(customerId))
-                .collect(Collectors.toList());
+        List<TourBooking> bookings = tourBookingRepository.findByTourIdAndCustomerId(tourId, customerId);
 
         if (bookings.size() == 1) {
             if (date != null) {

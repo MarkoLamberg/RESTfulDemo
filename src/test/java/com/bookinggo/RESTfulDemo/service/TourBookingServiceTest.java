@@ -67,7 +67,7 @@ public class TourBookingServiceTest {
     public void shouldNotUpdateBooking_whenUpdate_givenBookingWithTourIdAndCustomerIdNonExisting() throws NoSuchElementException {
         TourBooking booking = service.update(TOUR_ID, CUSTOMER_ID, DATE, LOCATION, PARTICIPANTS);
 
-        verify(tourBookingRepositoryMock, times(1)).findByTourId(TOUR_ID);
+        verify(tourBookingRepositoryMock, times(1)).findByTourIdAndCustomerId(TOUR_ID, CUSTOMER_ID);
         verify(tourBookingMock, times(0)).setDate(DATE);
         verify(tourBookingMock, times(0)).setPickupLocation(LOCATION);
         verify(tourBookingRepositoryMock, times(0)).saveAndFlush(null);
@@ -78,7 +78,7 @@ public class TourBookingServiceTest {
     public void shouldNotUpdateBooking_whenUpdateSome_givenBookingWithTourIdAndCustomerIdNonExisting() throws NoSuchElementException {
         TourBooking booking = service.updateSome(TOUR_ID, CUSTOMER_ID, DATE, LOCATION, PARTICIPANTS);
 
-        verify(tourBookingRepositoryMock, times(1)).findByTourId(TOUR_ID);
+        verify(tourBookingRepositoryMock, times(1)).findByTourIdAndCustomerId(TOUR_ID, CUSTOMER_ID);
         verify(tourBookingMock, times(0)).setDate(DATE);
         verify(tourBookingMock, times(0)).setPickupLocation(LOCATION);
         verify(tourBookingRepositoryMock, times(0)).saveAndFlush(null);

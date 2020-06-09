@@ -18,6 +18,7 @@ public abstract class AbstractRESTfulDemoIT {
 
     @AfterEach
     public void clearDatabase() {
-        JdbcTestUtils.deleteFromTables(jdbcTemplate, "tour_booking");
+        JdbcTestUtils.deleteFromTables(jdbcTemplate, "tour_booking", "customer");
+        jdbcTemplate.execute("ALTER TABLE customer AUTO_INCREMENT = 1;");
     }
 }

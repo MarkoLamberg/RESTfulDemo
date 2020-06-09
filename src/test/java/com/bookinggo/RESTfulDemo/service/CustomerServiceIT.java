@@ -23,6 +23,7 @@ public class CustomerServiceIT extends AbstractRESTfulDemoIT {
     @Autowired
     private CustomerService service;
 
+    @Sql
     @Test
     public void shouldReturnAllCustomers_whenLookupAllCustomers_givenCustomersExist() {
         List<Customer> customers = service.lookupAllCustomers();
@@ -30,6 +31,7 @@ public class CustomerServiceIT extends AbstractRESTfulDemoIT {
         assertEquals(8, customers.size());
     }
 
+    @Sql
     @Test
     public void shouldReturnACustomer_whenLookupCustomerById_givenCustomerWithIdExists() {
         Optional<Customer> customer = service.lookupCustomerById(CUSTOMER_ID);

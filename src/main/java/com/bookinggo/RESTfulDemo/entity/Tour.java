@@ -17,10 +17,8 @@ public class Tour implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column
     private String title;
 
-    @Column
     private Integer price;
 
     @ManyToOne
