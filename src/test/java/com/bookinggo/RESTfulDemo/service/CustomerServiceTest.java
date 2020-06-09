@@ -23,28 +23,28 @@ public class CustomerServiceTest {
     private static final int CUSTOMER_ID = 234;
 
     @Autowired
-    private CustomerService service;
+    private CustomerService customerService;
 
     @MockBean
     private CustomerRepository customerRepository;
 
     @Test
     public void shouldCallFindAll_whenLookupAllCustomers_givenNoCustomersExist() {
-        List<Customer> tours = service.lookupAllCustomers();
+        List<Customer> tours = customerService.lookupAllCustomers();
         verify(customerRepository, times(1)).findAll();
         assertEquals(0, tours.size());
     }
 
     @Test
     public void shouldCallFindById_whenLookupCustomerById_givenNoCustomersWithIdExists() {
-        Optional<Customer> customer = service.lookupCustomerById(CUSTOMER_ID);
+        Optional<Customer> customer = customerService.lookupCustomerById(CUSTOMER_ID);
         verify(customerRepository, times(1)).findById(CUSTOMER_ID);
         assertEquals(Optional.empty(), customer);
     }
 
     @Test
     public void shouldCallFindById_whenLookupBookingByCustomerId_givenNoCustomersWithIdExists() {
-        Optional<Customer> customer = service.lookupCustomerById(CUSTOMER_ID);
+        Optional<Customer> customer = customerService.lookupCustomerById(CUSTOMER_ID);
         verify(customerRepository, times(1)).findById(CUSTOMER_ID);
         assertEquals(Optional.empty(), customer);
     }

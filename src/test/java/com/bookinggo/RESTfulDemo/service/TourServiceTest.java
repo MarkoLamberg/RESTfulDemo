@@ -23,21 +23,21 @@ public class TourServiceTest {
     private static final int TOUR_ID = 234;
 
     @Autowired
-    private TourService service;
+    private TourService tourService;
 
     @MockBean
     private TourRepository tourRepositoryMock;
 
     @Test
     public void shouldCallFindAll_whenLookupAllTours_givenNoToursExist() {
-        List<Tour> tours = service.lookupAllTours();
+        List<Tour> tours = tourService.lookupAllTours();
         verify(tourRepositoryMock, times(1)).findAll();
         assertEquals(0, tours.size());
     }
 
     @Test
     public void shouldCallFindById_whenLookupTourById_givenNoTourWithIdExists() {
-        Optional<Tour> tour = service.lookupTourById(TOUR_ID);
+        Optional<Tour> tour = tourService.lookupTourById(TOUR_ID);
         verify(tourRepositoryMock, times(1)).findById(TOUR_ID);
         assertEquals(Optional.empty(), tour);
     }

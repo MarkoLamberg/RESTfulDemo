@@ -10,7 +10,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.*;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 
 import static org.junit.Assert.assertEquals;
@@ -18,7 +17,6 @@ import static org.junit.Assert.assertNotEquals;
 
 @SpringBootTest(classes = RestfulDemoApplication.class,
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@ActiveProfiles("integTest")
 public class TourBookingControllerIT extends AbstractRESTfulDemoIT {
 
     private static final int CUSTOMER_ID = 4;

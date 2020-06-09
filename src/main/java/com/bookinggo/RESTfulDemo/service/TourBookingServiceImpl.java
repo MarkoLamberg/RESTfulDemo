@@ -3,7 +3,7 @@ package com.bookinggo.RESTfulDemo.service;
 import com.bookinggo.RESTfulDemo.entity.*;
 import com.bookinggo.RESTfulDemo.repository.CustomerRepository;
 import com.bookinggo.RESTfulDemo.repository.TourBookingRepository;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 @Service
 @Slf4j
 @Transactional
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class TourBookingServiceImpl implements TourBookingService {
 
     private final TourBookingRepository tourBookingRepository;

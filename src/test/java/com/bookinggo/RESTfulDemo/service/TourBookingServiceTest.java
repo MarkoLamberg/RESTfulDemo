@@ -36,14 +36,14 @@ public class TourBookingServiceTest {
     private TourBookingRepository tourBookingRepositoryMock;
 
     @Autowired
-    private TourBookingService service;
+    private TourBookingService tourBookingService;
 
     @Mock
     private TourBooking tourBookingMock;
 
     @Test
     public void shouldNotCreateBooking_whenCreate_givenTourIdDoesNotExist() {
-        service.createNew(TOUR_ID, CUSTOMER_ID, DATE, LOCATION, PARTICIPANTS);
+        tourBookingService.createNew(TOUR_ID, CUSTOMER_ID, DATE, LOCATION, PARTICIPANTS);
 
         verify(tourRepositoryMock, times(1)).findById(TOUR_ID);
         verify(tourRepositoryMock, times(0)).save(any());
@@ -51,21 +51,21 @@ public class TourBookingServiceTest {
 
     @Test
     public void shouldNotReturnAnyBookings_whenLookupTourBookings_givenNoBookingsWithIdExist() {
-        List<TourBooking> bookings = service.lookupTourBookings(TOUR_ID);
+        List<TourBooking> bookings = tourBookingService.lookupTourBookings(TOUR_ID);
         verify(tourBookingRepositoryMock, times(1)).findByTourId(TOUR_ID);
         assertEquals(bookings.size(), 0);
     }
 
     @Test
     public void shouldNotReturnAnyBookings_whenLookupAllBookings_givenNoBookingsExist() {
-        List<TourBooking> bookings = service.lookupAllBookings();
+        List<TourBooking> bookings = tourBookingService.lookupAllBookings();
         verify(tourBookingRepositoryMock, times(1)).findAll();
         assertEquals(bookings.size(), 0);
     }
 
     @Test
     public void shouldNotUpdateBooking_whenUpdate_givenBookingWithTourIdAndCustomerIdNonExisting() throws NoSuchElementException {
-        TourBooking booking = service.update(TOUR_ID, CUSTOMER_ID, DATE, LOCATION, PARTICIPANTS);
+        TourBooking booking = tourBookingService.update(TOUR_ID, CUSTOMER_ID, DATE, LOCATION, PARTICIPANTS);
 
         verify(tourBookingRepositoryMock, times(1)).findByTourIdAndCustomerId(TOUR_ID, CUSTOMER_ID);
         verify(tourBookingMock, times(0)).setDate(DATE);
@@ -76,7 +76,7 @@ public class TourBookingServiceTest {
 
     @Test
     public void shouldNotUpdateBooking_whenUpdateSome_givenBookingWithTourIdAndCustomerIdNonExisting() throws NoSuchElementException {
-        TourBooking booking = service.updateSome(TOUR_ID, CUSTOMER_ID, DATE, LOCATION, PARTICIPANTS);
+        TourBooking booking = tourBookingService.updateSome(TOUR_ID, CUSTOMER_ID, DATE, LOCATION, PARTICIPANTS);
 
         verify(tourBookingRepositoryMock, times(1)).findByTourIdAndCustomerId(TOUR_ID, CUSTOMER_ID);
         verify(tourBookingMock, times(0)).setDate(DATE);
@@ -87,7 +87,7 @@ public class TourBookingServiceTest {
 
     @Test()
     public void shouldNotDeleteAnyBookings_whenDeleteAllBookingsWithTourIdAndCustomerId_givenBookingsWithTourIdAndCustomerIdNonExisting() throws NoSuchElementException {
-        service.deleteAllBookingsWithTourIdAndCustomerId(TOUR_ID, CUSTOMER_ID);
+        tourBookingService.deleteAllBookingsWithTourIdAndCustomerId(TOUR_ID, CUSTOMER_ID);
 
         verify(tourBookingRepositoryMock, times(1)).findByTourId(TOUR_ID);
         verify(tourBookingRepositoryMock, times(0)).delete(any());
@@ -95,7 +95,7 @@ public class TourBookingServiceTest {
 
     @Test
     public void shouldNotDeleteAnyBookings_whenDeleteAllBookingsWithCustomerId_givenBookingsWithCustomerIdNonExisting() {
-        service.deleteAllBookingsWithCustomerId(CUSTOMER_ID);
+        tourBookingService.deleteAllBookingsWithCustomerId(CUSTOMER_ID);
 
         verify(tourBookingRepositoryMock, times(1)).findByCustomerId(CUSTOMER_ID);
         verify(tourBookingRepositoryMock, times(0)).delete(any());
@@ -103,7 +103,7 @@ public class TourBookingServiceTest {
 
     @Test
     public void shouldNotDeleteAnyBookings_whenDeleteAllBookings_givenNoBookings() {
-        service.deleteAllBookings();
+        tourBookingService.deleteAllBookings();
         verify(tourBookingRepositoryMock, times(1)).deleteAll();
     }
 }
