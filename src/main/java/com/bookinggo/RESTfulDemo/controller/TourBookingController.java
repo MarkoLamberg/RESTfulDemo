@@ -48,40 +48,24 @@ public class TourBookingController {
     }
 
     @PutMapping(path = "/{tourId}/bookings")
-    public ResponseEntity<BookingDto> updateWithPut(@PathVariable(value = "tourId") int tourId, @Valid @RequestBody BookingDto bookingDto) {
+    public ResponseEntity<BookingDto> updateWithPut(@PathVariable(value = "tourId") int tourId, @Valid @RequestBody BookingPatchDto bookingPatchDto) {
         log.info("PUT /tours/{}/bookings", tourId);
-        LocalDateTime pickupDateTime = LocalDateTime.parse(bookingDto.getPickupDateTime(), DateTimeFormatter.ISO_LOCAL_DATE_TIME);
-        TourBooking response = tourBookingService.update(tourId, bookingDto.getCustomerId(),
-                pickupDateTime, bookingDto.getPickupLocation(), bookingDto.getParticipants());
-
-        if (response == null) {
-            return ResponseEntity.badRequest().body(bookingDto);
-        }
-
-        return ResponseEntity
-                .ok()
-                .body(toDto(response));
-    }
-
-    @PatchMapping(path = "/{tourId}/bookings")
-    public ResponseEntity<BookingPatchDto> updateWithPatch(@PathVariable(value = "tourId") int tourId, @Valid @RequestBody BookingPatchDto bookingPatchDto) {
-        log.info("PATCH /tours/{}/bookings", tourId);
         LocalDateTime pickupDateTime = null;
 
         if (bookingPatchDto.getPickupDateTime() != null) {
             pickupDateTime = LocalDateTime.parse(bookingPatchDto.getPickupDateTime(), DateTimeFormatter.ISO_LOCAL_DATE_TIME);
         }
 
-        TourBooking response = tourBookingService.updateSome(tourId, bookingPatchDto.getCustomerId(),
+        TourBooking response = tourBookingService.update(tourId, bookingPatchDto.getCustomerId(),
                 pickupDateTime, bookingPatchDto.getPickupLocation(), bookingPatchDto.getParticipants());
 
         if (response == null) {
-            return ResponseEntity.badRequest().body(bookingPatchDto);
+            return ResponseEntity.badRequest().body(null);
         }
 
         return ResponseEntity
                 .ok()
-                .body(toPatchDto(response));
+                .body(toDto(response));
     }
 
     @DeleteMapping("/{tourId}/bookings/{customerId}")

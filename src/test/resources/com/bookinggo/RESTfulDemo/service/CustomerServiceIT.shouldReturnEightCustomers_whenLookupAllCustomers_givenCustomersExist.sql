@@ -1,11 +1,11 @@
 use restfuldemodb;
 INSERT INTO customer (title, name )
 VALUES
-('mr', 'Customer One'),
-('mr', 'Customer Two'),
-('mr', 'Customer Three'),
-('mr', 'Customer Four'),
-('mr', 'Customer Five'),
-('mr', 'Customer Six'),
-('mr', 'Customer Seven'),
-('mr', 'Customer Eight');
+('Mr', 'Customer One'),
+('Mr', 'Customer Two'),
+('Mr', 'Customer Three'),
+('Mr', 'Customer Four'),
+('Mr', 'Customer Five'),
+('Mr', 'Customer Six'),
+('Mr', 'Customer Seven'),
+('Mr', 'Customer Eight');

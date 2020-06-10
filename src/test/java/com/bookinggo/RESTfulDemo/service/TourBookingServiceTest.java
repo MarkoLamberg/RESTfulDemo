@@ -25,13 +25,9 @@ import static org.mockito.Mockito.verify;
 public class TourBookingServiceTest {
 
     private static final int CUSTOMER_ID = 123;
-
     private static final int TOUR_ID = 234;
-
     private static final LocalDateTime DATE_TIME = LocalDateTime.of(2020, 03, 20, 12, 00);
-
     private static final String LOCATION = "Hotel Ibis";
-
     private static final int PARTICIPANTS = 1;
 
     @MockBean
@@ -80,17 +76,6 @@ public class TourBookingServiceTest {
     }
 
     @Test
-    public void shouldNotUpdateBooking_whenUpdateSome_givenBookingWithTourIdAndCustomerIdNonExisting() throws NoSuchElementException {
-        TourBooking booking = tourBookingService.updateSome(TOUR_ID, CUSTOMER_ID, DATE_TIME, LOCATION, PARTICIPANTS);
-
-        verify(tourBookingRepositoryMock, times(1)).findByTourIdAndCustomerId(TOUR_ID, CUSTOMER_ID);
-        verify(tourBookingMock, times(0)).setPickupDateTime(DATE_TIME);
-        verify(tourBookingMock, times(0)).setPickupLocation(LOCATION);
-        verify(tourBookingRepositoryMock, times(0)).saveAndFlush(null);
-        assertEquals(booking, null);
-    }
-
-    @Test()
     public void shouldNotDeleteAnyBookings_whenDeleteAllBookingsWithTourIdAndCustomerId_givenBookingsWithTourIdAndCustomerIdNonExisting() throws NoSuchElementException {
         tourBookingService.deleteAllBookingsWithTourIdAndCustomerId(TOUR_ID, CUSTOMER_ID);
 

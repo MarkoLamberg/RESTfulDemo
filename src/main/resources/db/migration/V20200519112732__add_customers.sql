@@ -1,9 +1,9 @@
 insert into customer (title, name ) values
-('mr', 'Tom Hanks'),
-('mr', 'Tom Cruise'),
-('mrs', 'Elisabeth Shue'),
-('mrs', 'Cate Blanchett'),
-('ms', 'Scarlett Johansson'),
-('mr', 'Clint Eastwood'),
-('mrs', 'Virginia Madsen'),
-('mr', 'Johnny Depp');
+('Mr', 'Tom Hanks'),
+('Mr', 'Tom Cruise'),
+('Mrs', 'Elisabeth Shue'),
+('Mrs', 'Cate Blanchett'),
+('Ms', 'Scarlett Johansson'),
+('Mr', 'Clint Eastwood'),
+('Mrs', 'Virginia Madsen'),
+('Mr', 'Johnny Depp');

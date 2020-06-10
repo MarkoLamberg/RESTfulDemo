@@ -1,7 +1,7 @@
 use restfuldemodb;
 INSERT INTO customer (title, name )
 VALUES
-('mr', 'Customer One'),
-('mr', 'Customer Two'),
-('mr', 'Customer Three'),
-('mr', 'Customer Four');
+('Mr', 'Customer One'),
+('Mr', 'Customer Two'),
+('Mr', 'Customer Three'),
+('Mr', 'Customer Four');

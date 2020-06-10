@@ -55,24 +55,7 @@ public class TourBookingServiceImpl implements TourBookingService {
     }
 
     @Override
-    public TourBooking update(int tourId, Integer customerId, LocalDateTime pickupDateTime, String location, Integer participants) throws NoSuchElementException {
-        log.info("update - tourId: {}, customerId: {}, date: {}, location {}", tourId, customerId, pickupDateTime, location);
-
-        List<TourBooking> bookings = tourBookingRepository.findByTourIdAndCustomerId(tourId, customerId);
-
-        if (bookings.size() == 1) {
-            bookings.get(0).setPickupDateTime(pickupDateTime);
-            bookings.get(0).setPickupLocation(location);
-            bookings.get(0).setParticipants(participants);
-
-            return tourBookingRepository.saveAndFlush(bookings.get(0));
-        }
-
-        return null;
-    }
-
-    @Override
-    public TourBooking updateSome(int tourId, Integer customerId, LocalDateTime pickupDateTime, String location, Integer participants)
+    public TourBooking update(int tourId, Integer customerId, LocalDateTime pickupDateTime, String location, Integer participants)
             throws NoSuchElementException {
         log.info("updateSome - tourId: {}, customerId: {}, date: {}, location {}", tourId, customerId, pickupDateTime, location);
 

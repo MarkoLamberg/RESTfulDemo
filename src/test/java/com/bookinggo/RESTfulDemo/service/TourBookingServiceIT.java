@@ -16,13 +16,9 @@ import static org.junit.Assert.*;
 public class TourBookingServiceIT extends AbstractRESTfulDemoIT {
 
     private static final int CUSTOMER_ID = 4;
-
     private static final int TOUR_ID = 1;
-
     private static final int PARTICIPANTS = 1;
-
     private static final LocalDateTime DATE_TIME = LocalDateTime.of(2020, 03, 20, 12, 00);
-
     private static final String LOCATION = "Hotel Ibis";
 
     @Autowired
@@ -115,7 +111,7 @@ public class TourBookingServiceIT extends AbstractRESTfulDemoIT {
         assertNotEquals(DATE_TIME, filteredBookingsBefore.get(0).getPickupDateTime());
         assertNotEquals(LOCATION, filteredBookingsBefore.get(0).getPickupLocation());
 
-        tourBookingService.updateSome(TOUR_ID, CUSTOMER_ID, DATE_TIME, LOCATION, PARTICIPANTS);
+        tourBookingService.update(TOUR_ID, CUSTOMER_ID, DATE_TIME, LOCATION, null);
 
         List<TourBooking> filteredBookingsAfter = tourBookingService.lookupTourBookings(TOUR_ID)
                 .stream()
@@ -124,26 +120,7 @@ public class TourBookingServiceIT extends AbstractRESTfulDemoIT {
 
         assertEquals(DATE_TIME, filteredBookingsAfter.get(0).getPickupDateTime());
         assertEquals(LOCATION, filteredBookingsAfter.get(0).getPickupLocation());
-    }
-
-    @Sql
-    @Test
-    public void shouldNotUpdateBooking_whenUpdateSome_givenMoreThanOneBookingWithTourIdAndCustomerExist() {
-        List<TourBooking> filteredBookingsBefore = tourBookingService.lookupTourBookings(TOUR_ID)
-                .stream()
-                .filter(booking -> booking.getCustomer().getId().equals(CUSTOMER_ID))
-                .collect(Collectors.toList());
-
-        assertFalse(filteredBookingsBefore.size() == 1);
-
-        tourBookingService.updateSome(TOUR_ID, CUSTOMER_ID, DATE_TIME, LOCATION, PARTICIPANTS);
-
-        List<TourBooking> filteredBookingsAfter = tourBookingService.lookupTourBookings(TOUR_ID)
-                .stream()
-                .filter(booking -> booking.getPickupLocation().equals(LOCATION))
-                .collect(Collectors.toList());
-
-        assertEquals(0, filteredBookingsAfter.size());
+        assertNotEquals(PARTICIPANTS, filteredBookingsAfter.get(0).getPickupLocation());
     }
 
     @Sql
