@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -15,9 +16,13 @@ import static org.junit.Assert.*;
 public class TourBookingServiceIT extends AbstractRESTfulDemoIT {
 
     private static final int CUSTOMER_ID = 4;
+
     private static final int TOUR_ID = 1;
+
     private static final int PARTICIPANTS = 1;
-    private static final String DATE = "20-03-2020";
+
+    private static final LocalDateTime DATE_TIME = LocalDateTime.of(2020, 03, 20, 12, 00);
+
     private static final String LOCATION = "Hotel Ibis";
 
     @Autowired
@@ -29,7 +34,7 @@ public class TourBookingServiceIT extends AbstractRESTfulDemoIT {
         List<TourBooking> bookingsBefore = tourBookingService.lookupAllBookings();
         assertEquals(0, bookingsBefore.size());
 
-        tourBookingService.createNew(TOUR_ID, CUSTOMER_ID, DATE, LOCATION, PARTICIPANTS);
+        tourBookingService.createNew(TOUR_ID, CUSTOMER_ID, DATE_TIME, LOCATION, PARTICIPANTS);
 
         List<TourBooking> bookingsAfter = tourBookingService.lookupAllBookings();
         TourBooking booking = bookingsAfter.get(0);
@@ -65,17 +70,17 @@ public class TourBookingServiceIT extends AbstractRESTfulDemoIT {
                 .filter(booking -> booking.getCustomer().getId().equals(CUSTOMER_ID))
                 .collect(Collectors.toList());
 
-        assertNotEquals(DATE, filteredBookingsBefore.get(0).getDate());
+        assertNotEquals(DATE_TIME, filteredBookingsBefore.get(0).getPickupDateTime());
         assertNotEquals(LOCATION, filteredBookingsBefore.get(0).getPickupLocation());
 
-        tourBookingService.update(TOUR_ID, CUSTOMER_ID, DATE, LOCATION, PARTICIPANTS);
+        tourBookingService.update(TOUR_ID, CUSTOMER_ID, DATE_TIME, LOCATION, PARTICIPANTS);
 
         List<TourBooking> filteredBookingsAfter = tourBookingService.lookupTourBookings(TOUR_ID)
                 .stream()
                 .filter(booking -> booking.getCustomer().getId().equals(CUSTOMER_ID))
                 .collect(Collectors.toList());
 
-        assertEquals(DATE, filteredBookingsAfter.get(0).getDate());
+        assertEquals(DATE_TIME, filteredBookingsAfter.get(0).getPickupDateTime());
         assertEquals(LOCATION, filteredBookingsAfter.get(0).getPickupLocation());
     }
 
@@ -89,7 +94,7 @@ public class TourBookingServiceIT extends AbstractRESTfulDemoIT {
 
         assertFalse(filteredBookingsBefore.size() == 1);
 
-        tourBookingService.update(TOUR_ID, CUSTOMER_ID, DATE, LOCATION, PARTICIPANTS);
+        tourBookingService.update(TOUR_ID, CUSTOMER_ID, DATE_TIME, LOCATION, PARTICIPANTS);
 
         List<TourBooking> filteredBookingsAfter = tourBookingService.lookupTourBookings(TOUR_ID)
                 .stream()
@@ -107,17 +112,17 @@ public class TourBookingServiceIT extends AbstractRESTfulDemoIT {
                 .filter(booking -> booking.getCustomer().getId().equals(CUSTOMER_ID))
                 .collect(Collectors.toList());
 
-        assertNotEquals(DATE, filteredBookingsBefore.get(0).getDate());
+        assertNotEquals(DATE_TIME, filteredBookingsBefore.get(0).getPickupDateTime());
         assertNotEquals(LOCATION, filteredBookingsBefore.get(0).getPickupLocation());
 
-        tourBookingService.updateSome(TOUR_ID, CUSTOMER_ID, DATE, LOCATION, PARTICIPANTS);
+        tourBookingService.updateSome(TOUR_ID, CUSTOMER_ID, DATE_TIME, LOCATION, PARTICIPANTS);
 
         List<TourBooking> filteredBookingsAfter = tourBookingService.lookupTourBookings(TOUR_ID)
                 .stream()
                 .filter(booking -> booking.getCustomer().getId().equals(CUSTOMER_ID))
                 .collect(Collectors.toList());
 
-        assertEquals(DATE, filteredBookingsAfter.get(0).getDate());
+        assertEquals(DATE_TIME, filteredBookingsAfter.get(0).getPickupDateTime());
         assertEquals(LOCATION, filteredBookingsAfter.get(0).getPickupLocation());
     }
 
@@ -131,7 +136,7 @@ public class TourBookingServiceIT extends AbstractRESTfulDemoIT {
 
         assertFalse(filteredBookingsBefore.size() == 1);
 
-        tourBookingService.updateSome(TOUR_ID, CUSTOMER_ID, DATE, LOCATION, PARTICIPANTS);
+        tourBookingService.updateSome(TOUR_ID, CUSTOMER_ID, DATE_TIME, LOCATION, PARTICIPANTS);
 
         List<TourBooking> filteredBookingsAfter = tourBookingService.lookupTourBookings(TOUR_ID)
                 .stream()

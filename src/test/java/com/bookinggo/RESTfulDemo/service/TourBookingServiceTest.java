@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -24,9 +25,13 @@ import static org.mockito.Mockito.verify;
 public class TourBookingServiceTest {
 
     private static final int CUSTOMER_ID = 123;
+
     private static final int TOUR_ID = 234;
-    private static final String DATE = "20-03-2020";
+
+    private static final LocalDateTime DATE_TIME = LocalDateTime.of(2020, 03, 20, 12, 00);
+
     private static final String LOCATION = "Hotel Ibis";
+
     private static final int PARTICIPANTS = 1;
 
     @MockBean
@@ -43,7 +48,7 @@ public class TourBookingServiceTest {
 
     @Test
     public void shouldNotCreateBooking_whenCreate_givenTourIdDoesNotExist() {
-        tourBookingService.createNew(TOUR_ID, CUSTOMER_ID, DATE, LOCATION, PARTICIPANTS);
+        tourBookingService.createNew(TOUR_ID, CUSTOMER_ID, DATE_TIME, LOCATION, PARTICIPANTS);
 
         verify(tourRepositoryMock, times(1)).findById(TOUR_ID);
         verify(tourRepositoryMock, times(0)).save(any());
@@ -65,10 +70,10 @@ public class TourBookingServiceTest {
 
     @Test
     public void shouldNotUpdateBooking_whenUpdate_givenBookingWithTourIdAndCustomerIdNonExisting() throws NoSuchElementException {
-        TourBooking booking = tourBookingService.update(TOUR_ID, CUSTOMER_ID, DATE, LOCATION, PARTICIPANTS);
+        TourBooking booking = tourBookingService.update(TOUR_ID, CUSTOMER_ID, DATE_TIME, LOCATION, PARTICIPANTS);
 
         verify(tourBookingRepositoryMock, times(1)).findByTourIdAndCustomerId(TOUR_ID, CUSTOMER_ID);
-        verify(tourBookingMock, times(0)).setDate(DATE);
+        verify(tourBookingMock, times(0)).setPickupDateTime(DATE_TIME);
         verify(tourBookingMock, times(0)).setPickupLocation(LOCATION);
         verify(tourBookingRepositoryMock, times(0)).saveAndFlush(null);
         assertEquals(booking, null);
@@ -76,10 +81,10 @@ public class TourBookingServiceTest {
 
     @Test
     public void shouldNotUpdateBooking_whenUpdateSome_givenBookingWithTourIdAndCustomerIdNonExisting() throws NoSuchElementException {
-        TourBooking booking = tourBookingService.updateSome(TOUR_ID, CUSTOMER_ID, DATE, LOCATION, PARTICIPANTS);
+        TourBooking booking = tourBookingService.updateSome(TOUR_ID, CUSTOMER_ID, DATE_TIME, LOCATION, PARTICIPANTS);
 
         verify(tourBookingRepositoryMock, times(1)).findByTourIdAndCustomerId(TOUR_ID, CUSTOMER_ID);
-        verify(tourBookingMock, times(0)).setDate(DATE);
+        verify(tourBookingMock, times(0)).setPickupDateTime(DATE_TIME);
         verify(tourBookingMock, times(0)).setPickupLocation(LOCATION);
         verify(tourBookingRepositoryMock, times(0)).saveAndFlush(null);
         assertEquals(booking, null);

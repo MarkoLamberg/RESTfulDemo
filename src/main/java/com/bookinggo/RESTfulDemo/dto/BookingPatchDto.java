@@ -7,21 +7,18 @@ import javax.validation.constraints.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class BookingDto {
+public class BookingPatchDto {
 
     @Size(max = 255)
-    @NotNull
     private String pickupDateTime;
 
     @Size(max = 255)
-    @NotNull
     private String pickupLocation;
 
     @NotNull
     @Positive
     private Integer customerId;
 
-    @NotNull
     @Positive
     private Integer participants;
 

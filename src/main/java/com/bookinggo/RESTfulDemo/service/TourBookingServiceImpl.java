@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -22,8 +23,8 @@ public class TourBookingServiceImpl implements TourBookingService {
     private final CustomerRepository customerRepository;
 
     @Override
-    public TourBooking createNew(int tourId, Integer customerId, String date, String location, Integer participants) throws NoSuchElementException {
-        log.info("createNew - tourId: {}, customerId: {}, date: {}, location {}, participants {}", tourId, customerId, date, location, participants);
+    public TourBooking createNew(int tourId, Integer customerId, LocalDateTime pickupDateTime, String location, Integer participants) throws NoSuchElementException {
+        log.info("createNew - tourId: {}, customerId: {}, date: {}, location {}, participants {}", tourId, customerId, pickupDateTime, location, participants);
 
         Optional<Tour> tour = tourService.lookupTourById(tourId);
 
@@ -32,7 +33,7 @@ public class TourBookingServiceImpl implements TourBookingService {
 
             if (customer.isPresent()) {
                 TourBooking tourBooking = new TourBooking(tour.get(), customer.get(),
-                        date, location, participants);
+                        pickupDateTime, location, participants);
                 tourBookingRepository.save(tourBooking);
 
                 return tourBooking;
@@ -54,13 +55,13 @@ public class TourBookingServiceImpl implements TourBookingService {
     }
 
     @Override
-    public TourBooking update(int tourId, Integer customerId, String date, String location, Integer participants) throws NoSuchElementException {
-        log.info("update - tourId: {}, customerId: {}, date: {}, location {}", tourId, customerId, date, location);
+    public TourBooking update(int tourId, Integer customerId, LocalDateTime pickupDateTime, String location, Integer participants) throws NoSuchElementException {
+        log.info("update - tourId: {}, customerId: {}, date: {}, location {}", tourId, customerId, pickupDateTime, location);
 
         List<TourBooking> bookings = tourBookingRepository.findByTourIdAndCustomerId(tourId, customerId);
 
         if (bookings.size() == 1) {
-            bookings.get(0).setDate(date);
+            bookings.get(0).setPickupDateTime(pickupDateTime);
             bookings.get(0).setPickupLocation(location);
             bookings.get(0).setParticipants(participants);
 
@@ -71,15 +72,15 @@ public class TourBookingServiceImpl implements TourBookingService {
     }
 
     @Override
-    public TourBooking updateSome(int tourId, Integer customerId, String date, String location, Integer participants)
+    public TourBooking updateSome(int tourId, Integer customerId, LocalDateTime pickupDateTime, String location, Integer participants)
             throws NoSuchElementException {
-        log.info("updateSome - tourId: {}, customerId: {}, date: {}, location {}", tourId, customerId, date, location);
+        log.info("updateSome - tourId: {}, customerId: {}, date: {}, location {}", tourId, customerId, pickupDateTime, location);
 
         List<TourBooking> bookings = tourBookingRepository.findByTourIdAndCustomerId(tourId, customerId);
 
         if (bookings.size() == 1) {
-            if (date != null) {
-                bookings.get(0).setDate(date);
+            if (pickupDateTime != null) {
+                bookings.get(0).setPickupDateTime(pickupDateTime);
             }
 
             if (location != null) {

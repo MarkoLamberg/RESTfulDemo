@@ -13,9 +13,9 @@ public class ExpandedBookingDto extends BookingDto{
     @Positive
     private Integer tourId;
 
-    public ExpandedBookingDto(@Size(max = 255) String date, @Size(max = 255) String pickupLocation, @NotNull Integer customerId,
+    public ExpandedBookingDto(@Size(max = 255) String localDateTime, @Size(max = 255) String pickupLocation, @NotNull Integer customerId,
                               @NotNull @Min(1) Integer participants, String totalPrice, @NotNull Integer tourId) {
-        super(date, pickupLocation, customerId, participants, totalPrice);
+        super(localDateTime, pickupLocation, customerId, participants, totalPrice);
         this.tourId = tourId;
     }
 }

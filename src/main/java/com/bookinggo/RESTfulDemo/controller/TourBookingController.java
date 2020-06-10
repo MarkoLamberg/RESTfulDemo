@@ -1,7 +1,6 @@
 package com.bookinggo.RESTfulDemo.controller;
 
-import com.bookinggo.RESTfulDemo.dto.BookingDto;
-import com.bookinggo.RESTfulDemo.dto.ExpandedBookingDto;
+import com.bookinggo.RESTfulDemo.dto.*;
 import com.bookinggo.RESTfulDemo.entity.TourBooking;
 import com.bookinggo.RESTfulDemo.service.TourBookingService;
 import lombok.AllArgsConstructor;
@@ -11,6 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
@@ -27,7 +28,8 @@ public class TourBookingController {
     @ResponseStatus(HttpStatus.CREATED)
     public TourBooking createTourBooking(@PathVariable(value = "tourId") int tourId, @Valid @RequestBody BookingDto bookingDto) {
         log.info("POST /tours/{}/bookings", tourId);
-        return tourBookingService.createNew(tourId, bookingDto.getCustomerId(), bookingDto.getDate(),
+        LocalDateTime pickupDateTime = LocalDateTime.parse(bookingDto.getPickupDateTime(), DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+        return tourBookingService.createNew(tourId, bookingDto.getCustomerId(), pickupDateTime,
                 bookingDto.getPickupLocation(), bookingDto.getParticipants());
     }
 
@@ -48,8 +50,9 @@ public class TourBookingController {
     @PutMapping(path = "/{tourId}/bookings")
     public ResponseEntity<BookingDto> updateWithPut(@PathVariable(value = "tourId") int tourId, @Valid @RequestBody BookingDto bookingDto) {
         log.info("PUT /tours/{}/bookings", tourId);
+        LocalDateTime pickupDateTime = LocalDateTime.parse(bookingDto.getPickupDateTime(), DateTimeFormatter.ISO_LOCAL_DATE_TIME);
         TourBooking response = tourBookingService.update(tourId, bookingDto.getCustomerId(),
-                bookingDto.getDate(), bookingDto.getPickupLocation(), bookingDto.getParticipants());
+                pickupDateTime, bookingDto.getPickupLocation(), bookingDto.getParticipants());
 
         if (response == null) {
             return ResponseEntity.badRequest().body(bookingDto);
@@ -61,19 +64,24 @@ public class TourBookingController {
     }
 
     @PatchMapping(path = "/{tourId}/bookings")
-    public ResponseEntity<BookingDto> updateWithPatch(@PathVariable(value = "tourId") int tourId, @Valid @RequestBody BookingDto bookingDto) {
+    public ResponseEntity<BookingPatchDto> updateWithPatch(@PathVariable(value = "tourId") int tourId, @Valid @RequestBody BookingPatchDto bookingPatchDto) {
         log.info("PATCH /tours/{}/bookings", tourId);
+        LocalDateTime pickupDateTime = null;
 
-        TourBooking response = tourBookingService.updateSome(tourId, bookingDto.getCustomerId(),
-                bookingDto.getDate(), bookingDto.getPickupLocation(), bookingDto.getParticipants());
+        if (bookingPatchDto.getPickupDateTime() != null) {
+            pickupDateTime = LocalDateTime.parse(bookingPatchDto.getPickupDateTime(), DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+        }
+
+        TourBooking response = tourBookingService.updateSome(tourId, bookingPatchDto.getCustomerId(),
+                pickupDateTime, bookingPatchDto.getPickupLocation(), bookingPatchDto.getParticipants());
 
         if (response == null) {
-            return ResponseEntity.badRequest().body(bookingDto);
+            return ResponseEntity.badRequest().body(bookingPatchDto);
         }
 
         return ResponseEntity
                 .ok()
-                .body(toDto(response));
+                .body(toPatchDto(response));
     }
 
     @DeleteMapping("/{tourId}/bookings/{customerId}")
@@ -95,13 +103,18 @@ public class TourBookingController {
     }
 
     private BookingDto toDto(TourBooking tourBooking) {
-        return new BookingDto(tourBooking.getDate(), tourBooking.getPickupLocation(), tourBooking.getCustomer().getId(),
+        return new BookingDto(tourBooking.getPickupDateTime().toString(), tourBooking.getPickupLocation(), tourBooking.getCustomer().getId(),
                 tourBooking.getParticipants(), tourBooking.getTotalPriceString());
     }
 
     private ExpandedBookingDto toExpandedDto(TourBooking tourBooking) {
-        return new ExpandedBookingDto(tourBooking.getDate(), tourBooking.getPickupLocation(), tourBooking.getCustomer().getId(),
+        return new ExpandedBookingDto(tourBooking.getPickupDateTime().toString(), tourBooking.getPickupLocation(), tourBooking.getCustomer().getId(),
                 tourBooking.getParticipants(), tourBooking.getTotalPriceString(), tourBooking.getTour().getId());
+    }
+
+    private BookingPatchDto toPatchDto(TourBooking tourBooking) {
+        return new BookingPatchDto(tourBooking.getPickupDateTime().toString(), tourBooking.getPickupLocation(), tourBooking.getCustomer().getId(),
+                tourBooking.getParticipants(), tourBooking.getTotalPriceString());
     }
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
