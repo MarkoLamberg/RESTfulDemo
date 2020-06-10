@@ -81,7 +81,7 @@ public class TourBookingServiceImpl implements TourBookingService {
     }
 
     @Override
-    public void deleteAllBookingsWithTourIdAndCustomerId(int tourId, Integer customerId) throws NoSuchElementException {
+    public List<TourBooking> deleteAllBookingsWithTourIdAndCustomerId(int tourId, Integer customerId) throws NoSuchElementException {
         log.info("delete - tourId: {}, customerId: {}", tourId, customerId);
 
         List<TourBooking> bookings = tourBookingRepository.findByTourId(tourId)
@@ -90,10 +90,12 @@ public class TourBookingServiceImpl implements TourBookingService {
                 .collect(Collectors.toList());
 
         bookings.forEach(booking -> tourBookingRepository.delete(booking));
+
+        return bookings;
     }
 
     @Override
-    public void deleteAllBookingsWithCustomerId(Integer customerId) throws NoSuchElementException {
+    public List<TourBooking> deleteAllBookingsWithCustomerId(Integer customerId) throws NoSuchElementException {
         log.info("delete - tourId: {}", customerId);
 
         List<TourBooking> bookings = tourBookingRepository.findByCustomerId(customerId);
@@ -101,12 +103,18 @@ public class TourBookingServiceImpl implements TourBookingService {
         for (TourBooking booking : bookings) {
             tourBookingRepository.delete(booking);
         }
+
+        return bookings;
     }
 
     @Override
-    public void deleteAllBookings() throws NoSuchElementException {
+    public List<TourBooking> deleteAllBookings() throws NoSuchElementException {
         log.info("deleteAll");
 
+        List<TourBooking> bookings = tourBookingRepository.findAll();
+
         tourBookingRepository.deleteAll();
+
+        return bookings;
     }
 }

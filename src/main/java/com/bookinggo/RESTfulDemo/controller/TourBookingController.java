@@ -12,8 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
@@ -69,26 +68,39 @@ public class TourBookingController {
     }
 
     @DeleteMapping("/{tourId}/bookings/{customerId}")
-    public void delete(@PathVariable(value = "tourId") int tourId, @PathVariable(value = "customerId") int customerId) {
+    public List<BookingDto> delete(@PathVariable(value = "tourId") int tourId, @PathVariable(value = "customerId") int customerId) {
         log.info("DELETE /tours/{}/bookings", tourId);
-        tourBookingService.deleteAllBookingsWithTourIdAndCustomerId(tourId, customerId);
+        List<TourBooking> bookings = tourBookingService.deleteAllBookingsWithTourIdAndCustomerId(tourId, customerId);
+
+        return listOfDtos(bookings);
     }
 
     @DeleteMapping("/bookings/{customerId}")
-    public void delete(@PathVariable(value = "customerId") int customerId) {
+    public List<BookingDto> delete(@PathVariable(value = "customerId") int customerId) {
         log.info("DELETE /tours/bookings/{}", customerId);
-        tourBookingService.deleteAllBookingsWithCustomerId(customerId);
+        List<TourBooking> bookings = tourBookingService.deleteAllBookingsWithCustomerId(customerId);
+
+        return listOfDtos(bookings);
     }
 
     @DeleteMapping("/bookings")
-    public void delete() {
+    public List<BookingDto> delete() {
         log.info("DELETE /tours/bookings/");
-        tourBookingService.deleteAllBookings();
+        List<TourBooking> bookings = tourBookingService.deleteAllBookings();
+
+        return listOfDtos(bookings);
     }
 
     private BookingDto toDto(TourBooking tourBooking) {
         return new BookingDto(tourBooking.getPickupDateTime().toString(), tourBooking.getPickupLocation(), tourBooking.getCustomer().getId(),
                 tourBooking.getParticipants(), tourBooking.getTotalPriceString());
+    }
+
+    private List<BookingDto> listOfDtos(List<TourBooking> bookings) {
+        List<BookingDto> bookingDtos = new LinkedList<>();
+        bookings.forEach(b -> bookingDtos.add(toDto(b)));
+
+        return bookingDtos;
     }
 
     private ExpandedBookingDto toExpandedDto(TourBooking tourBooking) {

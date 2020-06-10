@@ -133,7 +133,9 @@ public class TourBookingServiceIT extends AbstractRESTfulDemoIT {
 
         assertEquals(1, filteredBookingsBefore.size());
 
-        tourBookingService.deleteAllBookingsWithTourIdAndCustomerId(TOUR_ID, CUSTOMER_ID);
+        List<TourBooking> deletedBookings = tourBookingService.deleteAllBookingsWithTourIdAndCustomerId(TOUR_ID, CUSTOMER_ID);
+
+        assertEquals(1, deletedBookings.size());
 
         List<TourBooking> filteredBookingsAfter = tourBookingService.lookupTourBookings(TOUR_ID)
                 .stream()
@@ -153,7 +155,9 @@ public class TourBookingServiceIT extends AbstractRESTfulDemoIT {
 
         assertEquals(2, filteredBookingsBefore.size());
 
-        tourBookingService.deleteAllBookingsWithCustomerId(CUSTOMER_ID);
+        List<TourBooking> deletedBookings = tourBookingService.deleteAllBookingsWithCustomerId(CUSTOMER_ID);
+
+        assertEquals(2, deletedBookings.size());
 
         List<TourBooking> filteredBookingsAfter = tourBookingService.lookupAllBookings()
                 .stream()
@@ -169,7 +173,9 @@ public class TourBookingServiceIT extends AbstractRESTfulDemoIT {
         List<TourBooking> bookingsBefore = tourBookingService.lookupAllBookings();
         assertEquals(3, bookingsBefore.size());
 
-        tourBookingService.deleteAllBookings();
+        List<TourBooking> deletedBookings = tourBookingService.deleteAllBookings();
+
+        assertEquals(3, deletedBookings.size());
 
         List<TourBooking> bookingsAfter = tourBookingService.lookupAllBookings();
         assertEquals(0, bookingsAfter.size());
