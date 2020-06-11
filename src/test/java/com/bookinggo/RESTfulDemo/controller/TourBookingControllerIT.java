@@ -13,8 +13,7 @@ import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.*;
 import org.springframework.test.context.jdbc.Sql;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.HttpStatus.*;
 
 @SpringBootTest(classes = RestfulDemoApplication.class,
@@ -45,7 +44,8 @@ public class TourBookingControllerIT extends AbstractRESTfulDemoIT {
         TourBooking[] tourBookings = restTemplate
                 .getForEntity(LOCAL_HOST + port + "/tours/" + TOUR_ID + "/bookings", TourBooking[].class)
                 .getBody();
-        assertEquals(2, tourBookings.length);
+
+        assertThat(tourBookings.length).isEqualTo(2);
     }
 
     @Sql
@@ -54,7 +54,8 @@ public class TourBookingControllerIT extends AbstractRESTfulDemoIT {
         TourBooking[] tourBookings = restTemplate
                 .getForEntity(LOCAL_HOST + port + "/tours/bookings", TourBooking[].class)
                 .getBody();
-        assertEquals(3, tourBookings.length);
+
+        assertThat(tourBookings.length).isEqualTo(3);
     }
 
     @Test
@@ -69,7 +70,7 @@ public class TourBookingControllerIT extends AbstractRESTfulDemoIT {
 
         ResponseEntity<BookingDto> response = restTemplate.postForEntity(LOCAL_HOST + port + "/tours/" + TOUR_ID + "/bookings", bookingDto, BookingDto.class);
 
-        assertEquals(CREATED.value(), response.getStatusCodeValue());
+        assertThat(response.getStatusCodeValue()).isEqualTo(CREATED.value());
     }
 
     @Sql
@@ -85,9 +86,9 @@ public class TourBookingControllerIT extends AbstractRESTfulDemoIT {
         HttpEntity<BookingPatchDto> entity = new HttpEntity<>(bookingPatchDto);
         ResponseEntity<BookingDto> response = restTemplate.exchange(LOCAL_HOST + port + "/tours/" + TOUR_ID + "/bookings", HttpMethod.PUT, entity, BookingDto.class);
 
-        assertEquals(OK.value(), response.getStatusCodeValue());
-        assertEquals(LOCATION, response.getBody().getPickupLocation());
-        assertEquals(PARTICIPANTS, response.getBody().getParticipants().intValue());
+        assertThat(response.getStatusCodeValue()).isEqualTo(OK.value());
+        assertThat(response.getBody().getPickupLocation()).isEqualTo(LOCATION);
+        assertThat(response.getBody().getParticipants().intValue()).isEqualTo(PARTICIPANTS);
     }
 
     @Sql
@@ -103,9 +104,9 @@ public class TourBookingControllerIT extends AbstractRESTfulDemoIT {
         HttpEntity<BookingPatchDto> entity = new HttpEntity<>(bookingPatchDto);
         ResponseEntity<BookingDto> response = restTemplate.exchange(LOCAL_HOST + port + "/tours/" + TOUR_ID + "/bookings", HttpMethod.PUT, entity, BookingDto.class);
 
-        assertEquals(OK.value(), response.getStatusCodeValue());
-        assertNotEquals(LOCATION, response.getBody().getPickupLocation());
-        assertEquals(PARTICIPANTS, response.getBody().getParticipants().intValue());
+        assertThat(response.getStatusCodeValue()).isEqualTo(OK.value());
+        assertThat(response.getBody().getPickupLocation()).isNotEqualTo(LOCATION);
+        assertThat(response.getBody().getParticipants().intValue()).isEqualTo(PARTICIPANTS);
     }
 
     @Sql
@@ -122,17 +123,17 @@ public class TourBookingControllerIT extends AbstractRESTfulDemoIT {
         HttpEntity<BookingDto> entity = new HttpEntity<>(bookingDto);
         ResponseEntity<BookingDto> response = restTemplate.exchange(LOCAL_HOST + port + "/tours/" + TOUR_ID + "/bookings", HttpMethod.PUT, entity, BookingDto.class);
 
-        assertEquals(BAD_REQUEST.value(), response.getStatusCodeValue());
+        assertThat(response.getStatusCodeValue()).isEqualTo(BAD_REQUEST.value());
     }
 
     @Sql
     @Test
-    public void shouldDeleteBookingsByTourIdAndCustomerId_whenBookingDeleted_givenBookingExists() {
+    public void shouldDeleteOneBookingByTourIdAndCustomerId_whenBookingDeleted_givenBookingExists() {
         TourBooking[] tourBookingsBefore = restTemplate
                 .getForEntity(LOCAL_HOST + port + "/tours/" + TOUR_ID + "/bookings", TourBooking[].class)
                 .getBody();
 
-        assertEquals(2, tourBookingsBefore.length);
+        assertThat(tourBookingsBefore.length).isEqualTo(2);
 
         restTemplate.delete(LOCAL_HOST + port + "/tours/" + TOUR_ID + "/bookings/" + CUSTOMER_ID);
 
@@ -140,7 +141,7 @@ public class TourBookingControllerIT extends AbstractRESTfulDemoIT {
                 .getForEntity(LOCAL_HOST + port + "/tours/" + TOUR_ID + "/bookings", TourBooking[].class)
                 .getBody();
 
-        assertEquals(1, tourBookingsAfter.length);
+        assertThat(tourBookingsAfter.length).isEqualTo(1);
     }
 
     @Sql
@@ -150,7 +151,7 @@ public class TourBookingControllerIT extends AbstractRESTfulDemoIT {
                 .getForEntity(LOCAL_HOST + port + "/tours/bookings", TourBooking[].class)
                 .getBody();
 
-        assertEquals(3, tourBookingsBefore.length);
+        assertThat(tourBookingsBefore.length).isEqualTo(3);
 
         restTemplate.delete(LOCAL_HOST + port + "/tours/bookings/" + CUSTOMER_ID);
 
@@ -158,7 +159,25 @@ public class TourBookingControllerIT extends AbstractRESTfulDemoIT {
                 .getForEntity(LOCAL_HOST + port + "/tours/bookings", TourBooking[].class)
                 .getBody();
 
-        assertEquals(1, tourBookingsAfter.length);
+        assertThat(tourBookingsAfter.length).isEqualTo(1);
+    }
+
+    @Sql
+    @Test
+    public void shouldDeleteTwoBookingsByTourId_whenBookingsDeleted_givenBookingsExist() {
+        TourBooking[] tourBookingsBefore = restTemplate
+                .getForEntity(LOCAL_HOST + port + "/tours/" + TOUR_ID + "/bookings/", TourBooking[].class)
+                .getBody();
+
+        assertThat(tourBookingsBefore.length).isEqualTo(2);
+
+        restTemplate.delete(LOCAL_HOST + port + "/tours/" + TOUR_ID + "/bookings");
+
+        TourBooking[] tourBookingsAfter = restTemplate
+                .getForEntity(LOCAL_HOST + port + "/tours/" + TOUR_ID + "/bookings/", TourBooking[].class)
+                .getBody();
+
+        assertThat(tourBookingsAfter.length).isEqualTo(0);
     }
 
     @Sql
@@ -175,7 +194,7 @@ public class TourBookingControllerIT extends AbstractRESTfulDemoIT {
                 .getBody();
 
 
-        assertNotEquals(tourBookingsBefore.length, tourBookingsAfter.length);
-        assertEquals(0, tourBookingsAfter.length);
+        assertThat(tourBookingsAfter.length).isNotEqualTo(tourBookingsBefore.length);
+        assertThat(tourBookingsAfter.length).isEqualTo(0);
     }
 }

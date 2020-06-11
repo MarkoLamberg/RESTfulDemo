@@ -13,7 +13,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
@@ -33,20 +33,20 @@ public class CustomerServiceTest {
     public void shouldCallFindAll_whenLookupAllCustomers_givenNoCustomersExist() {
         List<Customer> customers = customerService.lookupAllCustomers();
         verify(customerRepository, times(1)).findAll();
-        assertEquals(0, customers.size());
+        assertThat(customers.size()).isEqualTo(0);
     }
 
     @Test
     public void shouldCallFindById_whenLookupCustomerById_givenNoCustomersWithIdExists() {
         Optional<Customer> customer = customerService.lookupCustomerById(CUSTOMER_ID);
         verify(customerRepository, times(1)).findById(CUSTOMER_ID);
-        assertEquals(Optional.empty(), customer);
+        assertThat(customer).isEmpty();
     }
 
     @Test
     public void shouldCallFindById_whenLookupBookingByCustomerId_givenNoCustomersWithIdExists() {
         List<TourBooking> bookings = customerService.lookupBookingsByCustomerId(CUSTOMER_ID);
         verify(customerRepository, times(1)).findById(CUSTOMER_ID);
-        assertEquals(null, bookings);
+        assertThat(bookings).isNull();
     }
 }

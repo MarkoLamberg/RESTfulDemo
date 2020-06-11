@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 public class TourBookingServiceIT extends AbstractRESTfulDemoIT {
@@ -28,34 +28,34 @@ public class TourBookingServiceIT extends AbstractRESTfulDemoIT {
     @Test
     public void shouldCreateABooking_whenCreateNew_givenValidBooking() {
         List<TourBooking> bookingsBefore = tourBookingService.lookupAllBookings();
-        assertEquals(0, bookingsBefore.size());
+        assertThat(bookingsBefore.size()).isEqualTo(0);
 
         tourBookingService.createNew(TOUR_ID, CUSTOMER_ID, DATE_TIME, LOCATION, PARTICIPANTS);
 
         List<TourBooking> bookingsAfter = tourBookingService.lookupAllBookings();
         TourBooking booking = bookingsAfter.get(0);
 
-        assertEquals(1, bookingsAfter.size());
-        assertEquals(TOUR_ID, booking.getTour().getId().intValue());
-        assertEquals(CUSTOMER_ID, booking.getCustomer().getId().intValue());
-        assertEquals(LOCATION, booking.getPickupLocation());
-        assertEquals(PARTICIPANTS, booking.getParticipants().intValue());
+        assertThat(bookingsAfter.size()).isEqualTo(1);
+        assertThat(booking.getTour().getId().intValue()).isEqualTo(TOUR_ID);
+        assertThat(booking.getCustomer().getId().intValue()).isEqualTo(CUSTOMER_ID);
+        assertThat(booking.getPickupLocation()).isEqualTo(LOCATION);
+        assertThat(booking.getParticipants().intValue()).isEqualTo(PARTICIPANTS);
     }
 
     @Sql
     @Test
     public void shouldReturnBooking_whenLookupTourBookings_givenBookingWithTourIdExists() {
         List<TourBooking> bookings = tourBookingService.lookupTourBookings(TOUR_ID);
-        assertEquals(1, bookings.size());
+        assertThat(bookings.size()).isEqualTo(1);
         int tourId = bookings.get(0).getTour().getId();
-        assertEquals(TOUR_ID, bookings.get(0).getTour().getId().intValue());
+        assertThat(bookings.get(0).getTour().getId().intValue()).isEqualTo(TOUR_ID);
     }
 
     @Sql
     @Test
     public void shouldReturnTwoBookings_whenLookupAllBookings_givenBookingsExist() {
         List<TourBooking> bookings = tourBookingService.lookupAllBookings();
-        assertEquals(2, bookings.size());
+        assertThat(bookings.size()).isEqualTo(2);
     }
 
     @Sql
@@ -66,8 +66,8 @@ public class TourBookingServiceIT extends AbstractRESTfulDemoIT {
                 .filter(booking -> booking.getCustomer().getId().equals(CUSTOMER_ID))
                 .collect(Collectors.toList());
 
-        assertNotEquals(DATE_TIME, filteredBookingsBefore.get(0).getPickupDateTime());
-        assertNotEquals(LOCATION, filteredBookingsBefore.get(0).getPickupLocation());
+        assertThat(filteredBookingsBefore.get(0).getPickupDateTime()).isNotEqualTo(DATE_TIME);
+        assertThat(filteredBookingsBefore.get(0).getPickupLocation()).isNotEqualTo(LOCATION);
 
         tourBookingService.update(TOUR_ID, CUSTOMER_ID, DATE_TIME, LOCATION, PARTICIPANTS);
 
@@ -76,8 +76,8 @@ public class TourBookingServiceIT extends AbstractRESTfulDemoIT {
                 .filter(booking -> booking.getCustomer().getId().equals(CUSTOMER_ID))
                 .collect(Collectors.toList());
 
-        assertEquals(DATE_TIME, filteredBookingsAfter.get(0).getPickupDateTime());
-        assertEquals(LOCATION, filteredBookingsAfter.get(0).getPickupLocation());
+        assertThat(filteredBookingsAfter.get(0).getPickupDateTime()).isEqualTo(DATE_TIME);
+        assertThat(filteredBookingsAfter.get(0).getPickupLocation()).isEqualTo(LOCATION);
     }
 
     @Sql
@@ -88,7 +88,7 @@ public class TourBookingServiceIT extends AbstractRESTfulDemoIT {
                 .filter(booking -> booking.getCustomer().getId().equals(CUSTOMER_ID))
                 .collect(Collectors.toList());
 
-        assertFalse(filteredBookingsBefore.size() == 1);
+        assertThat(filteredBookingsBefore.size() == 1).isFalse();
 
         tourBookingService.update(TOUR_ID, CUSTOMER_ID, DATE_TIME, LOCATION, PARTICIPANTS);
 
@@ -97,7 +97,7 @@ public class TourBookingServiceIT extends AbstractRESTfulDemoIT {
                 .filter(booking -> booking.getPickupLocation().equals(LOCATION))
                 .collect(Collectors.toList());
 
-        assertEquals(0, filteredBookingsAfter.size());
+        assertThat(filteredBookingsAfter.size()).isEqualTo(0);
     }
 
     @Sql
@@ -108,8 +108,8 @@ public class TourBookingServiceIT extends AbstractRESTfulDemoIT {
                 .filter(booking -> booking.getCustomer().getId().equals(CUSTOMER_ID))
                 .collect(Collectors.toList());
 
-        assertNotEquals(DATE_TIME, filteredBookingsBefore.get(0).getPickupDateTime());
-        assertNotEquals(LOCATION, filteredBookingsBefore.get(0).getPickupLocation());
+        assertThat(filteredBookingsBefore.get(0).getPickupDateTime()).isNotEqualTo(DATE_TIME);
+        assertThat(filteredBookingsBefore.get(0).getPickupLocation()).isNotEqualTo(LOCATION);
 
         tourBookingService.update(TOUR_ID, CUSTOMER_ID, DATE_TIME, LOCATION, null);
 
@@ -118,9 +118,25 @@ public class TourBookingServiceIT extends AbstractRESTfulDemoIT {
                 .filter(booking -> booking.getCustomer().getId().equals(CUSTOMER_ID))
                 .collect(Collectors.toList());
 
-        assertEquals(DATE_TIME, filteredBookingsAfter.get(0).getPickupDateTime());
-        assertEquals(LOCATION, filteredBookingsAfter.get(0).getPickupLocation());
-        assertNotEquals(PARTICIPANTS, filteredBookingsAfter.get(0).getPickupLocation());
+        assertThat(filteredBookingsAfter.get(0).getPickupDateTime()).isEqualTo(DATE_TIME);
+        assertThat(filteredBookingsAfter.get(0).getPickupLocation()).isEqualTo(LOCATION);
+        assertThat(filteredBookingsAfter.get(0).getPickupLocation()).isNotEqualTo(PARTICIPANTS);
+    }
+
+    @Sql
+    @Test
+    public void shouldDeleteBooking_whenDeleteAllBookingsWithTourId_givenBookingWithTourIdExists() {
+        List<TourBooking> bookingsBefore = tourBookingService.lookupTourBookings(TOUR_ID);
+
+        assertThat(bookingsBefore.size()).isEqualTo(1);
+
+        List<TourBooking> deletedBookings = tourBookingService.deleteAllBookingsWithTourId(TOUR_ID);
+
+        assertThat(deletedBookings.size()).isEqualTo(1);
+
+        List<TourBooking> bookingsAfter = tourBookingService.lookupTourBookings(TOUR_ID);
+
+        assertThat(bookingsAfter.size()).isEqualTo(0);
     }
 
     @Sql
@@ -131,18 +147,18 @@ public class TourBookingServiceIT extends AbstractRESTfulDemoIT {
                 .filter(booking -> booking.getCustomer().getId().equals(CUSTOMER_ID))
                 .collect(Collectors.toList());
 
-        assertEquals(1, filteredBookingsBefore.size());
+        assertThat(filteredBookingsBefore.size()).isEqualTo(1);
 
         List<TourBooking> deletedBookings = tourBookingService.deleteAllBookingsWithTourIdAndCustomerId(TOUR_ID, CUSTOMER_ID);
 
-        assertEquals(1, deletedBookings.size());
+        assertThat(deletedBookings.size()).isEqualTo(1);
 
         List<TourBooking> filteredBookingsAfter = tourBookingService.lookupTourBookings(TOUR_ID)
                 .stream()
                 .filter(booking -> booking.getCustomer().getId().equals(CUSTOMER_ID))
                 .collect(Collectors.toList());
 
-        assertEquals(0, filteredBookingsAfter.size());
+        assertThat(filteredBookingsAfter.size()).isEqualTo(0);
     }
 
     @Sql
@@ -153,32 +169,32 @@ public class TourBookingServiceIT extends AbstractRESTfulDemoIT {
                 .filter(booking -> booking.getCustomer().getId().equals(CUSTOMER_ID))
                 .collect(Collectors.toList());
 
-        assertEquals(2, filteredBookingsBefore.size());
+        assertThat(filteredBookingsBefore.size()).isEqualTo(2);
 
         List<TourBooking> deletedBookings = tourBookingService.deleteAllBookingsWithCustomerId(CUSTOMER_ID);
 
-        assertEquals(2, deletedBookings.size());
+        assertThat(deletedBookings.size()).isEqualTo(2);
 
         List<TourBooking> filteredBookingsAfter = tourBookingService.lookupAllBookings()
                 .stream()
                 .filter(booking -> booking.getCustomer().getId().equals(CUSTOMER_ID))
                 .collect(Collectors.toList());
 
-        assertEquals(0, filteredBookingsAfter.size());
+        assertThat(filteredBookingsAfter.size()).isEqualTo(0);
     }
 
     @Sql
     @Test
     public void shouldDeleteAllBookings_whenDeleteAllBookings_givenBookingsExists() {
         List<TourBooking> bookingsBefore = tourBookingService.lookupAllBookings();
-        assertEquals(3, bookingsBefore.size());
+        assertThat(bookingsBefore.size()).isEqualTo(3);
 
         List<TourBooking> deletedBookings = tourBookingService.deleteAllBookings();
 
-        assertEquals(3, deletedBookings.size());
+        assertThat(deletedBookings.size()).isEqualTo(3);
 
         List<TourBooking> bookingsAfter = tourBookingService.lookupAllBookings();
-        assertEquals(0, bookingsAfter.size());
+        assertThat(bookingsAfter.size()).isEqualTo(0);
     }
 }
 

@@ -8,8 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
+import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 public class TourServiceIT extends AbstractRESTfulDemoIT {
@@ -23,13 +22,13 @@ public class TourServiceIT extends AbstractRESTfulDemoIT {
     public void shouldReturnEightTours_whenLookupAllTours_givenToursExist() {
         List<Tour> tours = tourService.lookupAllTours();
 
-        assertEquals(8, tours.size());
+        assertThat(tours.size()).isEqualTo(8);
     }
 
     @Test
     public void shouldReturnATour_whenLookupTourById_givenTourWithIdExists() {
         Optional<Tour> tour = tourService.lookupTourById(TOUR_ID);
 
-        assertEquals(true, tour.isPresent());
+        assertThat(tour).isPresent();
     }
 }

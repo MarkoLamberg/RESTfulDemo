@@ -12,7 +12,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
@@ -32,13 +32,13 @@ public class TourServiceTest {
     public void shouldCallFindAll_whenLookupAllTours_givenNoToursExist() {
         List<Tour> tours = tourService.lookupAllTours();
         verify(tourRepositoryMock, times(1)).findAll();
-        assertEquals(0, tours.size());
+        assertThat(tours.size()).isEqualTo(0);
     }
 
     @Test
     public void shouldCallFindById_whenLookupTourById_givenNoTourWithIdExists() {
         Optional<Tour> tour = tourService.lookupTourById(TOUR_ID);
         verify(tourRepositoryMock, times(1)).findById(TOUR_ID);
-        assertEquals(Optional.empty(), tour);
+        assertThat(tour).isEmpty();
     }
 }

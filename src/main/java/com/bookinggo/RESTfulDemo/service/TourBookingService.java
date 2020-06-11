@@ -16,6 +16,8 @@ public interface TourBookingService {
 
     public TourBooking update(int tourId, Integer customerId, LocalDateTime pickupDateTime, String location, Integer participants) throws NoSuchElementException;
 
+    public List<TourBooking> deleteAllBookingsWithTourId(int tourId);
+
     public List<TourBooking> deleteAllBookingsWithTourIdAndCustomerId(int tourId, Integer customerId) throws NoSuchElementException;
 
     public List<TourBooking> deleteAllBookingsWithCustomerId(Integer customerId) throws NoSuchElementException;

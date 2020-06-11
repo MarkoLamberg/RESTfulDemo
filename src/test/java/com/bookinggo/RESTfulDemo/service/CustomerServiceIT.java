@@ -10,8 +10,7 @@ import org.springframework.test.context.jdbc.Sql;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
+import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 public class CustomerServiceIT extends AbstractRESTfulDemoIT {
@@ -26,15 +25,15 @@ public class CustomerServiceIT extends AbstractRESTfulDemoIT {
     public void shouldReturnEightCustomers_whenLookupAllCustomers_givenCustomersExist() {
         List<Customer> customers = customerService.lookupAllCustomers();
 
-        assertEquals(8, customers.size());
+        assertThat(customers.size()).isEqualTo(8);
     }
 
     @Sql
     @Test
     public void shouldReturnACustomer_whenLookupCustomerById_givenCustomerWithIdExists() {
-        Optional<Customer> customer = customerService.lookupCustomerById(CUSTOMER_ID);
+        Optional<Customer> customers = customerService.lookupCustomerById(CUSTOMER_ID);
 
-        assertEquals(true, customer.isPresent());
+        assertThat(customers.isPresent()).isTrue();
     }
 
     @Sql
@@ -42,6 +41,6 @@ public class CustomerServiceIT extends AbstractRESTfulDemoIT {
     public void shouldReturnTwoBookings_whenLookupBookingsByCustomerId_givenCustomerWithIdExistsAndBookingsExist() {
         List<TourBooking> tourBookings = customerService.lookupBookingsByCustomerId(CUSTOMER_ID);
 
-        assertEquals(2, tourBookings.size());
+        assertThat(tourBookings.size()).isEqualTo(2);
     }
 }

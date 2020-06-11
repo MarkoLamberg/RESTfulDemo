@@ -67,8 +67,16 @@ public class TourBookingController {
                 .body(toDto(response));
     }
 
+    @DeleteMapping("/{tourId}/bookings")
+    public List<BookingDto> deleteAllBookingsForTour(@PathVariable(value = "tourId") int tourId) {
+        log.info("DELETE /tours/{}/bookings", tourId);
+        List<TourBooking> bookings = tourBookingService.deleteAllBookingsWithTourId(tourId);
+
+        return listOfDtos(bookings);
+    }
+
     @DeleteMapping("/{tourId}/bookings/{customerId}")
-    public List<BookingDto> delete(@PathVariable(value = "tourId") int tourId, @PathVariable(value = "customerId") int customerId) {
+    public List<BookingDto> deleteAllBookingsForTourAndCustomer(@PathVariable(value = "tourId") int tourId, @PathVariable(value = "customerId") int customerId) {
         log.info("DELETE /tours/{}/bookings", tourId);
         List<TourBooking> bookings = tourBookingService.deleteAllBookingsWithTourIdAndCustomerId(tourId, customerId);
 
@@ -76,7 +84,7 @@ public class TourBookingController {
     }
 
     @DeleteMapping("/bookings/{customerId}")
-    public List<BookingDto> delete(@PathVariable(value = "customerId") int customerId) {
+    public List<BookingDto> deleteAllBookingsForCustomer(@PathVariable(value = "customerId") int customerId) {
         log.info("DELETE /tours/bookings/{}", customerId);
         List<TourBooking> bookings = tourBookingService.deleteAllBookingsWithCustomerId(customerId);
 
@@ -84,7 +92,7 @@ public class TourBookingController {
     }
 
     @DeleteMapping("/bookings")
-    public List<BookingDto> delete() {
+    public List<BookingDto> deleteAllBookings() {
         log.info("DELETE /tours/bookings/");
         List<TourBooking> bookings = tourBookingService.deleteAllBookings();
 

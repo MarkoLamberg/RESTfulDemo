@@ -11,7 +11,7 @@ import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.test.context.ActiveProfiles;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(classes = RestfulDemoApplication.class,
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -39,7 +39,8 @@ public class TourControllerIT {
         Tour[] tours = restTemplate
                 .getForEntity(LOCAL_HOST + port + "/tours", Tour[].class)
                 .getBody();
-        assertEquals(8, tours.length);
+
+        assertThat(tours.length).isEqualTo(8);
     }
 
     @Test
@@ -47,7 +48,8 @@ public class TourControllerIT {
         Tour tour = restTemplate
                 .getForEntity(LOCAL_HOST + port + "/tours/" + TOUR_ID, Tour.class)
                 .getBody();
-        assertEquals(1, tour.getId().intValue());
+
+        assertThat(tour.getId().intValue()).isEqualTo(1);
     }
 
     @Test
@@ -55,6 +57,7 @@ public class TourControllerIT {
         Tour[] tours = restTemplate
                 .getForEntity(LOCAL_HOST + port + "/tours/byLocation/" + TOUR_LOCATION, Tour[].class)
                 .getBody();
-        assertEquals(2, tours.length);
+
+        assertThat(tours.length).isEqualTo(2);
     }
 }

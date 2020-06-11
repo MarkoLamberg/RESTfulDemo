@@ -13,8 +13,7 @@ import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(classes = RestfulDemoApplication.class,
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -40,7 +39,8 @@ public class CustomerControllerIT {
         Customer[] customers = restTemplate
                 .getForEntity(LOCAL_HOST + port + "/customers", Customer[].class)
                 .getBody();
-        assertEquals(8, customers.length);
+
+        assertThat(customers.length).isEqualTo(8);
     }
 
     @Test
@@ -48,8 +48,9 @@ public class CustomerControllerIT {
         Customer customer = restTemplate
                 .getForEntity(LOCAL_HOST + port + "/customers/" + CUSTOMER_ID, Customer.class)
                 .getBody();
-        assertNotNull(customer);
-        assertEquals(CUSTOMER_ID, customer.getId().intValue());
+
+        assertThat(customer).isNotNull();
+        assertThat(customer.getId().intValue()).isEqualTo(CUSTOMER_ID);
     }
 
     @Sql
@@ -58,6 +59,7 @@ public class CustomerControllerIT {
         TourBooking[] tourBookings = restTemplate
                 .getForEntity(LOCAL_HOST + port + "/customers/" + CUSTOMER_ID + "/bookings", TourBooking[].class)
                 .getBody();
-        assertEquals(2, tourBookings.length);
+
+        assertThat(tourBookings.length).isEqualTo(2);
     }
 }

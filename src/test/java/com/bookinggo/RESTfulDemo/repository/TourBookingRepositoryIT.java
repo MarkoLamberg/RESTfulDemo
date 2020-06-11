@@ -7,7 +7,7 @@ import org.springframework.test.context.jdbc.Sql;
 
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class TourBookingRepositoryIT extends AbstractRepositoryIT {
 
@@ -21,20 +21,20 @@ public class TourBookingRepositoryIT extends AbstractRepositoryIT {
     @Test
     public void shouldReturnTwoBookings_whenFindBookingsByTourId_givenBookingsExist() {
         List<TourBooking> bookings = tourBookingRepository.findByTourId(TOUR_ID);
-        assertEquals(2, bookings.size());
+        assertThat(bookings.size()).isEqualTo(2);
     }
 
     @Sql
     @Test
     public void shouldReturnTwoBookings_whenFindBookingsByCustomerId_givenBookingsExists() {
         List<TourBooking> bookings = tourBookingRepository.findByCustomerId(CUSTOMER_ID);
-        assertEquals(2, bookings.size());
+        assertThat(bookings.size()).isEqualTo(2);
     }
 
     @Sql
     @Test
     public void shouldReturnTwoBookings_whenFindBookingsByTourIdAndCustomerId_givenBookingsExists() {
         List<TourBooking> bookings = tourBookingRepository.findByTourIdAndCustomerId(TOUR_ID, CUSTOMER_ID);
-        assertEquals(2, bookings.size());
+        assertThat(bookings.size()).isEqualTo(2);
     }
 }

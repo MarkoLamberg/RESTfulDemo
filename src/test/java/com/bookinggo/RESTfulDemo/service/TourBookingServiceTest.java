@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -54,14 +54,14 @@ public class TourBookingServiceTest {
     public void shouldNotReturnAnyBookings_whenLookupTourBookings_givenNoBookingsWithIdExist() {
         List<TourBooking> bookings = tourBookingService.lookupTourBookings(TOUR_ID);
         verify(tourBookingRepositoryMock, times(1)).findByTourId(TOUR_ID);
-        assertEquals(bookings.size(), 0);
+        assertThat(bookings.size()).isEqualTo(0);
     }
 
     @Test
     public void shouldNotReturnAnyBookings_whenLookupAllBookings_givenNoBookingsExist() {
         List<TourBooking> bookings = tourBookingService.lookupAllBookings();
         verify(tourBookingRepositoryMock, times(1)).findAll();
-        assertEquals(bookings.size(), 0);
+        assertThat(bookings.size()).isEqualTo(0);
     }
 
     @Test
@@ -72,7 +72,15 @@ public class TourBookingServiceTest {
         verify(tourBookingMock, times(0)).setPickupDateTime(DATE_TIME);
         verify(tourBookingMock, times(0)).setPickupLocation(LOCATION);
         verify(tourBookingRepositoryMock, times(0)).saveAndFlush(null);
-        assertEquals(booking, null);
+        assertThat(booking).isNull();
+    }
+
+    @Test
+    public void shouldNotDeleteAnyBookings_whenDeleteAllBookingsWithTourId_givenBookingsWithTourIdNonExisting() throws NoSuchElementException {
+        tourBookingService.deleteAllBookingsWithTourId(TOUR_ID);
+
+        verify(tourBookingRepositoryMock, times(1)).findByTourId(TOUR_ID);
+        verify(tourBookingRepositoryMock, times(0)).delete(any());
     }
 
     @Test
