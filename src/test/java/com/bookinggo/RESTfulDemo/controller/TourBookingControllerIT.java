@@ -59,7 +59,13 @@ public class TourBookingControllerIT extends AbstractRESTfulDemoIT {
 
     @Test
     public void shouldReturn201_whenBookingCreated_givenValidBooking() {
-        BookingDto bookingDto = new BookingDto(DATE_TIME, LOCATION, CUSTOMER_ID, PARTICIPANTS, TOTAL_PRICE);
+        BookingDto bookingDto = BookingDto.builder()
+                .pickupDateTime(DATE_TIME)
+                .pickupLocation(LOCATION)
+                .customerId(CUSTOMER_ID)
+                .participants(PARTICIPANTS)
+                .totalPrice(TOTAL_PRICE)
+                .build();
 
         ResponseEntity<BookingDto> response = restTemplate.postForEntity(LOCAL_HOST + port + "/tours/" + TOUR_ID + "/bookings", bookingDto, BookingDto.class);
 
@@ -69,8 +75,13 @@ public class TourBookingControllerIT extends AbstractRESTfulDemoIT {
     @Sql
     @Test
     public void shouldReturn200_whenBookingUpdated_givenValidBooking() {
-        BookingPatchDto bookingPatchDto = new BookingPatchDto(DATE_TIME, LOCATION, CUSTOMER_ID, PARTICIPANTS, TOTAL_PRICE);
-
+        BookingPatchDto bookingPatchDto = BookingPatchDto.builder()
+                .pickupDateTime(DATE_TIME)
+                .pickupLocation(LOCATION)
+                .customerId(CUSTOMER_ID)
+                .participants(PARTICIPANTS)
+                .totalPrice(TOTAL_PRICE)
+                .build();
         HttpEntity<BookingPatchDto> entity = new HttpEntity<>(bookingPatchDto);
         ResponseEntity<BookingDto> response = restTemplate.exchange(LOCAL_HOST + port + "/tours/" + TOUR_ID + "/bookings", HttpMethod.PUT, entity, BookingDto.class);
 
@@ -82,8 +93,13 @@ public class TourBookingControllerIT extends AbstractRESTfulDemoIT {
     @Sql
     @Test
     public void shouldReturn200_whenBookingUpdatedSome_givenValidBooking() {
-        BookingPatchDto bookingPatchDto = new BookingPatchDto(null, null, CUSTOMER_ID, PARTICIPANTS, TOTAL_PRICE);
-
+        BookingPatchDto bookingPatchDto = BookingPatchDto.builder()
+                .pickupDateTime(null)
+                .pickupLocation(null)
+                .customerId(CUSTOMER_ID)
+                .participants(PARTICIPANTS)
+                .totalPrice(TOTAL_PRICE)
+                .build();
         HttpEntity<BookingPatchDto> entity = new HttpEntity<>(bookingPatchDto);
         ResponseEntity<BookingDto> response = restTemplate.exchange(LOCAL_HOST + port + "/tours/" + TOUR_ID + "/bookings", HttpMethod.PUT, entity, BookingDto.class);
 
@@ -95,7 +111,13 @@ public class TourBookingControllerIT extends AbstractRESTfulDemoIT {
     @Sql
     @Test
     public void shouldReturn400_whenBookingUpdated_givenValidBookingButMoreThanOneBookingsWithSameCustomerAndSameLocation() {
-        BookingDto bookingDto = new BookingDto(DATE_TIME, LOCATION, CUSTOMER_ID, PARTICIPANTS, TOTAL_PRICE);
+        BookingDto bookingDto = BookingDto.builder()
+                .pickupDateTime(DATE_TIME)
+                .pickupLocation(LOCATION)
+                .customerId(CUSTOMER_ID)
+                .participants(PARTICIPANTS)
+                .totalPrice(TOTAL_PRICE)
+                .build();
 
         HttpEntity<BookingDto> entity = new HttpEntity<>(bookingDto);
         ResponseEntity<BookingDto> response = restTemplate.exchange(LOCAL_HOST + port + "/tours/" + TOUR_ID + "/bookings", HttpMethod.PUT, entity, BookingDto.class);

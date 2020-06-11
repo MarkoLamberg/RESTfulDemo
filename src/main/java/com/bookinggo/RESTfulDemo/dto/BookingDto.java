@@ -7,6 +7,7 @@ import javax.validation.constraints.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
+@Builder
 public class BookingDto {
 
     @Size(max = 255)

@@ -10,7 +10,9 @@ import java.time.LocalDateTime;
 
 @Entity
 @Data
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
 @Slf4j
 @Table(name = "tour_booking")
 @EqualsAndHashCode
@@ -50,16 +52,6 @@ public class TourBooking {
     @PreUpdate
     public void onUpdate() {
         modifiedWhen = LocalDateTime.now();
-    }
-
-    public TourBooking(Tour tour, Customer customer, LocalDateTime pickupDateTime, String pickupLocation, Integer participants) {
-        log.info("constructor - tour: {}, customerId: {}, date: {}, pickupLocation: {}, participants: {}", tour, pickupDateTime, pickupLocation, participants);
-
-        this.tour = tour;
-        this.customer = customer;
-        this.pickupDateTime = pickupDateTime;
-        this.pickupLocation = pickupLocation;
-        this.participants = participants;
     }
 
     public String getTotalPriceString() {

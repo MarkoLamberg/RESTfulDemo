@@ -32,8 +32,14 @@ public class TourBookingServiceImpl implements TourBookingService {
             Optional<Customer> customer = customerRepository.findById(customerId);
 
             if (customer.isPresent()) {
-                TourBooking tourBooking = new TourBooking(tour.get(), customer.get(),
-                        pickupDateTime, location, participants);
+                TourBooking tourBooking = TourBooking.builder()
+                        .tour(tour.get())
+                        .customer(customer.get())
+                        .pickupDateTime(pickupDateTime)
+                        .pickupLocation(location)
+                        .participants(participants)
+                        .build();
+
                 tourBookingRepository.save(tourBooking);
 
                 return tourBooking;

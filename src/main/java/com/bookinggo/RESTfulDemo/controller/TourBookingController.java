@@ -92,8 +92,13 @@ public class TourBookingController {
     }
 
     private BookingDto toDto(TourBooking tourBooking) {
-        return new BookingDto(tourBooking.getPickupDateTime().toString(), tourBooking.getPickupLocation(), tourBooking.getCustomer().getId(),
-                tourBooking.getParticipants(), tourBooking.getTotalPriceString());
+        return BookingDto.builder()
+                .pickupDateTime(tourBooking.getPickupDateTime().toString())
+                .pickupLocation(tourBooking.getPickupLocation())
+                .customerId(tourBooking.getCustomer().getId())
+                .participants(tourBooking.getParticipants())
+                .totalPrice(tourBooking.getTotalPriceString())
+                .build();
     }
 
     private List<BookingDto> listOfDtos(List<TourBooking> bookings) {
@@ -104,13 +109,14 @@ public class TourBookingController {
     }
 
     private ExpandedBookingDto toExpandedDto(TourBooking tourBooking) {
-        return new ExpandedBookingDto(tourBooking.getPickupDateTime().toString(), tourBooking.getPickupLocation(), tourBooking.getCustomer().getId(),
-                tourBooking.getParticipants(), tourBooking.getTotalPriceString(), tourBooking.getTour().getId());
-    }
-
-    private BookingPatchDto toPatchDto(TourBooking tourBooking) {
-        return new BookingPatchDto(tourBooking.getPickupDateTime().toString(), tourBooking.getPickupLocation(), tourBooking.getCustomer().getId(),
-                tourBooking.getParticipants(), tourBooking.getTotalPriceString());
+        return ExpandedBookingDto.childBuilder()
+                .pickupDateTime(tourBooking.getPickupDateTime().toString())
+                .pickupLocation(tourBooking.getPickupLocation())
+                .customerId(tourBooking.getCustomer().getId())
+                .participants(tourBooking.getParticipants())
+                .totalPrice(tourBooking.getTotalPriceString())
+                .tourId(tourBooking.getTour().getId())
+                .build();
     }
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
