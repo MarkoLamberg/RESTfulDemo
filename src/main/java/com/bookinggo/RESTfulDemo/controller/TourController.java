@@ -6,8 +6,10 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping(path = "/tours")
@@ -32,7 +34,8 @@ public class TourController {
             return tour.get();
         }
 
-        return null;
+        throw new ResponseStatusException(
+                HttpStatus.BAD_REQUEST, "Provide correct Tour Id");
     }
 
     @GetMapping(path = "/byLocation/{tourLocation}")
@@ -40,13 +43,11 @@ public class TourController {
         log.info("GET /tours/{}", location);
         List<Tour> tours = tourService.lookupToursByLocation(location);
 
-        return tours;
-    }
+        if (tours.size() > 0) {
+            return tours;
+        }
 
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    @ExceptionHandler(NoSuchElementException.class)
-    public String return400(NoSuchElementException ex) {
-        log.info("NOT FOUND");
-        return ex.getMessage();
+        throw new ResponseStatusException(
+                HttpStatus.BAD_REQUEST, "Provide correct Tour Location");
     }
 }

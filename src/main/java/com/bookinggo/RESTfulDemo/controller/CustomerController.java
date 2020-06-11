@@ -7,8 +7,10 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping(path = "/customers")
@@ -33,21 +35,22 @@ public class CustomerController {
             return customer.get();
         }
 
-        return null;
+        throw new ResponseStatusException(
+                HttpStatus.BAD_REQUEST, "Provide correct Customer Id");
     }
 
     @GetMapping(path = "/{customerId}/bookings")
     public List<TourBooking> getCustomersBookingsById(@PathVariable(value = "customerId") int customerId) {
         log.info("GET /customers/{}/bookings", customerId);
-        List<TourBooking> bookings = customerService.lookupBookingsByCustomerId(customerId);
+        Optional<Customer> customer = customerService.lookupCustomerById(customerId);
 
-        return bookings;
-    }
+        if (customer.isPresent()) {
+            List<TourBooking> bookings = customerService.lookupBookingsByCustomerId(customerId);
 
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    @ExceptionHandler(NoSuchElementException.class)
-    public String return400(NoSuchElementException ex) {
-        log.info("NOT FOUND");
-        return ex.getMessage();
+            return bookings;
+        }
+
+        throw new ResponseStatusException(
+                HttpStatus.BAD_REQUEST, "Provide correct Customer Id");
     }
 }
