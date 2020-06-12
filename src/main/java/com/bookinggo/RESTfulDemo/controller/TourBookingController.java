@@ -1,8 +1,10 @@
 package com.bookinggo.RESTfulDemo.controller;
 
 import com.bookinggo.RESTfulDemo.dto.*;
-import com.bookinggo.RESTfulDemo.entity.*;
-import com.bookinggo.RESTfulDemo.service.*;
+import com.bookinggo.RESTfulDemo.entity.Tour;
+import com.bookinggo.RESTfulDemo.entity.TourBooking;
+import com.bookinggo.RESTfulDemo.service.TourBookingService;
+import com.bookinggo.RESTfulDemo.service.TourService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -23,10 +25,7 @@ import java.util.stream.Collectors;
 public class TourBookingController {
 
     private final TourBookingService tourBookingService;
-
     private final TourService tourService;
-
-    private final CustomerService customerService;
 
     @PostMapping(path = "/{tourId}/bookings")
     @ResponseStatus(HttpStatus.CREATED)
@@ -117,16 +116,9 @@ public class TourBookingController {
         Optional<Tour> tour = tourService.lookupTourById(tourId);
 
         if (tour.isPresent()) {
-            Optional<Customer> customer = customerService.lookupCustomerById(customerId);
+            List<TourBooking> bookings = tourBookingService.deleteAllBookingsWithTourIdAndCustomerId(tourId, customerId);
 
-            if (customer.isPresent()) {
-                List<TourBooking> bookings = tourBookingService.deleteAllBookingsWithTourIdAndCustomerId(tourId, customerId);
-
-                return listOfDtos(bookings);
-            }
-
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST, "Provide correct Customer Id");
+            return listOfDtos(bookings);
         }
 
         throw new ResponseStatusException(
@@ -136,16 +128,9 @@ public class TourBookingController {
     @DeleteMapping("/bookings/{customerId}")
     public List<BookingDto> deleteAllBookingsForCustomer(@PathVariable(value = "customerId") int customerId) {
         log.info("DELETE /tours/bookings/{}", customerId);
-        Optional<Customer> customer = customerService.lookupCustomerById(customerId);
+        List<TourBooking> bookings = tourBookingService.deleteAllBookingsWithCustomerId(customerId);
 
-        if (customer.isPresent()) {
-            List<TourBooking> bookings = tourBookingService.deleteAllBookingsWithCustomerId(customerId);
-
-            return listOfDtos(bookings);
-        }
-
-        throw new ResponseStatusException(
-                HttpStatus.BAD_REQUEST, "Provide correct Customer Id");
+        return listOfDtos(bookings);
     }
 
     @DeleteMapping("/bookings")

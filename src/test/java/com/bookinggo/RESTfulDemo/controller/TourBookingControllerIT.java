@@ -35,9 +35,6 @@ public class TourBookingControllerIT extends AbstractRESTfulDemoIT {
     @Autowired
     private TestRestTemplate restTemplate;
 
-    @Autowired
-    private TourBookingController tourBookingController;
-
     @Sql
     @Test
     public void shouldReturnTwoBookings_whenGetBookingsForTourId_givenBookingsExist() {
