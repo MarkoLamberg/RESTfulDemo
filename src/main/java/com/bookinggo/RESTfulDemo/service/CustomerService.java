@@ -13,4 +13,6 @@ public interface CustomerService {
     public Optional<Customer> lookupCustomerById(int id);
 
     public List<TourBooking> lookupBookingsByCustomerId(int id);
+
+    public Customer createCustomer(String title, String name);
 }

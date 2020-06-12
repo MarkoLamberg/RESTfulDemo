@@ -17,6 +17,10 @@ public class CustomerServiceIT extends AbstractRESTfulDemoIT {
 
     private static final int CUSTOMER_ID = 1;
 
+    private static final String TITLE = "Mr";
+
+    private static final String NAME = "Marko Lamberg";
+
     @Autowired
     private CustomerService customerService;
 
@@ -42,5 +46,21 @@ public class CustomerServiceIT extends AbstractRESTfulDemoIT {
         List<TourBooking> tourBookings = customerService.lookupBookingsByCustomerId(CUSTOMER_ID);
 
         assertThat(tourBookings.size()).isEqualTo(2);
+    }
+
+    @Sql
+    @Test
+    public void shouldCreateCustomer_whenCreateCustomer_givenValidCustomer() {
+        List<Customer> customersBefore = customerService.lookupAllCustomers();
+        assertThat(customersBefore.size()).isEqualTo(5);
+
+        customerService.createCustomer(TITLE, NAME);
+
+        List<Customer> customersAfter = customerService.lookupAllCustomers();
+        Customer customer = customersAfter.get(5);
+
+        assertThat(customersAfter.size()).isEqualTo(6);
+        assertThat(customer.getTitle()).isEqualTo(TITLE);
+        assertThat(customer.getName()).isEqualTo(NAME);
     }
 }

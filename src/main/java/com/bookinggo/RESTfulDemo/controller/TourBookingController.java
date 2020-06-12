@@ -36,7 +36,7 @@ public class TourBookingController {
         if (tour.isPresent()) {
             LocalDateTime pickupDateTime = LocalDateTime.parse(bookingDto.getPickupDateTime(), DateTimeFormatter.ISO_LOCAL_DATE_TIME);
 
-            return tourBookingService.createNew(tourId, bookingDto.getCustomerId(), pickupDateTime,
+            return tourBookingService.createBooking(tourId, bookingDto.getCustomerId(), pickupDateTime,
                     bookingDto.getPickupLocation(), bookingDto.getParticipants());
         }
 

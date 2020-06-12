@@ -2,7 +2,6 @@ package com.bookinggo.RESTfulDemo.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
-import lombok.extern.slf4j.Slf4j;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
@@ -13,7 +12,6 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Slf4j
 @Table(name = "tour_booking")
 @EqualsAndHashCode
 public class TourBooking {

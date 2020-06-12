@@ -26,11 +26,11 @@ public class TourBookingServiceIT extends AbstractRESTfulDemoIT {
 
     @Sql
     @Test
-    public void shouldCreateABooking_whenCreateNew_givenValidBooking() {
+    public void shouldCreateABooking_whenCreateBooking_givenValidBooking() {
         List<TourBooking> bookingsBefore = tourBookingService.lookupAllBookings();
         assertThat(bookingsBefore.size()).isEqualTo(0);
 
-        tourBookingService.createNew(TOUR_ID, CUSTOMER_ID, DATE_TIME, LOCATION, PARTICIPANTS);
+        tourBookingService.createBooking(TOUR_ID, CUSTOMER_ID, DATE_TIME, LOCATION, PARTICIPANTS);
 
         List<TourBooking> bookingsAfter = tourBookingService.lookupAllBookings();
         TourBooking booking = bookingsAfter.get(0);

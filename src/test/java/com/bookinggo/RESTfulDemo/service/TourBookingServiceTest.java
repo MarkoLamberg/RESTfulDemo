@@ -44,7 +44,7 @@ public class TourBookingServiceTest {
 
     @Test
     public void shouldNotCreateBooking_whenCreate_givenTourIdDoesNotExist() {
-        tourBookingService.createNew(TOUR_ID, CUSTOMER_ID, DATE_TIME, LOCATION, PARTICIPANTS);
+        tourBookingService.createBooking(TOUR_ID, CUSTOMER_ID, DATE_TIME, LOCATION, PARTICIPANTS);
 
         verify(tourRepositoryMock, times(1)).findById(TOUR_ID);
         verify(tourRepositoryMock, times(0)).save(any());

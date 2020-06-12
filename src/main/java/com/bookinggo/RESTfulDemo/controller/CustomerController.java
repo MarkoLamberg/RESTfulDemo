@@ -1,5 +1,6 @@
 package com.bookinggo.RESTfulDemo.controller;
 
+import com.bookinggo.RESTfulDemo.dto.CustomerDto;
 import com.bookinggo.RESTfulDemo.entity.Customer;
 import com.bookinggo.RESTfulDemo.entity.TourBooking;
 import com.bookinggo.RESTfulDemo.service.CustomerService;
@@ -9,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
@@ -52,5 +54,13 @@ public class CustomerController {
 
         throw new ResponseStatusException(
                 HttpStatus.BAD_REQUEST, "Provide correct Customer Id");
+    }
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public Customer createCustomer(@Valid @RequestBody CustomerDto customerDto) {
+        log.info("POST /customers");
+
+        return customerService.createCustomer(customerDto.getTitle(), customerDto.getName());
     }
 }

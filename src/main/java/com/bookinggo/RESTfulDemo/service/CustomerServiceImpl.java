@@ -41,4 +41,18 @@ public class CustomerServiceImpl implements CustomerService {
 
         return null;
     }
+
+    @Override
+    public Customer createCustomer(String title, String name) {
+        log.info("createNewCustomer");
+
+        Customer customer = Customer.builder()
+                .title(title)
+                .name(name)
+                .build();
+
+        customerRepository.save(customer);
+
+        return customer;
+    }
 }
