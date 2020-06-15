@@ -34,7 +34,6 @@ public class MySQLConfig {
     @Bean
     @Primary
     public DataSource dataSource(EmbeddedMysql embeddedMySql) {
-        //Create our database with default root user and no password
         MysqldConfig config = embeddedMySql.getConfig();
         log.info(String.format("Integration Test MySQL database is running on port %s", config.getPort()));
         return DataSourceBuilder

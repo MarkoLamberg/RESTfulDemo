@@ -49,7 +49,7 @@ public class TourBookingServiceImpl implements TourBookingService {
 
     @Override
     public List<TourBooking> lookupTourBookings(int tourId) {
-        log.info("lookupBookings - tourId: {}", tourId);
+        log.info("lookupTourBookings - tourId: {}", tourId);
         return tourBookingRepository.findByTourId(tourId);
     }
 
@@ -61,7 +61,7 @@ public class TourBookingServiceImpl implements TourBookingService {
     @Override
     public TourBooking update(int tourId, Integer customerId, LocalDateTime pickupDateTime, String location, Integer participants)
             throws NoSuchElementException {
-        log.info("updateSome - tourId: {}, customerId: {}, date: {}, location {}", tourId, customerId, pickupDateTime, location);
+        log.info("update - tourId: {}, customerId: {}, date: {}, location {}", tourId, customerId, pickupDateTime, location);
 
         List<TourBooking> bookings = tourBookingRepository.findByTourIdAndCustomerId(tourId, customerId);
 
@@ -86,7 +86,7 @@ public class TourBookingServiceImpl implements TourBookingService {
 
     @Override
     public List<TourBooking> deleteAllBookingsWithTourId(int tourId) throws NoSuchElementException {
-        log.info("delete - tourId: {}", tourId);
+        log.info("deleteAllBookingsWithTourId - tourId: {}", tourId);
 
         List<TourBooking> bookings = tourBookingRepository.findByTourId(tourId);
 
@@ -97,7 +97,7 @@ public class TourBookingServiceImpl implements TourBookingService {
 
     @Override
     public List<TourBooking> deleteAllBookingsWithTourIdAndCustomerId(int tourId, Integer customerId) throws NoSuchElementException {
-        log.info("delete - tourId: {}, customerId: {}", tourId, customerId);
+        log.info("deleteAllBookingsWithTourIdAndCustomerId - tourId: {}, customerId: {}", tourId, customerId);
 
         List<TourBooking> bookings = tourBookingRepository.findByTourId(tourId)
                 .stream()
@@ -111,7 +111,7 @@ public class TourBookingServiceImpl implements TourBookingService {
 
     @Override
     public List<TourBooking> deleteAllBookingsWithCustomerId(Integer customerId) throws NoSuchElementException {
-        log.info("delete - tourId: {}", customerId);
+        log.info("deleteAllBookingsWithCustomerId - tourId: {}", customerId);
 
         List<TourBooking> bookings = tourBookingRepository.findByCustomerId(customerId);
 
@@ -124,7 +124,7 @@ public class TourBookingServiceImpl implements TourBookingService {
 
     @Override
     public List<TourBooking> deleteAllBookings() throws NoSuchElementException {
-        log.info("deleteAll");
+        log.info("deleteAllBookings");
 
         List<TourBooking> bookings = tourBookingRepository.findAll();
 

@@ -44,7 +44,7 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public List<TourBooking> lookupBookingsByCustomerId(int id) {
-        log.info("lookupCustomerById - customerId: {}", id);
+        log.info("lookupBookingsByCustomerId - customerId: {}", id);
         Optional<Customer> customer = customerRepository.findById(id);
 
         if (customer.isPresent()) {

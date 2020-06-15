@@ -168,11 +168,4 @@ public class TourBookingController {
                 .tourId(tourBooking.getTour().getId())
                 .build();
     }
-
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    @ExceptionHandler(NoSuchElementException.class)
-    public String return400(NoSuchElementException ex) {
-        log.info("NOT FOUND");
-        return ex.getMessage();
-    }
 }
