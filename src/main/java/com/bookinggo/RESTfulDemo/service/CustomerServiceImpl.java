@@ -28,9 +28,7 @@ public class CustomerServiceImpl implements CustomerService {
                 .name(name)
                 .build();
 
-        customerRepository.save(customer);
-
-        return customer;
+        return customerRepository.save(customer);
     }
 
     @Override

@@ -40,9 +40,7 @@ public class TourBookingServiceImpl implements TourBookingService {
                         .participants(participants)
                         .build();
 
-                tourBookingRepository.save(tourBooking);
-
-                return tourBooking;
+                return tourBookingRepository.save(tourBooking);
             }
         }
 

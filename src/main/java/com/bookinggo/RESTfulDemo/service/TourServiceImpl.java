@@ -36,9 +36,7 @@ public class TourServiceImpl implements TourService {
                     .price(price)
                     .build();
 
-            tourRepository.save(tour);
-
-            return Optional.of(tour);
+            return Optional.of(tourRepository.save(tour));
         }
 
         return Optional.empty();
