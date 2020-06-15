@@ -8,7 +8,9 @@ import java.io.Serializable;
 
 @Entity
 @Data
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
 @Slf4j
 @EqualsAndHashCode
 public class Tour implements Serializable {
@@ -20,6 +22,8 @@ public class Tour implements Serializable {
     private String title;
 
     private Integer price;
+
+    private String duration;
 
     @ManyToOne
     @JoinColumn(name = "tour_package_code")

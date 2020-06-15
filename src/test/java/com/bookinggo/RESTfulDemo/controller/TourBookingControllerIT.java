@@ -55,6 +55,7 @@ public class TourBookingControllerIT extends AbstractRESTfulDemoIT {
         assertThat(tourBookings.length).isEqualTo(3);
     }
 
+    @Sql
     @Test
     public void shouldReturn201_whenBookingCreated_givenValidBooking() {
         BookingDto bookingDto = BookingDto.builder()

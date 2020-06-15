@@ -1,6 +1,8 @@
 package com.bookinggo.RESTfulDemo.service;
 
 import com.bookinggo.RESTfulDemo.entity.Tour;
+import com.bookinggo.RESTfulDemo.entity.TourPackage;
+import com.bookinggo.RESTfulDemo.repository.TourPackageRepository;
 import com.bookinggo.RESTfulDemo.repository.TourRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +20,29 @@ import java.util.stream.Collectors;
 public class TourServiceImpl implements TourService {
 
     private final TourRepository tourRepository;
+
+    private final TourPackageRepository tourPackageRepository;
+
+    @Override
+    public Optional<Tour> createTour(String tourPackageCode, String title, String duration, int price) {
+        log.info("createTour - tourPackageCode: {}, title: {}, price: {}", tourPackageCode, title, price);
+        Optional<TourPackage> tourPackage = tourPackageRepository.getTourPackageByCode(tourPackageCode);
+
+        if (tourPackage.isPresent()) {
+            Tour tour = Tour.builder()
+                    .tourPackage(tourPackage.get())
+                    .title(title)
+                    .duration(duration)
+                    .price(price)
+                    .build();
+
+            tourRepository.save(tour);
+
+            return Optional.of(tour);
+        }
+
+        return Optional.empty();
+    }
 
     @Override
     public List<Tour> lookupAllTours() {

@@ -20,6 +20,20 @@ public class CustomerServiceImpl implements CustomerService {
     private final CustomerRepository customerRepository;
 
     @Override
+    public Customer createCustomer(String title, String name) {
+        log.info("createCustomer - title: {}, name: {}", title, name);
+
+        Customer customer = Customer.builder()
+                .title(title)
+                .name(name)
+                .build();
+
+        customerRepository.save(customer);
+
+        return customer;
+    }
+
+    @Override
     public List<Customer> lookupAllCustomers() {
         return customerRepository.findAll();
     }
@@ -40,19 +54,5 @@ public class CustomerServiceImpl implements CustomerService {
         }
 
         return null;
-    }
-
-    @Override
-    public Customer createCustomer(String title, String name) {
-        log.info("createNewCustomer");
-
-        Customer customer = Customer.builder()
-                .title(title)
-                .name(name)
-                .build();
-
-        customerRepository.save(customer);
-
-        return customer;
     }
 }

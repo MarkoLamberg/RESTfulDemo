@@ -43,6 +43,19 @@ public class CustomerControllerIT extends AbstractRESTfulDemoIT {
         restTemplate.getRestTemplate().setRequestFactory(new HttpComponentsClientHttpRequestFactory());
     }
 
+    @Test
+    public void shouldReturn201_whenCustomerCreated_givenValidCustomer() {
+        CustomerDto customerDto = CustomerDto.builder()
+                .title(TITLE)
+                .name(NAME)
+                .build();
+
+        ResponseEntity<Customer> response = restTemplate
+                .postForEntity(LOCAL_HOST + port + "/customers", customerDto, Customer.class);
+
+        assertThat(response.getStatusCodeValue()).isEqualTo(CREATED.value());
+    }
+
     @Sql
     @Test
     public void shouldReturnFourCustomers_whenGetAllCustomers_givenCustomersExist() {
@@ -72,18 +85,5 @@ public class CustomerControllerIT extends AbstractRESTfulDemoIT {
                 .getBody();
 
         assertThat(tourBookings.length).isEqualTo(2);
-    }
-
-    @Test
-    public void shouldReturn201_whenCustomerCreated_givenValidCustomer() {
-        CustomerDto customerDto = CustomerDto.builder()
-                .title(TITLE)
-                .name(NAME)
-                .build();
-
-        ResponseEntity<Customer> response = restTemplate
-                .postForEntity(LOCAL_HOST + port + "/customers", customerDto, Customer.class);
-
-        assertThat(response.getStatusCodeValue()).isEqualTo(CREATED.value());
     }
 }

@@ -18,7 +18,7 @@ public class TourPackage implements Serializable {
     private String code;
 
     private String name;
-    
+
     private String location;
 
     public TourPackage(String code, String name, String location) {

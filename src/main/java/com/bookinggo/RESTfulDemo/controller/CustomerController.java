@@ -22,6 +22,14 @@ public class CustomerController {
 
     private final CustomerService customerService;
 
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public Customer createCustomer(@Valid @RequestBody CustomerDto customerDto) {
+        log.info("POST /customers");
+
+        return customerService.createCustomer(customerDto.getTitle(), customerDto.getName());
+    }
+
     @GetMapping
     public List<Customer> getAllCustomers() {
         log.info("GET /customers");
@@ -54,13 +62,5 @@ public class CustomerController {
 
         throw new ResponseStatusException(
                 HttpStatus.BAD_REQUEST, "Provide correct Customer Id");
-    }
-
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public Customer createCustomer(@Valid @RequestBody CustomerDto customerDto) {
-        log.info("POST /customers");
-
-        return customerService.createCustomer(customerDto.getTitle(), customerDto.getName());
     }
 }
