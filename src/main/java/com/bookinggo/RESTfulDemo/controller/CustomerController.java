@@ -52,7 +52,7 @@ public class CustomerController {
         }
 
         throw new ResponseStatusException(
-                HttpStatus.BAD_REQUEST, "Provide correct Customer Id");
+                HttpStatus.BAD_REQUEST, "Customer doesn't exist. Provide correct Customer Id");
     }
 
     @GetMapping(path = "/{customerId}/bookings")
@@ -67,7 +67,7 @@ public class CustomerController {
         }
 
         throw new ResponseStatusException(
-                HttpStatus.BAD_REQUEST, "Provide correct Customer Id");
+                HttpStatus.BAD_REQUEST, "Customer doesn't exist. Provide correct Customer Id");
     }
 
     @DeleteMapping("/{customerId}")
@@ -82,6 +82,6 @@ public class CustomerController {
         }
 
         throw new ResponseStatusException(
-                HttpStatus.BAD_REQUEST, "Provide correct Customer Id");
+                HttpStatus.BAD_REQUEST, "Customer doesn't exist. Provide correct Customer Id");
     }
 }

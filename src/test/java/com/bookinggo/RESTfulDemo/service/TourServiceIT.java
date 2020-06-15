@@ -65,4 +65,16 @@ public class TourServiceIT extends AbstractRESTfulDemoIT {
 
         assertThat(tour).isPresent();
     }
+
+    @Sql
+    @Test
+    public void shouldDeleteTour_whenDeleteTourWithTourId_givenTourWithCTourIdExists() {
+        Optional<Tour> tourBefore = tourService.lookupTourById(TOUR_ID);
+        assertThat(tourBefore).isPresent();
+
+        tourService.deleteTour(TOUR_ID);
+
+        Optional<Tour> tourAfter = tourService.lookupTourById(TOUR_ID);
+        assertThat(tourAfter).isEmpty();
+    }
 }

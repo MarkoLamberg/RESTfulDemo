@@ -48,9 +48,9 @@ public class TourServiceImpl implements TourService {
     }
 
     @Override
-    public Optional<Tour> lookupTourById(int id) {
-        log.info("lookupTourById - id: {}", id);
-        Optional<Tour> tour = tourRepository.findById(id);
+    public Optional<Tour> lookupTourById(int tourId) {
+        log.info("lookupTourById - id: {}", tourId);
+        Optional<Tour> tour = tourRepository.findById(tourId);
 
         return tour;
     }
@@ -79,5 +79,10 @@ public class TourServiceImpl implements TourService {
         }
 
         return Optional.empty();
+    }
+
+    @Override
+    public void deleteTour(int tourId) {
+        tourRepository.deleteById(tourId);
     }
 }

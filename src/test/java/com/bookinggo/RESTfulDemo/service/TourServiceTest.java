@@ -58,4 +58,9 @@ public class TourServiceTest {
         assertThat(tour).isEmpty();
     }
 
+    @Test
+    public void shouldNotDeleteAnyCustomer_whenDeleteCustomerById_givenNoCustomer() {
+        tourService.deleteTour(TOUR_ID);
+        verify(tourRepositoryMock, times(1)).deleteById(TOUR_ID);
+    }
 }

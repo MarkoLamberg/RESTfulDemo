@@ -39,7 +39,7 @@ public class TourController {
         }
 
         throw new ResponseStatusException(
-                HttpStatus.BAD_REQUEST, "Provide correct Tour Package Id");
+                HttpStatus.BAD_REQUEST, "Tour doesn't exist. Provide correct Tour Package Id");
     }
 
     @GetMapping
@@ -58,7 +58,7 @@ public class TourController {
         }
 
         throw new ResponseStatusException(
-                HttpStatus.BAD_REQUEST, "Provide correct Tour Id");
+                HttpStatus.BAD_REQUEST, "Tour doesn't exist. Provide correct Tour Id");
     }
 
     @GetMapping(path = "/byLocation/{tourLocation}")
@@ -71,6 +71,21 @@ public class TourController {
         }
 
         throw new ResponseStatusException(
-                HttpStatus.BAD_REQUEST, "Provide correct Tour Location");
+                HttpStatus.BAD_REQUEST, "Tour with that location doesn't exist. Provide correct Tour Location");
+    }
+
+    @DeleteMapping("/{tourId}")
+    public Tour deleteTour(@PathVariable(value = "tourId") int tourId) {
+        log.info("DELETE /tour/{}", tourId);
+        Optional<Tour> tour = tourService.lookupTourById(tourId);
+
+        if (tour.isPresent()) {
+            tourService.deleteTour(tourId);
+
+            return tour.get();
+        }
+
+        throw new ResponseStatusException(
+                HttpStatus.BAD_REQUEST, "Tour doesn't exist. Provide correct Tour Id");
     }
 }
