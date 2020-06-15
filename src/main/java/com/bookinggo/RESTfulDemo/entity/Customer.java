@@ -2,8 +2,10 @@ package com.bookinggo.RESTfulDemo.entity;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -24,4 +26,9 @@ public class Customer {
     @JsonManagedReference
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "customer")
     private List<TourBooking> bookings;
+
+    @CreationTimestamp
+    @ToString.Exclude
+    @Column(name = "created_when", columnDefinition = "TIMESTAMP")
+    private LocalDateTime createdWhen;
 }

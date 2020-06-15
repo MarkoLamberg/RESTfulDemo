@@ -1,9 +1,11 @@
 package com.bookinggo.RESTfulDemo.entity;
 
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 @Entity
 @Data
@@ -26,4 +28,9 @@ public class Tour implements Serializable {
     @ManyToOne
     @JoinColumn(name = "tour_package_code")
     private TourPackage tourPackage;
+
+    @CreationTimestamp
+    @ToString.Exclude
+    @Column(name = "created_when", columnDefinition = "TIMESTAMP")
+    private LocalDateTime createdWhen;
 }

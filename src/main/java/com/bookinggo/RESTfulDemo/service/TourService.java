@@ -14,4 +14,6 @@ public interface TourService {
     public Optional<Tour> lookupTourById(int id);
 
     public List<Tour> lookupToursByLocation(String location);
+
+    public Optional<Tour> lookupTourByTourPackageCodeAndTitle(String tourPackageCode, String title);
 }

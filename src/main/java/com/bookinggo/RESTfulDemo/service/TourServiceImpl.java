@@ -65,4 +65,19 @@ public class TourServiceImpl implements TourService {
 
         return toursByLocation;
     }
+
+    @Override
+    public Optional<Tour> lookupTourByTourPackageCodeAndTitle(String tourPackageCode, String title) {
+        log.info("lookupTourByTourPackageCodeAndTitle - tourPackageCode: {}, title: {}", tourPackageCode, title);
+
+        Optional<TourPackage> tourPackage = tourPackageRepository.getTourPackageByCode(tourPackageCode);
+
+        if (tourPackage.isPresent()) {
+            Optional<Tour> tour = tourRepository.findTourByTourPackageAndTitle(tourPackage.get(), title);
+
+            return tour;
+        }
+
+        return Optional.empty();
+    }
 }

@@ -25,9 +25,13 @@ import static org.mockito.Mockito.verify;
 public class TourBookingServiceTest {
 
     private static final int CUSTOMER_ID = 123;
+
     private static final int TOUR_ID = 234;
-    private static final LocalDateTime DATE_TIME = LocalDateTime.of(2020, 03, 20, 12, 00);
-    private static final String LOCATION = "Hotel Ibis";
+
+    private static final LocalDateTime PICKUP_DATE_TIME = LocalDateTime.of(2020, 03, 20, 12, 00);
+
+    private static final String PICKUP_LOCATION = "Hotel Ibis";
+
     private static final int PARTICIPANTS = 1;
 
     @MockBean
@@ -44,7 +48,7 @@ public class TourBookingServiceTest {
 
     @Test
     public void shouldNotCreateBooking_whenCreate_givenTourIdDoesNotExist() {
-        tourBookingService.createBooking(TOUR_ID, CUSTOMER_ID, DATE_TIME, LOCATION, PARTICIPANTS);
+        tourBookingService.createBooking(TOUR_ID, CUSTOMER_ID, PICKUP_DATE_TIME, PICKUP_LOCATION, PARTICIPANTS);
 
         verify(tourRepositoryMock, times(1)).findById(TOUR_ID);
         verify(tourRepositoryMock, times(0)).save(any());
@@ -66,11 +70,11 @@ public class TourBookingServiceTest {
 
     @Test
     public void shouldNotUpdateBooking_whenUpdate_givenBookingWithTourIdAndCustomerIdNonExisting() throws NoSuchElementException {
-        TourBooking booking = tourBookingService.update(TOUR_ID, CUSTOMER_ID, DATE_TIME, LOCATION, PARTICIPANTS);
+        TourBooking booking = tourBookingService.update(TOUR_ID, CUSTOMER_ID, PICKUP_DATE_TIME, PICKUP_LOCATION, PARTICIPANTS);
 
         verify(tourBookingRepositoryMock, times(1)).findByTourIdAndCustomerId(TOUR_ID, CUSTOMER_ID);
-        verify(tourBookingMock, times(0)).setPickupDateTime(DATE_TIME);
-        verify(tourBookingMock, times(0)).setPickupLocation(LOCATION);
+        verify(tourBookingMock, times(0)).setPickupDateTime(PICKUP_DATE_TIME);
+        verify(tourBookingMock, times(0)).setPickupLocation(PICKUP_LOCATION);
         verify(tourBookingRepositoryMock, times(0)).saveAndFlush(null);
         assertThat(booking).isNull();
     }

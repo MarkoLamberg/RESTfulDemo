@@ -38,20 +38,31 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public Optional<Customer> lookupCustomerById(int id) {
-        log.info("lookupCustomerById - customerId: {}", id);
-        return customerRepository.findById(id);
+    public Optional<Customer> lookupCustomerById(int customerId) {
+        log.info("lookupCustomerById - customerId: {}", customerId);
+        return customerRepository.findById(customerId);
     }
 
     @Override
-    public List<TourBooking> lookupBookingsByCustomerId(int id) {
-        log.info("lookupBookingsByCustomerId - customerId: {}", id);
-        Optional<Customer> customer = customerRepository.findById(id);
+    public Optional<Customer> lookupCustomerByName(String customerName) {
+        log.info("lookupCustomerByName - customerName: {}", customerName);
+        return customerRepository.findCustomerByName(customerName);
+    }
+
+    @Override
+    public List<TourBooking> lookupBookingsByCustomerId(int customerId) {
+        log.info("lookupBookingsByCustomerId - customerId: {}", customerId);
+        Optional<Customer> customer = customerRepository.findById(customerId);
 
         if (customer.isPresent()) {
             return customer.get().getBookings();
         }
 
         return null;
+    }
+
+    @Override
+    public void deleteCustomer(int customerId) {
+        customerRepository.deleteById(customerId);
     }
 }

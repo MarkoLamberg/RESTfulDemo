@@ -8,13 +8,13 @@ import java.util.NoSuchElementException;
 
 public interface TourBookingService {
 
-    public TourBooking createBooking(int tourId, Integer customerId, LocalDateTime pickupDateTime, String location, Integer participants) throws NoSuchElementException;
+    public TourBooking createBooking(int tourId, Integer customerId, LocalDateTime pickupDateTime, String pickupLocation, Integer participants) throws NoSuchElementException;
 
     public List<TourBooking> lookupTourBookings(int tourId);
 
     public List<TourBooking> lookupAllBookings();
 
-    public TourBooking update(int tourId, Integer customerId, LocalDateTime pickupDateTime, String location, Integer participants) throws NoSuchElementException;
+    public TourBooking update(int tourId, Integer customerId, LocalDateTime pickupDateTime, String pickupLocation, Integer participants) throws NoSuchElementException;
 
     public List<TourBooking> deleteAllBookingsWithTourId(int tourId);
 

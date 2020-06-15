@@ -1,0 +1,2 @@
+ALTER TABLE `tour`
+ADD `created_when`          TIMESTAMP   DEFAULT CURRENT_TIMESTAMP;

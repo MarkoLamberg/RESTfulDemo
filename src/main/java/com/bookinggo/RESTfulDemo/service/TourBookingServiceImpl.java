@@ -23,8 +23,8 @@ public class TourBookingServiceImpl implements TourBookingService {
     private final CustomerRepository customerRepository;
 
     @Override
-    public TourBooking createBooking(int tourId, Integer customerId, LocalDateTime pickupDateTime, String location, Integer participants) throws NoSuchElementException {
-        log.info("createBooking - tourId: {}, customerId: {}, date: {}, location {}, participants {}", tourId, customerId, pickupDateTime, location, participants);
+    public TourBooking createBooking(int tourId, Integer customerId, LocalDateTime pickupDateTime, String pickupLocation, Integer participants) throws NoSuchElementException {
+        log.info("createBooking - tourId: {}, customerId: {}, date: {}, location {}, participants {}", tourId, customerId, pickupDateTime, pickupLocation, participants);
 
         Optional<Tour> tour = tourService.lookupTourById(tourId);
 
@@ -36,7 +36,7 @@ public class TourBookingServiceImpl implements TourBookingService {
                         .tour(tour.get())
                         .customer(customer.get())
                         .pickupDateTime(pickupDateTime)
-                        .pickupLocation(location)
+                        .pickupLocation(pickupLocation)
                         .participants(participants)
                         .build();
 
@@ -59,9 +59,9 @@ public class TourBookingServiceImpl implements TourBookingService {
     }
 
     @Override
-    public TourBooking update(int tourId, Integer customerId, LocalDateTime pickupDateTime, String location, Integer participants)
+    public TourBooking update(int tourId, Integer customerId, LocalDateTime pickupDateTime, String pickupLocation, Integer participants)
             throws NoSuchElementException {
-        log.info("update - tourId: {}, customerId: {}, date: {}, location {}", tourId, customerId, pickupDateTime, location);
+        log.info("update - tourId: {}, customerId: {}, date: {}, location {}", tourId, customerId, pickupDateTime, pickupLocation);
 
         List<TourBooking> bookings = tourBookingRepository.findByTourIdAndCustomerId(tourId, customerId);
 
@@ -70,8 +70,8 @@ public class TourBookingServiceImpl implements TourBookingService {
                 bookings.get(0).setPickupDateTime(pickupDateTime);
             }
 
-            if (location != null) {
-                bookings.get(0).setPickupLocation(location);
+            if (pickupLocation != null) {
+                bookings.get(0).setPickupLocation(pickupLocation);
             }
 
             if (participants != null) {

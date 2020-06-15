@@ -16,10 +16,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class TourBookingServiceIT extends AbstractRESTfulDemoIT {
 
     private static final int CUSTOMER_ID = 4;
+
     private static final int TOUR_ID = 1;
+
     private static final int PARTICIPANTS = 1;
-    private static final LocalDateTime DATE_TIME = LocalDateTime.of(2020, 03, 20, 12, 00);
-    private static final String LOCATION = "Hotel Ibis";
+
+    private static final LocalDateTime PICKUP_DATE_TIME = LocalDateTime.of(2020, 03, 20, 12, 00);
+
+    private static final String PICKUP_LOCATION = "Hotel Ibis";
 
     @Autowired
     private TourBookingService tourBookingService;
@@ -30,7 +34,7 @@ public class TourBookingServiceIT extends AbstractRESTfulDemoIT {
         List<TourBooking> bookingsBefore = tourBookingService.lookupAllBookings();
         assertThat(bookingsBefore.size()).isEqualTo(0);
 
-        tourBookingService.createBooking(TOUR_ID, CUSTOMER_ID, DATE_TIME, LOCATION, PARTICIPANTS);
+        tourBookingService.createBooking(TOUR_ID, CUSTOMER_ID, PICKUP_DATE_TIME, PICKUP_LOCATION, PARTICIPANTS);
 
         List<TourBooking> bookingsAfter = tourBookingService.lookupAllBookings();
         TourBooking booking = bookingsAfter.get(0);
@@ -38,7 +42,7 @@ public class TourBookingServiceIT extends AbstractRESTfulDemoIT {
         assertThat(bookingsAfter.size()).isEqualTo(1);
         assertThat(booking.getTour().getId().intValue()).isEqualTo(TOUR_ID);
         assertThat(booking.getCustomer().getId().intValue()).isEqualTo(CUSTOMER_ID);
-        assertThat(booking.getPickupLocation()).isEqualTo(LOCATION);
+        assertThat(booking.getPickupLocation()).isEqualTo(PICKUP_LOCATION);
         assertThat(booking.getParticipants().intValue()).isEqualTo(PARTICIPANTS);
     }
 
@@ -66,18 +70,18 @@ public class TourBookingServiceIT extends AbstractRESTfulDemoIT {
                 .filter(booking -> booking.getCustomer().getId().equals(CUSTOMER_ID))
                 .collect(Collectors.toList());
 
-        assertThat(filteredBookingsBefore.get(0).getPickupDateTime()).isNotEqualTo(DATE_TIME);
-        assertThat(filteredBookingsBefore.get(0).getPickupLocation()).isNotEqualTo(LOCATION);
+        assertThat(filteredBookingsBefore.get(0).getPickupDateTime()).isNotEqualTo(PICKUP_DATE_TIME);
+        assertThat(filteredBookingsBefore.get(0).getPickupLocation()).isNotEqualTo(PICKUP_LOCATION);
 
-        tourBookingService.update(TOUR_ID, CUSTOMER_ID, DATE_TIME, LOCATION, PARTICIPANTS);
+        tourBookingService.update(TOUR_ID, CUSTOMER_ID, PICKUP_DATE_TIME, PICKUP_LOCATION, PARTICIPANTS);
 
         List<TourBooking> filteredBookingsAfter = tourBookingService.lookupTourBookings(TOUR_ID)
                 .stream()
                 .filter(booking -> booking.getCustomer().getId().equals(CUSTOMER_ID))
                 .collect(Collectors.toList());
 
-        assertThat(filteredBookingsAfter.get(0).getPickupDateTime()).isEqualTo(DATE_TIME);
-        assertThat(filteredBookingsAfter.get(0).getPickupLocation()).isEqualTo(LOCATION);
+        assertThat(filteredBookingsAfter.get(0).getPickupDateTime()).isEqualTo(PICKUP_DATE_TIME);
+        assertThat(filteredBookingsAfter.get(0).getPickupLocation()).isEqualTo(PICKUP_LOCATION);
     }
 
     @Sql
@@ -90,11 +94,11 @@ public class TourBookingServiceIT extends AbstractRESTfulDemoIT {
 
         assertThat(filteredBookingsBefore.size() == 1).isFalse();
 
-        tourBookingService.update(TOUR_ID, CUSTOMER_ID, DATE_TIME, LOCATION, PARTICIPANTS);
+        tourBookingService.update(TOUR_ID, CUSTOMER_ID, PICKUP_DATE_TIME, PICKUP_LOCATION, PARTICIPANTS);
 
         List<TourBooking> filteredBookingsAfter = tourBookingService.lookupTourBookings(TOUR_ID)
                 .stream()
-                .filter(booking -> booking.getPickupLocation().equals(LOCATION))
+                .filter(booking -> booking.getPickupLocation().equals(PICKUP_LOCATION))
                 .collect(Collectors.toList());
 
         assertThat(filteredBookingsAfter.size()).isEqualTo(0);
@@ -108,18 +112,18 @@ public class TourBookingServiceIT extends AbstractRESTfulDemoIT {
                 .filter(booking -> booking.getCustomer().getId().equals(CUSTOMER_ID))
                 .collect(Collectors.toList());
 
-        assertThat(filteredBookingsBefore.get(0).getPickupDateTime()).isNotEqualTo(DATE_TIME);
-        assertThat(filteredBookingsBefore.get(0).getPickupLocation()).isNotEqualTo(LOCATION);
+        assertThat(filteredBookingsBefore.get(0).getPickupDateTime()).isNotEqualTo(PICKUP_DATE_TIME);
+        assertThat(filteredBookingsBefore.get(0).getPickupLocation()).isNotEqualTo(PICKUP_LOCATION);
 
-        tourBookingService.update(TOUR_ID, CUSTOMER_ID, DATE_TIME, LOCATION, null);
+        tourBookingService.update(TOUR_ID, CUSTOMER_ID, PICKUP_DATE_TIME, PICKUP_LOCATION, null);
 
         List<TourBooking> filteredBookingsAfter = tourBookingService.lookupTourBookings(TOUR_ID)
                 .stream()
                 .filter(booking -> booking.getCustomer().getId().equals(CUSTOMER_ID))
                 .collect(Collectors.toList());
 
-        assertThat(filteredBookingsAfter.get(0).getPickupDateTime()).isEqualTo(DATE_TIME);
-        assertThat(filteredBookingsAfter.get(0).getPickupLocation()).isEqualTo(LOCATION);
+        assertThat(filteredBookingsAfter.get(0).getPickupDateTime()).isEqualTo(PICKUP_DATE_TIME);
+        assertThat(filteredBookingsAfter.get(0).getPickupLocation()).isEqualTo(PICKUP_LOCATION);
         assertThat(filteredBookingsAfter.get(0).getPickupLocation()).isNotEqualTo(PARTICIPANTS);
     }
 

@@ -49,4 +49,10 @@ public class CustomerServiceTest {
         verify(customerRepository, times(1)).findById(CUSTOMER_ID);
         assertThat(bookings).isNull();
     }
+
+    @Test
+    public void shouldNotDeleteAnyCustomer_whenDeleteCustomerById_givenNoCustomer() {
+        customerService.deleteCustomer(CUSTOMER_ID);
+        verify(customerRepository, times(1)).deleteById(CUSTOMER_ID);
+    }
 }

@@ -21,12 +21,17 @@ import static org.springframework.http.HttpStatus.*;
 public class TourBookingControllerIT extends AbstractRESTfulDemoIT {
 
     private static final int CUSTOMER_ID = 4;
+
     private static final int TOUR_ID = 1;
+
     private static final int PARTICIPANTS = 1;
 
     private static final String LOCAL_HOST = "http://localhost:";
-    private static final String DATE_TIME = "2020-03-20T12:00:00";
-    private static final String LOCATION = "Hotel Ibis";
+
+    private static final String PICKUP_DATE_TIME = "2020-03-20T12:00:00";
+
+    private static final String PICKUP_LOCATION = "Hotel Ibis";
+
     private static final String TOTAL_PRICE = "£250.00";
 
     @LocalServerPort
@@ -59,8 +64,8 @@ public class TourBookingControllerIT extends AbstractRESTfulDemoIT {
     @Test
     public void shouldReturn201_whenBookingCreated_givenValidBooking() {
         BookingDto bookingDto = BookingDto.builder()
-                .pickupDateTime(DATE_TIME)
-                .pickupLocation(LOCATION)
+                .pickupDateTime(PICKUP_DATE_TIME)
+                .pickupLocation(PICKUP_LOCATION)
                 .customerId(CUSTOMER_ID)
                 .participants(PARTICIPANTS)
                 .totalPrice(TOTAL_PRICE)
@@ -75,8 +80,8 @@ public class TourBookingControllerIT extends AbstractRESTfulDemoIT {
     @Test
     public void shouldReturn200_whenBookingUpdated_givenValidBooking() {
         BookingPatchDto bookingPatchDto = BookingPatchDto.builder()
-                .pickupDateTime(DATE_TIME)
-                .pickupLocation(LOCATION)
+                .pickupDateTime(PICKUP_DATE_TIME)
+                .pickupLocation(PICKUP_LOCATION)
                 .customerId(CUSTOMER_ID)
                 .participants(PARTICIPANTS)
                 .totalPrice(TOTAL_PRICE)
@@ -85,7 +90,7 @@ public class TourBookingControllerIT extends AbstractRESTfulDemoIT {
         ResponseEntity<BookingDto> response = restTemplate.exchange(LOCAL_HOST + port + "/tours/" + TOUR_ID + "/bookings", HttpMethod.PUT, entity, BookingDto.class);
 
         assertThat(response.getStatusCodeValue()).isEqualTo(OK.value());
-        assertThat(response.getBody().getPickupLocation()).isEqualTo(LOCATION);
+        assertThat(response.getBody().getPickupLocation()).isEqualTo(PICKUP_LOCATION);
         assertThat(response.getBody().getParticipants().intValue()).isEqualTo(PARTICIPANTS);
     }
 
@@ -103,7 +108,7 @@ public class TourBookingControllerIT extends AbstractRESTfulDemoIT {
         ResponseEntity<BookingDto> response = restTemplate.exchange(LOCAL_HOST + port + "/tours/" + TOUR_ID + "/bookings", HttpMethod.PUT, entity, BookingDto.class);
 
         assertThat(response.getStatusCodeValue()).isEqualTo(OK.value());
-        assertThat(response.getBody().getPickupLocation()).isNotEqualTo(LOCATION);
+        assertThat(response.getBody().getPickupLocation()).isNotEqualTo(PICKUP_LOCATION);
         assertThat(response.getBody().getParticipants().intValue()).isEqualTo(PARTICIPANTS);
     }
 
@@ -111,8 +116,8 @@ public class TourBookingControllerIT extends AbstractRESTfulDemoIT {
     @Test
     public void shouldReturn400_whenBookingUpdated_givenValidBookingButMoreThanOneBookingsWithSameCustomerAndSameLocation() {
         BookingDto bookingDto = BookingDto.builder()
-                .pickupDateTime(DATE_TIME)
-                .pickupLocation(LOCATION)
+                .pickupDateTime(PICKUP_DATE_TIME)
+                .pickupLocation(PICKUP_LOCATION)
                 .customerId(CUSTOMER_ID)
                 .participants(PARTICIPANTS)
                 .totalPrice(TOTAL_PRICE)

@@ -12,7 +12,11 @@ public interface CustomerService {
 
     public List<Customer> lookupAllCustomers();
 
-    public Optional<Customer> lookupCustomerById(int id);
+    public Optional<Customer> lookupCustomerById(int customerId);
 
-    public List<TourBooking> lookupBookingsByCustomerId(int id);
+    public Optional<Customer> lookupCustomerByName(String customerName);
+
+    public List<TourBooking> lookupBookingsByCustomerId(int customerId);
+
+    public void deleteCustomer(int customerId);
 }

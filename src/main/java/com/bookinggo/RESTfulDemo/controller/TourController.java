@@ -25,6 +25,12 @@ public class TourController {
     @ResponseStatus(HttpStatus.CREATED)
     public Tour createTour(@Valid @RequestBody TourDto tourDto) {
         log.info("POST /tours");
+        Optional<Tour> existingTour = tourService.lookupTourByTourPackageCodeAndTitle(tourDto.getTourPackageCode(), tourDto.getTitle());
+
+        if (existingTour.isPresent()) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, "Tour with that Tour Package Code and Tour Title already exists");
+        }
 
         Optional<Tour> tour = tourService.createTour(tourDto.getTourPackageCode(), tourDto.getTitle(), tourDto.getDuration(), tourDto.getPrice());
 

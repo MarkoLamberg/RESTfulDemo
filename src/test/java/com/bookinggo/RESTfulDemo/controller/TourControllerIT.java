@@ -14,6 +14,7 @@ import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.test.context.ActiveProfiles;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.CREATED;
 
 @SpringBootTest(classes = RestfulDemoApplication.class,
@@ -30,6 +31,8 @@ public class TourControllerIT {
     private static final String TOUR_PACKAGE_CODE = "LS";
 
     private static final String TITLE = "London Tower Bridge";
+
+    private static final String EXISTING_TITLE = "London City Sightseeing Tour";
 
     private static final String DURATION = "2 hours";
 
@@ -59,6 +62,21 @@ public class TourControllerIT {
                 .postForEntity(LOCAL_HOST + port + "/tours", tourDto, Tour.class);
 
         assertThat(response.getStatusCodeValue()).isEqualTo(CREATED.value());
+    }
+
+    @Test
+    public void shouldReturn400_whenTourCreated_givenTourWithThatTourPackageCodeAndNameAlreadyExists() {
+        TourDto tourDto = TourDto.builder()
+                .tourPackageCode(TOUR_PACKAGE_CODE)
+                .title(EXISTING_TITLE)
+                .duration(DURATION)
+                .price(PRICE)
+                .build();
+
+        ResponseEntity<Tour> response = restTemplate
+                .postForEntity(LOCAL_HOST + port + "/tours", tourDto, Tour.class);
+
+        assertThat(response.getStatusCodeValue()).isEqualTo(BAD_REQUEST.value());
     }
 
     @Test

@@ -26,6 +26,12 @@ public class CustomerController {
     @ResponseStatus(HttpStatus.CREATED)
     public Customer createCustomer(@Valid @RequestBody CustomerDto customerDto) {
         log.info("POST /customers");
+        Optional<Customer> customer = customerService.lookupCustomerByName(customerDto.getName());
+
+        if (customer.isPresent()) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, "Customer with that name already exists");
+        }
 
         return customerService.createCustomer(customerDto.getTitle(), customerDto.getName());
     }
@@ -58,6 +64,21 @@ public class CustomerController {
             List<TourBooking> bookings = customerService.lookupBookingsByCustomerId(customerId);
 
             return bookings;
+        }
+
+        throw new ResponseStatusException(
+                HttpStatus.BAD_REQUEST, "Provide correct Customer Id");
+    }
+
+    @DeleteMapping("/{customerId}")
+    public Customer deleteCustomer(@PathVariable(value = "customerId") int customerId) {
+        log.info("DELETE /customers/{}", customerId);
+        Optional<Customer> customer = customerService.lookupCustomerById(customerId);
+
+        if (customer.isPresent()) {
+            customerService.deleteCustomer(customerId);
+
+            return customer.get();
         }
 
         throw new ResponseStatusException(
