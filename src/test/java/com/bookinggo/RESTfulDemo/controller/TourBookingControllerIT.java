@@ -115,7 +115,9 @@ public class TourBookingControllerIT extends AbstractRESTfulDemoIT {
                 .participants(PARTICIPANTS)
                 .totalPrice(TOTAL_PRICE)
                 .build();
+
         HttpEntity<BookingPatchDto> entity = new HttpEntity<>(bookingPatchDto);
+
         ResponseEntity<BookingDto> response = restTemplate
                 .exchange(LOCAL_HOST + port + "/tours/" + TOUR_ID + "/bookings", HttpMethod.PUT, entity, BookingDto.class);
 
@@ -134,7 +136,9 @@ public class TourBookingControllerIT extends AbstractRESTfulDemoIT {
                 .participants(PARTICIPANTS)
                 .totalPrice(TOTAL_PRICE)
                 .build();
+
         HttpEntity<BookingPatchDto> entity = new HttpEntity<>(bookingPatchDto);
+
         ResponseEntity<BookingDto> response = restTemplate
                 .exchange(LOCAL_HOST + port + "/tours/" + TOUR_ID + "/bookings", HttpMethod.PUT, entity, BookingDto.class);
 
@@ -155,6 +159,7 @@ public class TourBookingControllerIT extends AbstractRESTfulDemoIT {
                 .build();
 
         HttpEntity<BookingDto> entity = new HttpEntity<>(bookingDto);
+
         ResponseEntity<BookingDto> response = restTemplate
                 .exchange(LOCAL_HOST + port + "/tours/" + TOUR_ID + "/bookings", HttpMethod.PUT, entity, BookingDto.class);
 
@@ -173,6 +178,7 @@ public class TourBookingControllerIT extends AbstractRESTfulDemoIT {
                 .build();
 
         HttpEntity<BookingDto> entity = new HttpEntity<>(bookingDto);
+
         ResponseEntity<BookingDto> response = restTemplate
                 .exchange(LOCAL_HOST + port + "/tours/" + NON_EXISTING_TOUR_ID + "/bookings", HttpMethod.PUT, entity, BookingDto.class);
 

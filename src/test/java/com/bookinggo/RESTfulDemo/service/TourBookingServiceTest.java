@@ -56,6 +56,7 @@ public class TourBookingServiceTest {
     @Test
     public void shouldNotReturnAnyBookings_whenLookupTourBookings_givenNoBookingsWithIdExist() {
         List<TourBooking> bookings = tourBookingService.lookupTourBookings(TOUR_ID);
+
         verify(tourBookingRepositoryMock, times(1)).findByTourId(TOUR_ID);
         assertThat(bookings.size()).isEqualTo(0);
     }
@@ -63,6 +64,7 @@ public class TourBookingServiceTest {
     @Test
     public void shouldNotReturnAnyBookings_whenLookupAllBookings_givenNoBookingsExist() {
         List<TourBooking> bookings = tourBookingService.lookupAllBookings();
+
         verify(tourBookingRepositoryMock, times(1)).findAll();
         assertThat(bookings.size()).isEqualTo(0);
     }

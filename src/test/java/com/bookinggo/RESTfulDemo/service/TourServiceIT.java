@@ -20,9 +20,9 @@ public class TourServiceIT extends AbstractRESTfulDemoIT {
 
     private static final String TOUR_TITLE = "London Tower Bridge";
 
-    private static final String DURATION = "2 hours";
+    private static final String TOUR_DURATION = "2 hours";
 
-    private static final int PRICE = 150;
+    private static final int TOUR_PRICE = 150;
 
     private static final String TOUR_LOCATION = "paris";
 
@@ -35,7 +35,7 @@ public class TourServiceIT extends AbstractRESTfulDemoIT {
         List<Tour> toursBefore = tourService.lookupAllTours();
         assertThat(toursBefore.size()).isEqualTo(4);
 
-        tourService.createTour(TOUR_PACKAGE_CODE, TOUR_TITLE, DURATION, PRICE);
+        tourService.createTour(TOUR_PACKAGE_CODE, TOUR_TITLE, TOUR_DURATION, TOUR_PRICE);
 
         List<Tour> toursAfter = tourService.lookupAllTours();
         Tour tour = toursAfter.get(4);
@@ -43,8 +43,8 @@ public class TourServiceIT extends AbstractRESTfulDemoIT {
         assertThat(toursAfter.size()).isEqualTo(5);
         assertThat(tour.getTourPackage().getCode()).isEqualTo(TOUR_PACKAGE_CODE);
         assertThat(tour.getTitle()).isEqualTo(TOUR_TITLE);
-        assertThat(tour.getDuration()).isEqualTo(DURATION);
-        assertThat(tour.getPrice()).isEqualTo(PRICE);
+        assertThat(tour.getDuration()).isEqualTo(TOUR_DURATION);
+        assertThat(tour.getPrice()).isEqualTo(TOUR_PRICE);
     }
 
     @Sql
@@ -82,11 +82,13 @@ public class TourServiceIT extends AbstractRESTfulDemoIT {
     @Test
     public void shouldDeleteTour_whenDeleteTourWithTourId_givenTourWithCTourIdExists() {
         Optional<Tour> tourBefore = tourService.lookupTourById(TOUR_ID);
+
         assertThat(tourBefore).isPresent();
 
         tourService.deleteTour(TOUR_ID);
 
         Optional<Tour> tourAfter = tourService.lookupTourById(TOUR_ID);
+
         assertThat(tourAfter).isEmpty();
     }
 }

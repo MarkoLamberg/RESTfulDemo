@@ -37,13 +37,13 @@ public class TourControllerIT extends AbstractRESTfulDemoIT {
 
     private static final String TOUR_PACKAGE_CODE = "LS";
 
-    private static final String TITLE = "London Tower Bridge";
+    private static final String TOUR_TITLE = "London Tower Bridge";
 
-    private static final String NON_EXISTING_TITLE = "London City Sightseeing Tour";
+    private static final String NON_EXISTING_TOUR_TITLE = "London City Sightseeing Tour";
 
-    private static final String DURATION = "2 hours";
+    private static final String TOUR_DURATION = "2 hours";
 
-    private static final int PRICE = 150;
+    private static final int TOUR_PRICE = 150;
 
     @LocalServerPort
     private int port;
@@ -60,9 +60,9 @@ public class TourControllerIT extends AbstractRESTfulDemoIT {
     public void shouldReturn201_whenTourCreated_givenValidTour() {
         TourDto tourDto = TourDto.builder()
                 .tourPackageCode(TOUR_PACKAGE_CODE)
-                .title(TITLE)
-                .duration(DURATION)
-                .price(PRICE)
+                .title(TOUR_TITLE)
+                .duration(TOUR_DURATION)
+                .price(TOUR_PRICE)
                 .build();
 
         ResponseEntity<Tour> response = restTemplate
@@ -76,9 +76,9 @@ public class TourControllerIT extends AbstractRESTfulDemoIT {
     public void shouldReturn400_whenTourCreated_givenTourWithThatTourPackageCodeAndNameAlreadyExists() {
         TourDto tourDto = TourDto.builder()
                 .tourPackageCode(TOUR_PACKAGE_CODE)
-                .title(NON_EXISTING_TITLE)
-                .duration(DURATION)
-                .price(PRICE)
+                .title(NON_EXISTING_TOUR_TITLE)
+                .duration(TOUR_DURATION)
+                .price(TOUR_PRICE)
                 .build();
 
         ResponseEntity<Tour> response = restTemplate

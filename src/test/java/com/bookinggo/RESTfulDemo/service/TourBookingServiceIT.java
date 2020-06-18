@@ -50,8 +50,11 @@ public class TourBookingServiceIT extends AbstractRESTfulDemoIT {
     @Test
     public void shouldReturnBooking_whenLookupTourBookings_givenBookingWithTourIdExists() {
         List<TourBooking> bookings = tourBookingService.lookupTourBookings(TOUR_ID);
+
         assertThat(bookings.size()).isEqualTo(1);
+
         int tourId = bookings.get(0).getTour().getId();
+
         assertThat(bookings.get(0).getTour().getId().intValue()).isEqualTo(TOUR_ID);
     }
 
@@ -59,6 +62,7 @@ public class TourBookingServiceIT extends AbstractRESTfulDemoIT {
     @Test
     public void shouldReturnTwoBookings_whenLookupAllBookings_givenBookingsExist() {
         List<TourBooking> bookings = tourBookingService.lookupAllBookings();
+
         assertThat(bookings.size()).isEqualTo(2);
     }
 
@@ -191,6 +195,7 @@ public class TourBookingServiceIT extends AbstractRESTfulDemoIT {
     @Test
     public void shouldDeleteAllBookings_whenDeleteAllBookings_givenBookingsExists() {
         List<TourBooking> bookingsBefore = tourBookingService.lookupAllBookings();
+
         assertThat(bookingsBefore.size()).isEqualTo(3);
 
         List<TourBooking> deletedBookings = tourBookingService.deleteAllBookings();
@@ -198,6 +203,7 @@ public class TourBookingServiceIT extends AbstractRESTfulDemoIT {
         assertThat(deletedBookings.size()).isEqualTo(3);
 
         List<TourBooking> bookingsAfter = tourBookingService.lookupAllBookings();
+
         assertThat(bookingsAfter.size()).isEqualTo(0);
     }
 }

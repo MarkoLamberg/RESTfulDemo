@@ -29,9 +29,9 @@ public class TourServiceTest {
 
     private static final String TOUR_TITLE = "London City Sightseeing Tour";
 
-    private static final String DURATION = "2 hours";
+    private static final String TOUR_DURATION = "2 hours";
 
-    private static final int PRICE = 150;
+    private static final int TOUR_PRICE = 150;
 
     private static final String TOUR_LOCATION = "liverpool";
 
@@ -46,7 +46,8 @@ public class TourServiceTest {
 
     @Test
     public void shouldCallGetTourPackageByCode_whenCreateTour_givenTourPackageDoesntExist() {
-        Optional<Tour> tour = tourService.createTour(NON_EXISTING_TOUR_PACKAGE_CODE, TOUR_TITLE, DURATION, PRICE);
+        Optional<Tour> tour = tourService.createTour(NON_EXISTING_TOUR_PACKAGE_CODE, TOUR_TITLE, TOUR_DURATION, TOUR_PRICE);
+
         verify(tourPackageRepositoryMock, times(1)).getTourPackageByCode(TOUR_PACKAGE_CODE);
         assertThat(tour).isEmpty();
     }
@@ -54,6 +55,7 @@ public class TourServiceTest {
     @Test
     public void shouldCallFindAll_whenLookupAllTours_givenNoToursExist() {
         List<Tour> tours = tourService.lookupAllTours();
+
         verify(tourRepositoryMock, times(1)).findAll();
         assertThat(tours.size()).isEqualTo(0);
     }
@@ -61,6 +63,7 @@ public class TourServiceTest {
     @Test
     public void shouldCallFindById_whenLookupTourById_givenNoTourWithIdExists() {
         Optional<Tour> tour = tourService.lookupTourById(TOUR_ID);
+
         verify(tourRepositoryMock, times(1)).findById(TOUR_ID);
         assertThat(tour).isEmpty();
     }
@@ -68,6 +71,7 @@ public class TourServiceTest {
     @Test
     public void shouldCallFindAll_whenLookupToursByLocation_givenNoTourWithLocationExists() {
         List<Tour> tours = tourService.lookupToursByLocation(TOUR_LOCATION);
+
         verify(tourRepositoryMock, times(1)).findAll();
         assertThat(tours.size()).isEqualTo(0);
     }
@@ -83,6 +87,7 @@ public class TourServiceTest {
     @Test
     public void shouldNotDeleteAnyCustomer_whenDeleteCustomerById_givenNoCustomer() {
         tourService.deleteTour(TOUR_ID);
+
         verify(tourRepositoryMock, times(1)).deleteById(TOUR_ID);
     }
 }

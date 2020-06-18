@@ -95,7 +95,6 @@ public class CustomerServiceIT extends AbstractRESTfulDemoIT {
 
         customerService.deleteCustomer(CUSTOMER_ID);
 
-
         Optional<Customer> customerAfter = customerService.lookupCustomerById(CUSTOMER_ID);
         assertThat(customerAfter).isEmpty();
     }

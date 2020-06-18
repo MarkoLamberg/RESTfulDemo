@@ -44,6 +44,7 @@ public class CustomerServiceTest {
     @Test
     public void shouldCallFindAll_whenLookupAllCustomers_givenNoCustomersExist() {
         List<Customer> customers = customerService.lookupAllCustomers();
+
         verify(customerRepositoryMock, times(1)).findAll();
         assertThat(customers.size()).isEqualTo(0);
     }
@@ -51,6 +52,7 @@ public class CustomerServiceTest {
     @Test
     public void shouldCallFindById_whenLookupCustomerById_givenNoCustomersWithIdExists() {
         Optional<Customer> customer = customerService.lookupCustomerById(CUSTOMER_ID);
+
         verify(customerRepositoryMock, times(1)).findById(CUSTOMER_ID);
         assertThat(customer).isEmpty();
     }
@@ -58,6 +60,7 @@ public class CustomerServiceTest {
     @Test
     public void shouldCallFindById_whenLookupCustomerByName_givenNoCustomersWithIdExists() {
         Optional<Customer> customer = customerService.lookupCustomerByName(CUSTOMER_NAME);
+
         verify(customerRepositoryMock, times(1)).findCustomerByName(CUSTOMER_NAME);
         assertThat(customer).isEmpty();
     }
@@ -65,6 +68,7 @@ public class CustomerServiceTest {
     @Test
     public void shouldCallFindById_whenLookupBookingByCustomerId_givenNoCustomersWithIdExists() {
         List<TourBooking> bookings = customerService.lookupBookingsByCustomerId(CUSTOMER_ID);
+
         verify(customerRepositoryMock, times(1)).findById(CUSTOMER_ID);
         assertThat(bookings).isNull();
     }
@@ -72,6 +76,7 @@ public class CustomerServiceTest {
     @Test
     public void shouldNotDeleteAnyCustomer_whenDeleteCustomerById_givenNoCustomer() {
         customerService.deleteCustomer(CUSTOMER_ID);
+
         verify(customerRepositoryMock, times(1)).deleteById(CUSTOMER_ID);
     }
 }
