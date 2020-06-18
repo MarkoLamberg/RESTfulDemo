@@ -13,7 +13,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -69,8 +68,8 @@ public class TourBookingServiceTest {
     }
 
     @Test
-    public void shouldNotUpdateBooking_whenUpdate_givenBookingWithTourIdAndCustomerIdNonExisting() throws NoSuchElementException {
-        TourBooking booking = tourBookingService.update(TOUR_ID, CUSTOMER_ID, PICKUP_DATE_TIME, PICKUP_LOCATION, PARTICIPANTS);
+    public void shouldNotUpdateBooking_whenUpdateBooking_givenBookingWithTourIdAndCustomerIdNonExisting() {
+        TourBooking booking = tourBookingService.updateBooking(TOUR_ID, CUSTOMER_ID, PICKUP_DATE_TIME, PICKUP_LOCATION, PARTICIPANTS);
 
         verify(tourBookingRepositoryMock, times(1)).findByTourIdAndCustomerId(TOUR_ID, CUSTOMER_ID);
         verify(tourBookingMock, times(0)).setPickupDateTime(PICKUP_DATE_TIME);
@@ -80,7 +79,7 @@ public class TourBookingServiceTest {
     }
 
     @Test
-    public void shouldNotDeleteAnyBookings_whenDeleteAllBookingsWithTourId_givenBookingsWithTourIdNonExisting() throws NoSuchElementException {
+    public void shouldNotDeleteAnyBookings_whenDeleteAllBookingsWithTourId_givenBookingsWithTourIdNonExisting() {
         tourBookingService.deleteAllBookingsWithTourId(TOUR_ID);
 
         verify(tourBookingRepositoryMock, times(1)).findByTourId(TOUR_ID);
@@ -88,7 +87,7 @@ public class TourBookingServiceTest {
     }
 
     @Test
-    public void shouldNotDeleteAnyBookings_whenDeleteAllBookingsWithTourIdAndCustomerId_givenBookingsWithTourIdAndCustomerIdNonExisting() throws NoSuchElementException {
+    public void shouldNotDeleteAnyBookings_whenDeleteAllBookingsWithTourIdAndCustomerId_givenBookingsWithTourIdAndCustomerIdNonExisting() {
         tourBookingService.deleteAllBookingsWithTourIdAndCustomerId(TOUR_ID, CUSTOMER_ID);
 
         verify(tourBookingRepositoryMock, times(1)).findByTourId(TOUR_ID);

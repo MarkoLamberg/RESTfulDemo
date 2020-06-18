@@ -15,12 +15,16 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class TourServiceIT extends AbstractRESTfulDemoIT {
 
     private static final int TOUR_ID = 1;
+
     private static final String TOUR_PACKAGE_CODE = "LS";
 
     private static final String TOUR_TITLE = "London Tower Bridge";
 
     private static final String DURATION = "2 hours";
+
     private static final int PRICE = 150;
+
+    private static final String TOUR_LOCATION = "paris";
 
     @Autowired
     private TourService tourService;
@@ -56,6 +60,14 @@ public class TourServiceIT extends AbstractRESTfulDemoIT {
         Optional<Tour> tour = tourService.lookupTourById(TOUR_ID);
 
         assertThat(tour).isPresent();
+    }
+
+    @Sql
+    @Test
+    public void shouldReturnTwoTours_whenLookupToursByLocation_givenToursWithLocationExist() {
+        List<Tour> tours = tourService.lookupToursByLocation(TOUR_LOCATION);
+
+        assertThat(tours.size()).isEqualTo(2);
     }
 
     @Sql

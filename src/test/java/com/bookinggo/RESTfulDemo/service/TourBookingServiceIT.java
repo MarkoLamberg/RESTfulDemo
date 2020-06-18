@@ -73,7 +73,7 @@ public class TourBookingServiceIT extends AbstractRESTfulDemoIT {
         assertThat(filteredBookingsBefore.get(0).getPickupDateTime()).isNotEqualTo(PICKUP_DATE_TIME);
         assertThat(filteredBookingsBefore.get(0).getPickupLocation()).isNotEqualTo(PICKUP_LOCATION);
 
-        tourBookingService.update(TOUR_ID, CUSTOMER_ID, PICKUP_DATE_TIME, PICKUP_LOCATION, PARTICIPANTS);
+        tourBookingService.updateBooking(TOUR_ID, CUSTOMER_ID, PICKUP_DATE_TIME, PICKUP_LOCATION, PARTICIPANTS);
 
         List<TourBooking> filteredBookingsAfter = tourBookingService.lookupTourBookings(TOUR_ID)
                 .stream()
@@ -94,7 +94,7 @@ public class TourBookingServiceIT extends AbstractRESTfulDemoIT {
 
         assertThat(filteredBookingsBefore.size() == 1).isFalse();
 
-        tourBookingService.update(TOUR_ID, CUSTOMER_ID, PICKUP_DATE_TIME, PICKUP_LOCATION, PARTICIPANTS);
+        tourBookingService.updateBooking(TOUR_ID, CUSTOMER_ID, PICKUP_DATE_TIME, PICKUP_LOCATION, PARTICIPANTS);
 
         List<TourBooking> filteredBookingsAfter = tourBookingService.lookupTourBookings(TOUR_ID)
                 .stream()
@@ -115,7 +115,7 @@ public class TourBookingServiceIT extends AbstractRESTfulDemoIT {
         assertThat(filteredBookingsBefore.get(0).getPickupDateTime()).isNotEqualTo(PICKUP_DATE_TIME);
         assertThat(filteredBookingsBefore.get(0).getPickupLocation()).isNotEqualTo(PICKUP_LOCATION);
 
-        tourBookingService.update(TOUR_ID, CUSTOMER_ID, PICKUP_DATE_TIME, PICKUP_LOCATION, null);
+        tourBookingService.updateBooking(TOUR_ID, CUSTOMER_ID, PICKUP_DATE_TIME, PICKUP_LOCATION, null);
 
         List<TourBooking> filteredBookingsAfter = tourBookingService.lookupTourBookings(TOUR_ID)
                 .stream()

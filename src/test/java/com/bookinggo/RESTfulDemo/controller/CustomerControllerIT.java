@@ -2,6 +2,7 @@ package com.bookinggo.RESTfulDemo.controller;
 
 import com.bookinggo.RESTfulDemo.RestfulDemoApplication;
 import com.bookinggo.RESTfulDemo.dto.CustomerDto;
+import com.bookinggo.RESTfulDemo.dto.CustomerPatchDto;
 import com.bookinggo.RESTfulDemo.entity.Customer;
 import com.bookinggo.RESTfulDemo.entity.TourBooking;
 import com.bookinggo.RESTfulDemo.service.AbstractRESTfulDemoIT;
@@ -11,14 +12,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
-import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.*;
 
 @SpringBootTest(classes = RestfulDemoApplication.class,
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -26,6 +26,8 @@ import static org.springframework.http.HttpStatus.CREATED;
 public class CustomerControllerIT extends AbstractRESTfulDemoIT {
 
     private static final int CUSTOMER_ID = 1;
+
+    private static final int NON_EXISTING_CUSTOMER_ID = 20;
 
     private static final String LOCAL_HOST = "http://localhost:";
 
@@ -73,6 +75,67 @@ public class CustomerControllerIT extends AbstractRESTfulDemoIT {
 
     @Sql
     @Test
+    public void shouldReturn200_whenCustomerUpdated_givenValidCustomer() {
+        CustomerPatchDto customerPatchDto = CustomerPatchDto.builder()
+                .title(CUSTOMER_TITLE)
+                .name(CUSTOMER_NAME)
+                .build();
+
+        HttpEntity<CustomerPatchDto> entity = new HttpEntity<>(customerPatchDto);
+        ResponseEntity<Customer> response = restTemplate
+                .exchange(LOCAL_HOST + port + "/customers/" + CUSTOMER_ID, HttpMethod.PUT, entity, Customer.class);
+
+        assertThat(response.getStatusCodeValue()).isEqualTo(OK.value());
+        assertThat(response.getBody().getTitle()).isEqualTo(CUSTOMER_TITLE);
+        assertThat(response.getBody().getName()).isEqualTo(CUSTOMER_NAME);
+    }
+
+    @Sql
+    @Test
+    public void shouldReturn200_whenCustomerUpdatedSome_givenValidCustomer() {
+        CustomerPatchDto customerPatchDto = CustomerPatchDto.builder()
+                .title(CUSTOMER_TITLE)
+                .build();
+
+        HttpEntity<CustomerPatchDto> entity = new HttpEntity<>(customerPatchDto);
+        ResponseEntity<Customer> response = restTemplate
+                .exchange(LOCAL_HOST + port + "/customers/" + CUSTOMER_ID, HttpMethod.PUT, entity, Customer.class);
+
+        assertThat(response.getStatusCodeValue()).isEqualTo(OK.value());
+        assertThat(response.getBody().getTitle()).isEqualTo(CUSTOMER_TITLE);
+        assertThat(response.getBody().getName()).isEqualTo(CUSTOMER_NAME);
+    }
+
+    @Sql
+    @Test
+    public void shouldReturn400_whenCustomerUpdated_givenCustomerWithIdDoesntExist() {
+        CustomerPatchDto customerPatchDto = CustomerPatchDto.builder()
+                .name(CUSTOMER_NAME)
+                .build();
+
+        HttpEntity<CustomerPatchDto> entity = new HttpEntity<>(customerPatchDto);
+        ResponseEntity<Customer> response = restTemplate
+                .exchange(LOCAL_HOST + port + "/customers/" + NON_EXISTING_CUSTOMER_ID, HttpMethod.PUT, entity, Customer.class);
+
+        assertThat(response.getStatusCodeValue()).isEqualTo(BAD_REQUEST.value());
+    }
+
+    @Sql
+    @Test
+    public void shouldReturn400_whenCustomerUpdated_givenCustomerWithNewNameExists() {
+        CustomerPatchDto customerPatchDto = CustomerPatchDto.builder()
+                .name(CUSTOMER_NAME)
+                .build();
+
+        HttpEntity<CustomerPatchDto> entity = new HttpEntity<>(customerPatchDto);
+        ResponseEntity<Customer> response = restTemplate
+                .exchange(LOCAL_HOST + port + "/customers/" + CUSTOMER_ID, HttpMethod.PUT, entity, Customer.class);
+
+        assertThat(response.getStatusCodeValue()).isEqualTo(BAD_REQUEST.value());
+    }
+
+    @Sql
+    @Test
     public void shouldReturnFourCustomers_whenGetAllCustomers_givenCustomersExist() {
         Customer[] customers = restTemplate
                 .getForEntity(LOCAL_HOST + port + "/customers", Customer[].class)
@@ -94,12 +157,30 @@ public class CustomerControllerIT extends AbstractRESTfulDemoIT {
 
     @Sql
     @Test
+    public void shouldReturn400_whenGetCustomerById_givenCustomerDoesntExist() {
+        ResponseEntity<Customer> response = restTemplate
+                .exchange(LOCAL_HOST + port + "/customers/" + NON_EXISTING_CUSTOMER_ID, HttpMethod.GET, null, Customer.class);
+
+        assertThat(response.getStatusCodeValue()).isEqualTo(BAD_REQUEST.value());
+    }
+
+    @Sql
+    @Test
     public void shouldReturnTwoBookings_whenGetCustomersBookingsById_givenBookingsExist() {
         TourBooking[] tourBookings = restTemplate
                 .getForEntity(LOCAL_HOST + port + "/customers/" + CUSTOMER_ID + "/bookings", TourBooking[].class)
                 .getBody();
 
         assertThat(tourBookings.length).isEqualTo(2);
+    }
+
+    @Sql
+    @Test
+    public void shouldReturn400_whenGetCustomersBookingsById_givenCustomerDoesntExist() {
+        ResponseEntity<String> response = restTemplate
+                .exchange(LOCAL_HOST + port + "/customers/" + NON_EXISTING_CUSTOMER_ID + "/bookings", HttpMethod.GET, null, String.class);
+
+        assertThat(response.getStatusCodeValue()).isEqualTo(BAD_REQUEST.value());
     }
 
     @Sql
@@ -118,5 +199,13 @@ public class CustomerControllerIT extends AbstractRESTfulDemoIT {
                 .getBody();
 
         assertThat(customersAfter.length).isEqualTo(3);
+    }
+
+    @Test
+    public void shouldReturn400_whenDeletedCustomer_givenCustomerWithIdDoesntExist() {
+        ResponseEntity<Customer> response = restTemplate
+                .exchange(LOCAL_HOST + port + "/customers/" + NON_EXISTING_CUSTOMER_ID, HttpMethod.DELETE, null, Customer.class);
+
+        assertThat(response.getStatusCodeValue()).isEqualTo(BAD_REQUEST.value());
     }
 }

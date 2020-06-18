@@ -33,6 +33,27 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
+    public Customer updateCustomer(int customerId, String title, String name) {
+        log.info("updateCustomer - customerId: {}, title: {}, name {}", customerId, title, name);
+
+        Optional<Customer> customer = customerRepository.findById(customerId);
+
+        if (customer.isPresent()) {
+            if (title != null) {
+                customer.get().setTitle(title);
+            }
+
+            if (name != null) {
+                customer.get().setName(name);
+            }
+
+            return customerRepository.saveAndFlush(customer.get());
+        }
+
+        return null;
+    }
+
+    @Override
     public List<Customer> lookupAllCustomers() {
         return customerRepository.findAll();
     }

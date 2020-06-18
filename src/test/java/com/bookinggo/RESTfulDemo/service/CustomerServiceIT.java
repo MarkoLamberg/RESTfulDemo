@@ -42,6 +42,20 @@ public class CustomerServiceIT extends AbstractRESTfulDemoIT {
 
     @Sql
     @Test
+    public void shouldUpdateCustomer_whenUpdateCustomer_givenValidCustomer() {
+        Optional<Customer> customerBefore = customerService.lookupCustomerById(CUSTOMER_ID);
+        assertThat(customerBefore.get().getTitle()).isNotEqualTo(CUSTOMER_TITLE);
+        assertThat(customerBefore.get().getName()).isNotEqualTo(CUSTOMER_NAME);
+
+        customerService.updateCustomer(CUSTOMER_ID, CUSTOMER_TITLE, CUSTOMER_NAME);
+
+        Optional<Customer> customerAfter = customerService.lookupCustomerById(CUSTOMER_ID);
+        assertThat(customerAfter.get().getTitle()).isEqualTo(CUSTOMER_TITLE);
+        assertThat(customerAfter.get().getName()).isEqualTo(CUSTOMER_NAME);
+    }
+
+    @Sql
+    @Test
     public void shouldReturnEightCustomers_whenLookupAllCustomers_givenCustomersExist() {
         List<Customer> customers = customerService.lookupAllCustomers();
 
@@ -54,6 +68,15 @@ public class CustomerServiceIT extends AbstractRESTfulDemoIT {
         Optional<Customer> customers = customerService.lookupCustomerById(CUSTOMER_ID);
 
         assertThat(customers.isPresent()).isTrue();
+    }
+
+    @Sql
+    @Test
+    public void shouldReturnACustomer_whenLookupCustomerByName_givenCustomerWithNameExists() {
+        Optional<Customer> customer = customerService.lookupCustomerByName(CUSTOMER_NAME);
+
+        assertThat(customer).isPresent();
+        assertThat(customer.get().getName()).isEqualTo(CUSTOMER_NAME);
     }
 
     @Sql

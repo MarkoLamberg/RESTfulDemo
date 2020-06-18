@@ -10,6 +10,8 @@ public interface CustomerService {
 
     public Customer createCustomer(String title, String name);
 
+    public Customer updateCustomer(int customerId, String title, String name);
+
     public List<Customer> lookupAllCustomers();
 
     public Optional<Customer> lookupCustomerById(int customerId);

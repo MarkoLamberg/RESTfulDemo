@@ -24,6 +24,8 @@ public class TourBookingControllerIT extends AbstractRESTfulDemoIT {
 
     private static final int TOUR_ID = 1;
 
+    private static final int NON_EXISTING_TOUR_ID = 10;
+
     private static final int PARTICIPANTS = 1;
 
     private static final String LOCAL_HOST = "http://localhost:";
@@ -42,12 +44,55 @@ public class TourBookingControllerIT extends AbstractRESTfulDemoIT {
 
     @Sql
     @Test
-    public void shouldReturnTwoBookings_whenGetBookingsForTourId_givenBookingsExist() {
+    public void shouldReturn201_whenBookingCreated_givenValidBooking() {
+        BookingDto bookingDto = BookingDto.builder()
+                .pickupDateTime(PICKUP_DATE_TIME)
+                .pickupLocation(PICKUP_LOCATION)
+                .customerId(CUSTOMER_ID)
+                .participants(PARTICIPANTS)
+                .totalPrice(TOTAL_PRICE)
+                .build();
+
+        ResponseEntity<BookingDto> response = restTemplate
+                .postForEntity(LOCAL_HOST + port + "/tours/" + TOUR_ID + "/bookings", bookingDto, BookingDto.class);
+
+        assertThat(response.getStatusCodeValue()).isEqualTo(CREATED.value());
+    }
+
+    @Sql
+    @Test
+    public void shouldReturn400_whenBookingCreated_givenNotValidTourId() {
+        BookingDto bookingDto = BookingDto.builder()
+                .pickupDateTime(PICKUP_DATE_TIME)
+                .pickupLocation(PICKUP_LOCATION)
+                .customerId(CUSTOMER_ID)
+                .participants(PARTICIPANTS)
+                .totalPrice(TOTAL_PRICE)
+                .build();
+
+        ResponseEntity<BookingDto> response = restTemplate
+                .postForEntity(LOCAL_HOST + port + "/tours/" + NON_EXISTING_TOUR_ID + "/bookings", bookingDto, BookingDto.class);
+
+        assertThat(response.getStatusCodeValue()).isEqualTo(BAD_REQUEST.value());
+    }
+
+    @Sql
+    @Test
+    public void shouldReturnTwoBookings_whenGetAllBookingsForTour_givenBookingsExist() {
         TourBooking[] tourBookings = restTemplate
                 .getForEntity(LOCAL_HOST + port + "/tours/" + TOUR_ID + "/bookings", TourBooking[].class)
                 .getBody();
 
         assertThat(tourBookings.length).isEqualTo(2);
+    }
+
+    @Sql
+    @Test
+    public void shouldReturn400_whenGetAllBookingsForTour_givenNotValidTourId() {
+        ResponseEntity<String> response = restTemplate
+                .exchange(LOCAL_HOST + port + "/tours/" + NON_EXISTING_TOUR_ID + "/bookings", HttpMethod.GET, null, String.class);
+
+        assertThat(response.getStatusCodeValue()).isEqualTo(BAD_REQUEST.value());
     }
 
     @Sql
@@ -62,22 +107,6 @@ public class TourBookingControllerIT extends AbstractRESTfulDemoIT {
 
     @Sql
     @Test
-    public void shouldReturn201_whenBookingCreated_givenValidBooking() {
-        BookingDto bookingDto = BookingDto.builder()
-                .pickupDateTime(PICKUP_DATE_TIME)
-                .pickupLocation(PICKUP_LOCATION)
-                .customerId(CUSTOMER_ID)
-                .participants(PARTICIPANTS)
-                .totalPrice(TOTAL_PRICE)
-                .build();
-
-        ResponseEntity<BookingDto> response = restTemplate.postForEntity(LOCAL_HOST + port + "/tours/" + TOUR_ID + "/bookings", bookingDto, BookingDto.class);
-
-        assertThat(response.getStatusCodeValue()).isEqualTo(CREATED.value());
-    }
-
-    @Sql
-    @Test
     public void shouldReturn200_whenBookingUpdated_givenValidBooking() {
         BookingPatchDto bookingPatchDto = BookingPatchDto.builder()
                 .pickupDateTime(PICKUP_DATE_TIME)
@@ -87,7 +116,8 @@ public class TourBookingControllerIT extends AbstractRESTfulDemoIT {
                 .totalPrice(TOTAL_PRICE)
                 .build();
         HttpEntity<BookingPatchDto> entity = new HttpEntity<>(bookingPatchDto);
-        ResponseEntity<BookingDto> response = restTemplate.exchange(LOCAL_HOST + port + "/tours/" + TOUR_ID + "/bookings", HttpMethod.PUT, entity, BookingDto.class);
+        ResponseEntity<BookingDto> response = restTemplate
+                .exchange(LOCAL_HOST + port + "/tours/" + TOUR_ID + "/bookings", HttpMethod.PUT, entity, BookingDto.class);
 
         assertThat(response.getStatusCodeValue()).isEqualTo(OK.value());
         assertThat(response.getBody().getPickupLocation()).isEqualTo(PICKUP_LOCATION);
@@ -105,7 +135,8 @@ public class TourBookingControllerIT extends AbstractRESTfulDemoIT {
                 .totalPrice(TOTAL_PRICE)
                 .build();
         HttpEntity<BookingPatchDto> entity = new HttpEntity<>(bookingPatchDto);
-        ResponseEntity<BookingDto> response = restTemplate.exchange(LOCAL_HOST + port + "/tours/" + TOUR_ID + "/bookings", HttpMethod.PUT, entity, BookingDto.class);
+        ResponseEntity<BookingDto> response = restTemplate
+                .exchange(LOCAL_HOST + port + "/tours/" + TOUR_ID + "/bookings", HttpMethod.PUT, entity, BookingDto.class);
 
         assertThat(response.getStatusCodeValue()).isEqualTo(OK.value());
         assertThat(response.getBody().getPickupLocation()).isNotEqualTo(PICKUP_LOCATION);
@@ -124,50 +155,33 @@ public class TourBookingControllerIT extends AbstractRESTfulDemoIT {
                 .build();
 
         HttpEntity<BookingDto> entity = new HttpEntity<>(bookingDto);
-        ResponseEntity<BookingDto> response = restTemplate.exchange(LOCAL_HOST + port + "/tours/" + TOUR_ID + "/bookings", HttpMethod.PUT, entity, BookingDto.class);
+        ResponseEntity<BookingDto> response = restTemplate
+                .exchange(LOCAL_HOST + port + "/tours/" + TOUR_ID + "/bookings", HttpMethod.PUT, entity, BookingDto.class);
 
         assertThat(response.getStatusCodeValue()).isEqualTo(BAD_REQUEST.value());
     }
 
     @Sql
     @Test
-    public void shouldDeleteOneBookingByTourIdAndCustomerId_whenBookingDeleted_givenBookingExists() {
-        TourBooking[] tourBookingsBefore = restTemplate
-                .getForEntity(LOCAL_HOST + port + "/tours/" + TOUR_ID + "/bookings", TourBooking[].class)
-                .getBody();
+    public void shouldReturn400_whenBookingUpdated_givenNotValidTourId() {
+        BookingDto bookingDto = BookingDto.builder()
+                .pickupDateTime(PICKUP_DATE_TIME)
+                .pickupLocation(PICKUP_LOCATION)
+                .customerId(CUSTOMER_ID)
+                .participants(PARTICIPANTS)
+                .totalPrice(TOTAL_PRICE)
+                .build();
 
-        assertThat(tourBookingsBefore.length).isEqualTo(2);
+        HttpEntity<BookingDto> entity = new HttpEntity<>(bookingDto);
+        ResponseEntity<BookingDto> response = restTemplate
+                .exchange(LOCAL_HOST + port + "/tours/" + NON_EXISTING_TOUR_ID + "/bookings", HttpMethod.PUT, entity, BookingDto.class);
 
-        restTemplate.delete(LOCAL_HOST + port + "/tours/" + TOUR_ID + "/bookings/" + CUSTOMER_ID);
-
-        TourBooking[] tourBookingsAfter = restTemplate
-                .getForEntity(LOCAL_HOST + port + "/tours/" + TOUR_ID + "/bookings", TourBooking[].class)
-                .getBody();
-
-        assertThat(tourBookingsAfter.length).isEqualTo(1);
+        assertThat(response.getStatusCodeValue()).isEqualTo(BAD_REQUEST.value());
     }
 
     @Sql
     @Test
-    public void shouldDeleteTwoBookingsByCustomerId_whenBookingsDeleted_givenBookingsExist() {
-        TourBooking[] tourBookingsBefore = restTemplate
-                .getForEntity(LOCAL_HOST + port + "/tours/bookings", TourBooking[].class)
-                .getBody();
-
-        assertThat(tourBookingsBefore.length).isEqualTo(3);
-
-        restTemplate.delete(LOCAL_HOST + port + "/tours/bookings/" + CUSTOMER_ID);
-
-        TourBooking[] tourBookingsAfter = restTemplate
-                .getForEntity(LOCAL_HOST + port + "/tours/bookings", TourBooking[].class)
-                .getBody();
-
-        assertThat(tourBookingsAfter.length).isEqualTo(1);
-    }
-
-    @Sql
-    @Test
-    public void shouldDeleteTwoBookingsByTourId_whenBookingsDeleted_givenBookingsExist() {
+    public void shouldDeleteTwoBookings_whenDeleteAllBookingsForTour_givenBookingsExist() {
         TourBooking[] tourBookingsBefore = restTemplate
                 .getForEntity(LOCAL_HOST + port + "/tours/" + TOUR_ID + "/bookings/", TourBooking[].class)
                 .getBody();
@@ -185,7 +199,61 @@ public class TourBookingControllerIT extends AbstractRESTfulDemoIT {
 
     @Sql
     @Test
-    public void shouldDeleteAllBookings_whenAllBookingsDeleted_givenBookingsExist() {
+    public void shouldReturn400_whenAllBookingsForTourDeleted_givenNotValidTourId() {
+        ResponseEntity<String> response = restTemplate
+                .exchange(LOCAL_HOST + port + "/tours/" + NON_EXISTING_TOUR_ID + "/bookings", HttpMethod.DELETE, null, String.class);
+
+        assertThat(response.getStatusCodeValue()).isEqualTo(BAD_REQUEST.value());
+    }
+
+    @Sql
+    @Test
+    public void shouldDeleteOneBooking_whenDeleteAllBookingsForTourAndCustomer_givenBookingExists() {
+        TourBooking[] tourBookingsBefore = restTemplate
+                .getForEntity(LOCAL_HOST + port + "/tours/" + TOUR_ID + "/bookings", TourBooking[].class)
+                .getBody();
+
+        assertThat(tourBookingsBefore.length).isEqualTo(2);
+
+        restTemplate.delete(LOCAL_HOST + port + "/tours/" + TOUR_ID + "/bookings/" + CUSTOMER_ID);
+
+        TourBooking[] tourBookingsAfter = restTemplate
+                .getForEntity(LOCAL_HOST + port + "/tours/" + TOUR_ID + "/bookings", TourBooking[].class)
+                .getBody();
+
+        assertThat(tourBookingsAfter.length).isEqualTo(1);
+    }
+
+    @Sql
+    @Test
+    public void shouldReturn400_whenDeleteAllBookingsForTourAndCustomer_givenNotValidTourId() {
+        ResponseEntity<String> response = restTemplate
+                .exchange(LOCAL_HOST + port + "/tours/" + NON_EXISTING_TOUR_ID + "/bookings/" + CUSTOMER_ID, HttpMethod.DELETE, null, String.class);
+
+        assertThat(response.getStatusCodeValue()).isEqualTo(BAD_REQUEST.value());
+    }
+
+    @Sql
+    @Test
+    public void shouldDeleteTwoBookings_whenDeleteAllBookingsForCustomer_givenBookingsExist() {
+        TourBooking[] tourBookingsBefore = restTemplate
+                .getForEntity(LOCAL_HOST + port + "/tours/bookings", TourBooking[].class)
+                .getBody();
+
+        assertThat(tourBookingsBefore.length).isEqualTo(3);
+
+        restTemplate.delete(LOCAL_HOST + port + "/tours/bookings/" + CUSTOMER_ID);
+
+        TourBooking[] tourBookingsAfter = restTemplate
+                .getForEntity(LOCAL_HOST + port + "/tours/bookings", TourBooking[].class)
+                .getBody();
+
+        assertThat(tourBookingsAfter.length).isEqualTo(1);
+    }
+
+    @Sql
+    @Test
+    public void shouldDeleteAllBookings_whenDeleteAllBookings_givenBookingsExist() {
         TourBooking[] tourBookingsBefore = restTemplate
                 .getForEntity(LOCAL_HOST + port + "/tours/bookings", TourBooking[].class)
                 .getBody();

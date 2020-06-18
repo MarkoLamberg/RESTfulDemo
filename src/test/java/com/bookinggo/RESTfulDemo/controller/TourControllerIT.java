@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.test.context.ActiveProfiles;
@@ -26,15 +27,19 @@ public class TourControllerIT extends AbstractRESTfulDemoIT {
 
     private static final int TOUR_ID = 1;
 
+    private static final int NON_EXISTING_TOUR_ID = 10;
+
     private static final String LOCAL_HOST = "http://localhost:";
 
     private static final String TOUR_LOCATION = "paris";
+
+    private static final String NON_EXISTING_TOUR_LOCATION = "barcelona";
 
     private static final String TOUR_PACKAGE_CODE = "LS";
 
     private static final String TITLE = "London Tower Bridge";
 
-    private static final String EXISTING_TITLE = "London City Sightseeing Tour";
+    private static final String NON_EXISTING_TITLE = "London City Sightseeing Tour";
 
     private static final String DURATION = "2 hours";
 
@@ -71,7 +76,7 @@ public class TourControllerIT extends AbstractRESTfulDemoIT {
     public void shouldReturn400_whenTourCreated_givenTourWithThatTourPackageCodeAndNameAlreadyExists() {
         TourDto tourDto = TourDto.builder()
                 .tourPackageCode(TOUR_PACKAGE_CODE)
-                .title(EXISTING_TITLE)
+                .title(NON_EXISTING_TITLE)
                 .duration(DURATION)
                 .price(PRICE)
                 .build();
@@ -104,12 +109,30 @@ public class TourControllerIT extends AbstractRESTfulDemoIT {
 
     @Sql
     @Test
+    public void shouldReturn400_whenGetTourById_givenTourDoesntExist() {
+        ResponseEntity<Tour> response = restTemplate
+                .exchange(LOCAL_HOST + port + "/tours/" + NON_EXISTING_TOUR_ID, HttpMethod.GET, null, Tour.class);
+
+        assertThat(response.getStatusCodeValue()).isEqualTo(BAD_REQUEST.value());
+    }
+
+    @Sql
+    @Test
     public void shouldReturnTwoTours_whenGetToursByLocation_givenToursExist() {
         Tour[] tours = restTemplate
                 .getForEntity(LOCAL_HOST + port + "/tours/byLocation/" + TOUR_LOCATION, Tour[].class)
                 .getBody();
 
         assertThat(tours.length).isEqualTo(2);
+    }
+
+    @Sql
+    @Test
+    public void shouldReturn400_whenGetToursByLocation_givenLocationDoesntExist() {
+        ResponseEntity<String> response = restTemplate
+                .exchange(LOCAL_HOST + port + "/tours/byLocation/" + NON_EXISTING_TOUR_LOCATION, HttpMethod.GET, null, String.class);
+
+        assertThat(response.getStatusCodeValue()).isEqualTo(BAD_REQUEST.value());
     }
 
     @Sql
@@ -128,5 +151,14 @@ public class TourControllerIT extends AbstractRESTfulDemoIT {
                 .getBody();
 
         assertThat(toursAfter.length).isEqualTo(3);
+    }
+
+    @Sql
+    @Test
+    public void shouldReturn400_whenDeletedTour_givenTourExistsAndTourHasBookings() {
+        ResponseEntity<Tour> response = restTemplate
+                .exchange(LOCAL_HOST + port + "/tours/" + TOUR_ID, HttpMethod.DELETE, null, Tour.class);
+
+        assertThat(response.getStatusCodeValue()).isEqualTo(BAD_REQUEST.value());
     }
 }

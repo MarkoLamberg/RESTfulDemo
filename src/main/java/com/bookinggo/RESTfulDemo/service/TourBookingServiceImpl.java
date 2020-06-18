@@ -9,7 +9,8 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -23,7 +24,7 @@ public class TourBookingServiceImpl implements TourBookingService {
     private final CustomerRepository customerRepository;
 
     @Override
-    public TourBooking createBooking(int tourId, Integer customerId, LocalDateTime pickupDateTime, String pickupLocation, Integer participants) throws NoSuchElementException {
+    public TourBooking createBooking(int tourId, Integer customerId, LocalDateTime pickupDateTime, String pickupLocation, Integer participants) {
         log.info("createBooking - tourId: {}, customerId: {}, date: {}, location {}, participants {}", tourId, customerId, pickupDateTime, pickupLocation, participants);
 
         Optional<Tour> tour = tourService.lookupTourById(tourId);
@@ -59,9 +60,8 @@ public class TourBookingServiceImpl implements TourBookingService {
     }
 
     @Override
-    public TourBooking update(int tourId, Integer customerId, LocalDateTime pickupDateTime, String pickupLocation, Integer participants)
-            throws NoSuchElementException {
-        log.info("update - tourId: {}, customerId: {}, date: {}, location {}", tourId, customerId, pickupDateTime, pickupLocation);
+    public TourBooking updateBooking(int tourId, Integer customerId, LocalDateTime pickupDateTime, String pickupLocation, Integer participants) {
+        log.info("updateBooking - tourId: {}, customerId: {}, date: {}, location {}", tourId, customerId, pickupDateTime, pickupLocation);
 
         List<TourBooking> bookings = tourBookingRepository.findByTourIdAndCustomerId(tourId, customerId);
 
@@ -85,7 +85,7 @@ public class TourBookingServiceImpl implements TourBookingService {
     }
 
     @Override
-    public List<TourBooking> deleteAllBookingsWithTourId(int tourId) throws NoSuchElementException {
+    public List<TourBooking> deleteAllBookingsWithTourId(int tourId) {
         log.info("deleteAllBookingsWithTourId - tourId: {}", tourId);
 
         List<TourBooking> bookings = tourBookingRepository.findByTourId(tourId);
@@ -96,7 +96,7 @@ public class TourBookingServiceImpl implements TourBookingService {
     }
 
     @Override
-    public List<TourBooking> deleteAllBookingsWithTourIdAndCustomerId(int tourId, Integer customerId) throws NoSuchElementException {
+    public List<TourBooking> deleteAllBookingsWithTourIdAndCustomerId(int tourId, Integer customerId) {
         log.info("deleteAllBookingsWithTourIdAndCustomerId - tourId: {}, customerId: {}", tourId, customerId);
 
         List<TourBooking> bookings = tourBookingRepository.findByTourId(tourId)
@@ -110,7 +110,7 @@ public class TourBookingServiceImpl implements TourBookingService {
     }
 
     @Override
-    public List<TourBooking> deleteAllBookingsWithCustomerId(Integer customerId) throws NoSuchElementException {
+    public List<TourBooking> deleteAllBookingsWithCustomerId(Integer customerId) {
         log.info("deleteAllBookingsWithCustomerId - tourId: {}", customerId);
 
         List<TourBooking> bookings = tourBookingRepository.findByCustomerId(customerId);
@@ -123,7 +123,7 @@ public class TourBookingServiceImpl implements TourBookingService {
     }
 
     @Override
-    public List<TourBooking> deleteAllBookings() throws NoSuchElementException {
+    public List<TourBooking> deleteAllBookings() {
         log.info("deleteAllBookings");
 
         List<TourBooking> bookings = tourBookingRepository.findAll();

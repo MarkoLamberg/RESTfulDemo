@@ -2,10 +2,12 @@ package com.bookinggo.RESTfulDemo.controller;
 
 import com.bookinggo.RESTfulDemo.dto.TourDto;
 import com.bookinggo.RESTfulDemo.entity.Tour;
+import com.bookinggo.RESTfulDemo.service.TourBookingService;
 import com.bookinggo.RESTfulDemo.service.TourService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -20,6 +22,8 @@ import java.util.Optional;
 public class TourController {
 
     private final TourService tourService;
+
+    private final TourBookingService tourBookingService;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -62,16 +66,19 @@ public class TourController {
     }
 
     @GetMapping(path = "/byLocation/{tourLocation}")
-    public List<Tour> getToursByLocation(@PathVariable(value = "tourLocation") String location) {
+    public ResponseEntity<?> getToursByLocation(@PathVariable(value = "tourLocation") String location) {
         log.info("GET /tours/{}", location);
         List<Tour> tours = tourService.lookupToursByLocation(location);
 
         if (tours.size() > 0) {
-            return tours;
+            return ResponseEntity
+                    .ok()
+                    .body(tours);
         }
 
-        throw new ResponseStatusException(
-                HttpStatus.BAD_REQUEST, "Tour with that location doesn't exist. Provide correct Tour Location");
+        return ResponseEntity
+                .badRequest()
+                .body("Tour with that location doesn't exist. Provide correct Tour Location");
     }
 
     @DeleteMapping("/{tourId}")
@@ -80,6 +87,12 @@ public class TourController {
         Optional<Tour> tour = tourService.lookupTourById(tourId);
 
         if (tour.isPresent()) {
+
+            if (tourBookingService.lookupTourBookings(tourId).size() > 0) {
+                throw new ResponseStatusException(
+                        HttpStatus.BAD_REQUEST, "Can't delete tour that has bookings.");
+            }
+
             tourService.deleteTour(tourId);
 
             return tour.get();

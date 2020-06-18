@@ -25,7 +25,15 @@ public class TourServiceTest {
 
     private static final String TOUR_PACKAGE_CODE = "LS";
 
+    private static final String NON_EXISTING_TOUR_PACKAGE_CODE = "LS";
+
     private static final String TOUR_TITLE = "London City Sightseeing Tour";
+
+    private static final String DURATION = "2 hours";
+
+    private static final int PRICE = 150;
+
+    private static final String TOUR_LOCATION = "liverpool";
 
     @Autowired
     private TourService tourService;
@@ -35,6 +43,13 @@ public class TourServiceTest {
 
     @MockBean
     private TourPackageRepository tourPackageRepositoryMock;
+
+    @Test
+    public void shouldCallGetTourPackageByCode_whenCreateTour_givenTourPackageDoesntExist() {
+        Optional<Tour> tour = tourService.createTour(NON_EXISTING_TOUR_PACKAGE_CODE, TOUR_TITLE, DURATION, PRICE);
+        verify(tourPackageRepositoryMock, times(1)).getTourPackageByCode(TOUR_PACKAGE_CODE);
+        assertThat(tour).isEmpty();
+    }
 
     @Test
     public void shouldCallFindAll_whenLookupAllTours_givenNoToursExist() {
@@ -48,6 +63,13 @@ public class TourServiceTest {
         Optional<Tour> tour = tourService.lookupTourById(TOUR_ID);
         verify(tourRepositoryMock, times(1)).findById(TOUR_ID);
         assertThat(tour).isEmpty();
+    }
+
+    @Test
+    public void shouldCallFindAll_whenLookupToursByLocation_givenNoTourWithLocationExists() {
+        List<Tour> tours = tourService.lookupToursByLocation(TOUR_LOCATION);
+        verify(tourRepositoryMock, times(1)).findAll();
+        assertThat(tours.size()).isEqualTo(0);
     }
 
     @Test

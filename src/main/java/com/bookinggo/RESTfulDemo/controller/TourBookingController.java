@@ -45,18 +45,24 @@ public class TourBookingController {
     }
 
     @GetMapping(path = "/{tourId}/bookings")
-    public List<BookingDto> getAllBookingsForTour(@PathVariable(value = "tourId") int tourId) {
+    public ResponseEntity<?> getAllBookingsForTour(@PathVariable(value = "tourId") int tourId) {
         log.info("GET /tours/{}/bookings", tourId);
         Optional<Tour> tour = tourService.lookupTourById(tourId);
 
         if (tour.isPresent()) {
             List<TourBooking> tourBookings = tourBookingService.lookupTourBookings(tourId);
 
-            return tourBookings.stream().map(tourBooking -> toDto(tourBooking)).collect(Collectors.toList());
+            return ResponseEntity
+                    .ok()
+                    .body(tourBookings
+                            .stream()
+                            .map(tourBooking -> toDto(tourBooking))
+                            .collect(Collectors.toList()));
         }
 
-        throw new ResponseStatusException(
-                HttpStatus.BAD_REQUEST, "Tour doesn't exist. Provide correct Tour Id");
+        return ResponseEntity
+                .badRequest()
+                .body("Tour doesn't exist. Provide correct Tour Id");
     }
 
     @GetMapping(path = "/bookings")
@@ -68,7 +74,7 @@ public class TourBookingController {
     }
 
     @PutMapping(path = "/{tourId}/bookings")
-    public ResponseEntity<BookingDto> updateWithPut(@PathVariable(value = "tourId") int tourId, @Valid @RequestBody BookingPatchDto bookingPatchDto) {
+    public ResponseEntity<BookingDto> updateBooking(@PathVariable(value = "tourId") int tourId, @Valid @RequestBody BookingPatchDto bookingPatchDto) {
         log.info("PUT /tours/{}/bookings", tourId);
         Optional<Tour> tour = tourService.lookupTourById(tourId);
 
@@ -79,7 +85,7 @@ public class TourBookingController {
                 pickupDateTime = LocalDateTime.parse(bookingPatchDto.getPickupDateTime(), DateTimeFormatter.ISO_LOCAL_DATE_TIME);
             }
 
-            TourBooking response = tourBookingService.update(tourId, bookingPatchDto.getCustomerId(),
+            TourBooking response = tourBookingService.updateBooking(tourId, bookingPatchDto.getCustomerId(),
                     pickupDateTime, bookingPatchDto.getPickupLocation(), bookingPatchDto.getParticipants());
 
             if (response == null) {
@@ -96,33 +102,39 @@ public class TourBookingController {
     }
 
     @DeleteMapping("/{tourId}/bookings")
-    public List<BookingDto> deleteAllBookingsForTour(@PathVariable(value = "tourId") int tourId) {
+    public ResponseEntity<?> deleteAllBookingsForTour(@PathVariable(value = "tourId") int tourId) {
         log.info("DELETE /tours/{}/bookings", tourId);
         Optional<Tour> tour = tourService.lookupTourById(tourId);
 
         if (tour.isPresent()) {
             List<TourBooking> bookings = tourBookingService.deleteAllBookingsWithTourId(tourId);
 
-            return listOfDtos(bookings);
+            return ResponseEntity
+                    .ok()
+                    .body(listOfDtos(bookings));
         }
 
-        throw new ResponseStatusException(
-                HttpStatus.BAD_REQUEST, "Tour doesn't exist. Provide correct Tour Id");
+        return ResponseEntity
+                .badRequest()
+                .body("Tour doesn't exist. Provide correct Tour Id");
     }
 
     @DeleteMapping("/{tourId}/bookings/{customerId}")
-    public List<BookingDto> deleteAllBookingsForTourAndCustomer(@PathVariable(value = "tourId") int tourId, @PathVariable(value = "customerId") int customerId) {
+    public ResponseEntity<?> deleteAllBookingsForTourAndCustomer(@PathVariable(value = "tourId") int tourId, @PathVariable(value = "customerId") int customerId) {
         log.info("DELETE /tours/{}/bookings", tourId);
         Optional<Tour> tour = tourService.lookupTourById(tourId);
 
         if (tour.isPresent()) {
             List<TourBooking> bookings = tourBookingService.deleteAllBookingsWithTourIdAndCustomerId(tourId, customerId);
 
-            return listOfDtos(bookings);
+            return ResponseEntity
+                    .ok()
+                    .body(listOfDtos(bookings));
         }
 
-        throw new ResponseStatusException(
-                HttpStatus.BAD_REQUEST, "Tour doesn't exist. Provide correct Tour Id");
+        return ResponseEntity
+                .badRequest()
+                .body("Tour doesn't exist. Provide correct Tour Id");
     }
 
     @DeleteMapping("/bookings/{customerId}")
