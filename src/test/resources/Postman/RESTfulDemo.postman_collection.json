@@ -76,12 +76,97 @@
 			"protocolProfileBehavior": {}
 		},
 		{
-			"name": "Get all tours",
+			"name": "Create customer",
 			"event": [
 				{
 					"listen": "test",
 					"script": {
-						"id": "74a179de-dbad-4722-82b9-37253a6db109",
+						"id": "0e758965-2f97-4e91-bc87-b41e282b2578",
+						"exec": [
+							"pm.test(\"Status test\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "    {\n        \"title\": \"Mr\",\n        \"name\": \"Marko Lamberg\"\n    }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/customers",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"customers"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update customer",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "09106795-b725-4765-b9f0-67581943321f",
+						"exec": [
+							"pm.test(\"Status test\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"title\":\"Mr\",\n\t\"name\": \"Donald Duck\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/customers/15",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"customers",
+						"15"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get all customers",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "1aad67de-ca05-46bb-9ad7-01a749aa111a",
 						"exec": [
 							"pm.test(\"Status test\", function () {",
 							"    pm.response.to.have.status(200);",
@@ -95,7 +180,159 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/tours/",
+					"raw": "http://localhost:8080/customers",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"customers"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get customer by id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "6dd16e3d-64b2-4150-b9e5-ae3f085b33ea",
+						"exec": [
+							"pm.test(\"Status test\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/customers/3",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"customers",
+						"3"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get bookings for customer by id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "7737dce8-a9b4-4c9b-a68d-bf3f19fd43bc",
+						"exec": [
+							"pm.test(\"Status test\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/customers/3/bookings",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"customers",
+						"3",
+						"bookings"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete customer by id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "b1fc7b7e-8e8e-4805-8ce1-f26b0d8a4b3d",
+						"exec": [
+							"pm.test(\"Status test\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/customers/15",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"customers",
+						"15"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create booking for tour id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "f350cc8a-abc1-45ff-a6bd-84cc3558ab79",
+						"exec": [
+							"pm.test(\"Status test\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "    {\n        \"pickupDateTime\": \"2020-05-26T17:30:00\",\n        \"pickupLocation\": \"Hotel Intercontinental\",\n        \"customerId\": 3,\n        \"participants\": 5\n    }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/tours/11/bookings/",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -103,6 +340,8 @@
 					"port": "8080",
 					"path": [
 						"tours",
+						"11",
+						"bookings",
 						""
 					]
 				}
@@ -110,12 +349,12 @@
 			"response": []
 		},
 		{
-			"name": "Get tours of package 1",
+			"name": "Get bookings for tour id",
 			"event": [
 				{
 					"listen": "test",
 					"script": {
-						"id": "63c1e6e9-849f-4819-bf3c-397cf0d9222a",
+						"id": "78d5588c-73bd-40f1-9d12-689d3bd1f3b1",
 						"exec": [
 							"pm.test(\"Status test\", function () {",
 							"    pm.response.to.have.status(200);",
@@ -129,7 +368,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/tours/1",
+					"raw": "http://localhost:8080/tours/11/bookings/",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -137,7 +376,9 @@
 					"port": "8080",
 					"path": [
 						"tours",
-						"1"
+						"11",
+						"bookings",
+						""
 					]
 				}
 			},
@@ -190,64 +431,12 @@
 			"response": []
 		},
 		{
-			"name": "Create booking for tour 7",
+			"name": "Update booking for tour id",
 			"event": [
 				{
 					"listen": "test",
 					"script": {
-						"id": "f350cc8a-abc1-45ff-a6bd-84cc3558ab79",
-						"exec": [
-							"pm.test(\"Status test\", function () {",
-							"    pm.response.to.have.status(201);",
-							"});"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"name": "Content-Type",
-						"value": "application/json",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "    {\n        \"pickupDateTime\": \"2020-05-26T17:30:00\",\n        \"pickupLocation\": \"Hotel Intercontinental\",\n        \"customerId\": 1,\n        \"participants\": 5\n    }",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "http://localhost:8080/tours/7/bookings/",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8080",
-					"path": [
-						"tours",
-						"7",
-						"bookings",
-						""
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Get bookings for tour 6",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"id": "78d5588c-73bd-40f1-9d12-689d3bd1f3b1",
+						"id": "02f2fe7d-08d3-4685-a456-427e65a0352d",
 						"exec": [
 							"pm.test(\"Status test\", function () {",
 							"    pm.response.to.have.status(200);",
@@ -258,10 +447,19 @@
 				}
 			],
 			"request": {
-				"method": "GET",
+				"method": "PUT",
 				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "    {\n        \"pickupLocation\": \"Hotel Ibis\",\n        \"customerId\": 3,\n        \"participants\": 3\n    }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
 				"url": {
-					"raw": "http://localhost:8080/tours/8/bookings/",
+					"raw": "http://localhost:8080/tours/11/bookings/",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -269,7 +467,7 @@
 					"port": "8080",
 					"path": [
 						"tours",
-						"8",
+						"11",
 						"bookings",
 						""
 					]
@@ -278,62 +476,12 @@
 			"response": []
 		},
 		{
-			"name": "Create a new tour",
+			"name": "Delete all bookings for a tour id",
 			"event": [
 				{
 					"listen": "test",
 					"script": {
-						"id": "4580a47e-322f-4e26-bd32-73f1cfb54fe4",
-						"exec": [
-							"pm.test(\"Status test\", function () {",
-							"    pm.response.to.have.status(405);",
-							"});"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"name": "Content-Type",
-						"value": "application/json",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n\t\"tourPackageCode\":\"BW\",\n\t\"title\":\"Catalonia Wine Tour\",\n\t\"duration\":\"2 hours\",\n\t\"price\": 10\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "http://localhost:8080/tours/",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8080",
-					"path": [
-						"tours",
-						""
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Delete all bookings",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"id": "d1d07847-dd88-443e-a6d6-fb437cb8f3c3",
+						"id": "8600492a-ffd1-4cc2-8da4-c31bb81af04f",
 						"exec": [
 							"pm.test(\"Status test\", function () {",
 							"    pm.response.to.have.status(200);",
@@ -347,7 +495,7 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/tours/bookings",
+					"raw": "http://localhost:8080/tours/1/bookings",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -355,7 +503,44 @@
 					"port": "8080",
 					"path": [
 						"tours",
+						"1",
 						"bookings"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete all bookings for tour and customer",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "712678a6-fcde-4071-ab94-d8371cef193f",
+						"exec": [
+							"pm.test(\"Status test\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/tours/11/bookings/7",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"tours",
+						"11",
+						"bookings",
+						"7"
 					]
 				}
 			},
@@ -397,51 +582,96 @@
 			"response": []
 		},
 		{
-			"name": "Get all customers",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "http://localhost:8080/customers",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8080",
-					"path": [
-						"customers"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Get customer 3",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "http://localhost:8080/customers/3",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8080",
-					"path": [
-						"customers",
-						"3"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Get bookings for customer 3",
+			"name": "Delete all bookings",
 			"event": [
 				{
 					"listen": "test",
 					"script": {
-						"id": "7737dce8-a9b4-4c9b-a68d-bf3f19fd43bc",
+						"id": "d1d07847-dd88-443e-a6d6-fb437cb8f3c3",
+						"exec": [
+							"pm.test(\"Status test\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/tours/bookings",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"tours",
+						"bookings"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create a new tour",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "4580a47e-322f-4e26-bd32-73f1cfb54fe4",
+						"exec": [
+							"pm.test(\"Status test\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"tourPackageCode\":\"BW\",\n\t\"title\":\"Barcelona Red Wine Tour\",\n\t\"duration\":\"2.0 hours\",\n\t\"price\": 15\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/tours/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"tours",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get all tours",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "74a179de-dbad-4722-82b9-37253a6db109",
 						"exec": [
 							"pm.test(\"Status test\", function () {",
 							"    pm.response.to.have.status(200);",
@@ -455,23 +685,56 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/customers/3/bookings",
+					"raw": "http://localhost:8080/tours/",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
-						"customers",
-						"3",
-						"bookings"
+						"tours",
+						""
 					]
 				}
 			},
 			"response": []
 		},
 		{
-			"name": "Get tours for location Barcelona",
+			"name": "Get tour by id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "63c1e6e9-849f-4819-bf3c-397cf0d9222a",
+						"exec": [
+							"pm.test(\"Status test\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/tours/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"tours",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get tours for location",
 			"event": [
 				{
 					"listen": "test",
@@ -506,58 +769,15 @@
 			"response": []
 		},
 		{
-			"name": "Delete all bookings for tour and customer",
-			"request": {
-				"method": "DELETE",
-				"header": [],
-				"url": {
-					"raw": "http://localhost:8080/tours/4/bookings/2",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8080",
-					"path": [
-						"tours",
-						"4",
-						"bookings",
-						"2"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Delete all bookings for a tour",
-			"request": {
-				"method": "DELETE",
-				"header": [],
-				"url": {
-					"raw": "http://localhost:8080/tours/1/bookings",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8080",
-					"path": [
-						"tours",
-						"1",
-						"bookings"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Create customer",
+			"name": "Delete tour by id",
 			"event": [
 				{
 					"listen": "test",
 					"script": {
-						"id": "0e758965-2f97-4e91-bc87-b41e282b2578",
+						"id": "01ec8fe9-4eee-42c4-8ee1-573efe967831",
 						"exec": [
 							"pm.test(\"Status test\", function () {",
-							"    pm.response.to.have.status(201);",
+							"    pm.response.to.have.status(200);",
 							"});"
 						],
 						"type": "text/javascript"
@@ -565,58 +785,10 @@
 				}
 			],
 			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "    {\n        \"title\": \"Mr\",\n        \"name\": \"Marko Lamberg\"\n    }",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "http://localhost:8080/customers",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8080",
-					"path": [
-						"customers"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Delete customer 10",
-			"request": {
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/customers/10",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8080",
-					"path": [
-						"customers",
-						"10"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Delete tour 10",
-			"request": {
-				"method": "DELETE",
-				"header": [],
-				"url": {
-					"raw": "http://localhost:8080/tours/10",
+					"raw": "http://localhost:8080/tours/13",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -624,7 +796,7 @@
 					"port": "8080",
 					"path": [
 						"tours",
-						"10"
+						"13"
 					]
 				}
 			},
