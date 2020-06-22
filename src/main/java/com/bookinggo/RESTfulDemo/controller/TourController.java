@@ -1,5 +1,6 @@
 package com.bookinggo.RESTfulDemo.controller;
 
+import com.bookinggo.RESTfulDemo.dto.ErrorDto;
 import com.bookinggo.RESTfulDemo.dto.TourDto;
 import com.bookinggo.RESTfulDemo.entity.Tour;
 import com.bookinggo.RESTfulDemo.service.TourBookingService;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
 
@@ -78,7 +80,13 @@ public class TourController {
 
         return ResponseEntity
                 .badRequest()
-                .body("Tour with that location doesn't exist. Provide correct Tour Location");
+                .body(ErrorDto.builder()
+                        .timestamp(new Timestamp(System.currentTimeMillis()))
+                        .status(HttpStatus.BAD_REQUEST.value())
+                        .error(HttpStatus.BAD_REQUEST.name())
+                        .message("Tour with that location doesn't exist. Provide correct Tour Location")
+                        .path("/tours/byLocation/" + location)
+                        .build());
     }
 
     @DeleteMapping("/{tourId}")

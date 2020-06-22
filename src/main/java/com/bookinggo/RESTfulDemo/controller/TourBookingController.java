@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -62,7 +63,13 @@ public class TourBookingController {
 
         return ResponseEntity
                 .badRequest()
-                .body("Tour doesn't exist. Provide correct Tour Id");
+                .body(ErrorDto.builder()
+                        .timestamp(new Timestamp(System.currentTimeMillis()))
+                        .status(HttpStatus.BAD_REQUEST.value())
+                        .error(HttpStatus.BAD_REQUEST.name())
+                        .message("Tour doesn't exist. Provide correct Tour Id")
+                        .path("/tours/" + tourId + "/bookings")
+                        .build());
     }
 
     @GetMapping(path = "/bookings")
@@ -116,7 +123,13 @@ public class TourBookingController {
 
         return ResponseEntity
                 .badRequest()
-                .body("Tour doesn't exist. Provide correct Tour Id");
+                .body(ErrorDto.builder()
+                        .timestamp(new Timestamp(System.currentTimeMillis()))
+                        .status(HttpStatus.BAD_REQUEST.value())
+                        .error(HttpStatus.BAD_REQUEST.name())
+                        .message("Tour doesn't exist. Provide correct Tour Id")
+                        .path("/tours/" + tourId + "/bookings")
+                        .build());
     }
 
     @DeleteMapping("/{tourId}/bookings/{customerId}")
@@ -134,7 +147,13 @@ public class TourBookingController {
 
         return ResponseEntity
                 .badRequest()
-                .body("Tour doesn't exist. Provide correct Tour Id");
+                .body(ErrorDto.builder()
+                        .timestamp(new Timestamp(System.currentTimeMillis()))
+                        .status(HttpStatus.BAD_REQUEST.value())
+                        .error(HttpStatus.BAD_REQUEST.name())
+                        .message("Tour doesn't exist. Provide correct Tour Id")
+                        .path("/tours/" + tourId + "/bookings/" + customerId)
+                        .build());
     }
 
     @DeleteMapping("/bookings/{customerId}")

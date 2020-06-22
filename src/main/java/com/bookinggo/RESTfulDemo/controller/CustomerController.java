@@ -1,7 +1,6 @@
 package com.bookinggo.RESTfulDemo.controller;
 
-import com.bookinggo.RESTfulDemo.dto.CustomerDto;
-import com.bookinggo.RESTfulDemo.dto.CustomerPatchDto;
+import com.bookinggo.RESTfulDemo.dto.*;
 import com.bookinggo.RESTfulDemo.entity.Customer;
 import com.bookinggo.RESTfulDemo.entity.TourBooking;
 import com.bookinggo.RESTfulDemo.service.CustomerService;
@@ -13,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
 
@@ -101,7 +101,13 @@ public class CustomerController {
 
         return ResponseEntity
                 .badRequest()
-                .body("Customer doesn't exist. Provide correct Customer Id");
+                .body(ErrorDto.builder()
+                        .timestamp(new Timestamp(System.currentTimeMillis()))
+                        .status(HttpStatus.BAD_REQUEST.value())
+                        .error(HttpStatus.BAD_REQUEST.name())
+                        .message("Customer doesn't exist. Provide correct Customer Id")
+                        .path("/customers/" + customerId + "/bookings")
+                        .build());
     }
 
     @DeleteMapping("/{customerId}")
