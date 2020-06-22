@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping(path = "/tours")
+@RequestMapping("/tours")
 @Slf4j
 @AllArgsConstructor
 public class TourController {
@@ -35,7 +35,7 @@ public class TourController {
 
         if (existingTour.isPresent()) {
             throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST, "Tour with that Tour Package Code and Tour Title already exists");
+                    HttpStatus.BAD_REQUEST, "Tour with that Tour Package Code and Tour Title already exists.");
         }
 
         Optional<Tour> tour = tourService.createTour(tourDto.getTourPackageCode(), tourDto.getTitle(), tourDto.getDuration(), tourDto.getPrice());
@@ -45,7 +45,7 @@ public class TourController {
         }
 
         throw new ResponseStatusException(
-                HttpStatus.BAD_REQUEST, "Tour doesn't exist. Provide correct Tour Package Id");
+                HttpStatus.BAD_REQUEST, "Tour doesn't exist. Provide correct Tour Package Id.");
     }
 
     @GetMapping
@@ -64,12 +64,12 @@ public class TourController {
         }
 
         throw new ResponseStatusException(
-                HttpStatus.BAD_REQUEST, "Tour doesn't exist. Provide correct Tour Id");
+                HttpStatus.BAD_REQUEST, "Tour doesn't exist. Provide correct Tour Id.");
     }
 
     @GetMapping(path = "/byLocation/{tourLocation}")
     public ResponseEntity<?> getToursByLocation(@PathVariable(value = "tourLocation") String location) {
-        log.info("GET /tours/{}", location);
+        log.info("GET /tours/byLocation/{}", location);
         List<Tour> tours = tourService.lookupToursByLocation(location);
 
         if (tours.size() > 0) {
@@ -84,14 +84,14 @@ public class TourController {
                         .timestamp(new Timestamp(System.currentTimeMillis()))
                         .status(HttpStatus.BAD_REQUEST.value())
                         .error(HttpStatus.BAD_REQUEST.name())
-                        .message("Tour with that location doesn't exist. Provide correct Tour Location")
+                        .message("Tour with that location doesn't exist. Provide correct Tour Location.")
                         .path("/tours/byLocation/" + location)
                         .build());
     }
 
     @DeleteMapping("/{tourId}")
     public Tour deleteTour(@PathVariable(value = "tourId") int tourId) {
-        log.info("DELETE /tour/{}", tourId);
+        log.info("DELETE /tours/{}", tourId);
         Optional<Tour> tour = tourService.lookupTourById(tourId);
 
         if (tour.isPresent()) {
@@ -107,6 +107,6 @@ public class TourController {
         }
 
         throw new ResponseStatusException(
-                HttpStatus.BAD_REQUEST, "Tour doesn't exist. Provide correct Tour Id");
+                HttpStatus.BAD_REQUEST, "Tour doesn't exist. Provide correct Tour Id.");
     }
 }

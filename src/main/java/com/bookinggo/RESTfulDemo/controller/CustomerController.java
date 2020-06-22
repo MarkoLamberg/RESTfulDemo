@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping(path = "/customers")
+@RequestMapping("/customers")
 @Slf4j
 @AllArgsConstructor
 public class CustomerController {
@@ -32,13 +32,13 @@ public class CustomerController {
 
         if (customer.isPresent()) {
             throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST, "Customer with that name already exists");
+                    HttpStatus.BAD_REQUEST, "Customer with that name already exists.");
         }
 
         return customerService.createCustomer(customerDto.getTitle(), customerDto.getName());
     }
 
-    @PutMapping(path = "/{customerId}")
+    @PutMapping("/{customerId}")
     public ResponseEntity<Customer> updateCustomer(@PathVariable(value = "customerId") int customerId, @Valid @RequestBody CustomerPatchDto customerPatchDto) {
         log.info("PUT /customers/{}", customerId);
         Optional<Customer> customer = customerService.lookupCustomerById(customerId);
@@ -49,7 +49,7 @@ public class CustomerController {
 
             if (customerWithNewName.isPresent()) {
                 throw new ResponseStatusException(
-                        HttpStatus.BAD_REQUEST, "Can't change the customer name to match with other existing customer");
+                        HttpStatus.BAD_REQUEST, "Can't change the customer name to match with other existing customer.");
             } else {
                 Customer response = customerService.updateCustomer(customerId, customerPatchDto.getTitle(), customerPatchDto.getName());
 
@@ -64,7 +64,7 @@ public class CustomerController {
         }
 
         throw new ResponseStatusException(
-                HttpStatus.BAD_REQUEST, "Customer doesn't exist. Provide correct Customer Id");
+                HttpStatus.BAD_REQUEST, "Customer doesn't exist. Provide correct Customer Id.");
     }
 
     @GetMapping
@@ -73,7 +73,7 @@ public class CustomerController {
         return customerService.lookupAllCustomers();
     }
 
-    @GetMapping(path = "/{customerId}")
+    @GetMapping("/{customerId}")
     public Customer getCustomersById(@PathVariable(value = "customerId") int customerId) {
         log.info("GET /customers/{}", customerId);
         Optional<Customer> customer = customerService.lookupCustomerById(customerId);
@@ -83,10 +83,10 @@ public class CustomerController {
         }
 
         throw new ResponseStatusException(
-                HttpStatus.BAD_REQUEST, "Customer doesn't exist. Provide correct Customer Id");
+                HttpStatus.BAD_REQUEST, "Customer doesn't exist. Provide correct Customer Id.");
     }
 
-    @GetMapping(path = "/{customerId}/bookings")
+    @GetMapping("/{customerId}/bookings")
     public ResponseEntity<?> getCustomersBookingsById(@PathVariable(value = "customerId") int customerId) {
         log.info("GET /customers/{}/bookings", customerId);
         Optional<Customer> customer = customerService.lookupCustomerById(customerId);
@@ -105,7 +105,7 @@ public class CustomerController {
                         .timestamp(new Timestamp(System.currentTimeMillis()))
                         .status(HttpStatus.BAD_REQUEST.value())
                         .error(HttpStatus.BAD_REQUEST.name())
-                        .message("Customer doesn't exist. Provide correct Customer Id")
+                        .message("Customer doesn't exist. Provide correct Customer Id.")
                         .path("/customers/" + customerId + "/bookings")
                         .build());
     }
@@ -122,6 +122,6 @@ public class CustomerController {
         }
 
         throw new ResponseStatusException(
-                HttpStatus.BAD_REQUEST, "Customer doesn't exist. Provide correct Customer Id");
+                HttpStatus.BAD_REQUEST, "Customer doesn't exist. Provide correct Customer Id.");
     }
 }

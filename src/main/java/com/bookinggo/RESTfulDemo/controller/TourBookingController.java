@@ -20,7 +20,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping(path = "/tours")
+@RequestMapping("/tours")
 @Slf4j
 @RequiredArgsConstructor
 public class TourBookingController {
@@ -28,7 +28,7 @@ public class TourBookingController {
     private final TourBookingService tourBookingService;
     private final TourService tourService;
 
-    @PostMapping(path = "/{tourId}/bookings")
+    @PostMapping("/{tourId}/bookings")
     @ResponseStatus(HttpStatus.CREATED)
     public TourBooking createTourBooking(@PathVariable(value = "tourId") int tourId, @Valid @RequestBody BookingDto bookingDto) {
         log.info("POST /tours/{}/bookings", tourId);
@@ -42,10 +42,10 @@ public class TourBookingController {
         }
 
         throw new ResponseStatusException(
-                HttpStatus.BAD_REQUEST, "Tour doesn't exist. Provide correct Tour Id");
+                HttpStatus.BAD_REQUEST, "Tour doesn't exist. Provide correct Tour Id.");
     }
 
-    @GetMapping(path = "/{tourId}/bookings")
+    @GetMapping("/{tourId}/bookings")
     public ResponseEntity<?> getAllBookingsForTour(@PathVariable(value = "tourId") int tourId) {
         log.info("GET /tours/{}/bookings", tourId);
         Optional<Tour> tour = tourService.lookupTourById(tourId);
@@ -67,20 +67,20 @@ public class TourBookingController {
                         .timestamp(new Timestamp(System.currentTimeMillis()))
                         .status(HttpStatus.BAD_REQUEST.value())
                         .error(HttpStatus.BAD_REQUEST.name())
-                        .message("Tour doesn't exist. Provide correct Tour Id")
+                        .message("Tour doesn't exist. Provide correct Tour Id.")
                         .path("/tours/" + tourId + "/bookings")
                         .build());
     }
 
-    @GetMapping(path = "/bookings")
+    @GetMapping("/bookings")
     public List<ExpandedBookingDto> getAllBookings() {
-        log.info("GET /tours/bookings/");
+        log.info("GET /tours/bookings");
         List<TourBooking> tourBookings = tourBookingService.lookupAllBookings();
 
         return tourBookings.stream().map(tourBooking -> toExpandedDto(tourBooking)).collect(Collectors.toList());
     }
 
-    @PutMapping(path = "/{tourId}/bookings")
+    @PutMapping("/{tourId}/bookings")
     public ResponseEntity<BookingDto> updateBooking(@PathVariable(value = "tourId") int tourId, @Valid @RequestBody BookingPatchDto bookingPatchDto) {
         log.info("PUT /tours/{}/bookings", tourId);
         Optional<Tour> tour = tourService.lookupTourById(tourId);
@@ -105,7 +105,7 @@ public class TourBookingController {
         }
 
         throw new ResponseStatusException(
-                HttpStatus.BAD_REQUEST, "Tour doesn't exist. Provide correct Tour Id");
+                HttpStatus.BAD_REQUEST, "Tour doesn't exist. Provide correct Tour Id.");
     }
 
     @DeleteMapping("/{tourId}/bookings")
@@ -127,14 +127,14 @@ public class TourBookingController {
                         .timestamp(new Timestamp(System.currentTimeMillis()))
                         .status(HttpStatus.BAD_REQUEST.value())
                         .error(HttpStatus.BAD_REQUEST.name())
-                        .message("Tour doesn't exist. Provide correct Tour Id")
+                        .message("Tour doesn't exist. Provide correct Tour Id.")
                         .path("/tours/" + tourId + "/bookings")
                         .build());
     }
 
     @DeleteMapping("/{tourId}/bookings/{customerId}")
     public ResponseEntity<?> deleteAllBookingsForTourAndCustomer(@PathVariable(value = "tourId") int tourId, @PathVariable(value = "customerId") int customerId) {
-        log.info("DELETE /tours/{}/bookings", tourId);
+        log.info("DELETE /tours/{}/bookings/{}", tourId, customerId);
         Optional<Tour> tour = tourService.lookupTourById(tourId);
 
         if (tour.isPresent()) {
@@ -151,7 +151,7 @@ public class TourBookingController {
                         .timestamp(new Timestamp(System.currentTimeMillis()))
                         .status(HttpStatus.BAD_REQUEST.value())
                         .error(HttpStatus.BAD_REQUEST.name())
-                        .message("Tour doesn't exist. Provide correct Tour Id")
+                        .message("Tour doesn't exist. Provide correct Tour Id.")
                         .path("/tours/" + tourId + "/bookings/" + customerId)
                         .build());
     }
@@ -166,7 +166,7 @@ public class TourBookingController {
 
     @DeleteMapping("/bookings")
     public List<BookingDto> deleteAllBookings() {
-        log.info("DELETE /tours/bookings/");
+        log.info("DELETE /tours/bookings");
         List<TourBooking> bookings = tourBookingService.deleteAllBookings();
 
         return listOfDtos(bookings);
