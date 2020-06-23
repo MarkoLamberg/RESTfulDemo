@@ -13,11 +13,14 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 @RestController
 @RequestMapping("/tours")
@@ -26,23 +29,24 @@ import java.util.stream.Collectors;
 public class TourBookingController {
 
     private final TourBookingService tourBookingService;
+
     private final TourService tourService;
 
     @PostMapping("/{tourId}/bookings")
     @ResponseStatus(HttpStatus.CREATED)
-    public TourBooking createTourBooking(@PathVariable(value = "tourId") int tourId, @Valid @RequestBody BookingDto bookingDto) {
+    public TourBooking createTourBooking(@PathVariable(value = "tourId") int tourId, @Valid @RequestBody BookingDto bookingDto) throws SQLException {
         log.info("POST /tours/{}/bookings", tourId);
         Optional<Tour> tour = tourService.lookupTourById(tourId);
 
         if (tour.isPresent()) {
-            LocalDateTime pickupDateTime = LocalDateTime.parse(bookingDto.getPickupDateTime(), DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+            LocalDateTime pickupDateTime = LocalDateTime.parse(bookingDto.getPickupDateTime(), ISO_LOCAL_DATE_TIME);
 
             return tourBookingService.createBooking(tourId, bookingDto.getCustomerId(), pickupDateTime,
                     bookingDto.getPickupLocation(), bookingDto.getParticipants());
         }
 
         throw new ResponseStatusException(
-                HttpStatus.BAD_REQUEST, "Tour doesn't exist. Provide correct Tour Id.");
+                BAD_REQUEST, "Tour doesn't exist. Provide correct Tour Id.");
     }
 
     @GetMapping("/{tourId}/bookings")
@@ -65,8 +69,8 @@ public class TourBookingController {
                 .badRequest()
                 .body(ErrorDto.builder()
                         .timestamp(new Timestamp(System.currentTimeMillis()))
-                        .status(HttpStatus.BAD_REQUEST.value())
-                        .error(HttpStatus.BAD_REQUEST.name())
+                        .status(BAD_REQUEST.value())
+                        .error(BAD_REQUEST.name().toLowerCase().replace('_', ' '))
                         .message("Tour doesn't exist. Provide correct Tour Id.")
                         .path("/tours/" + tourId + "/bookings")
                         .build());
@@ -89,7 +93,7 @@ public class TourBookingController {
             LocalDateTime pickupDateTime = null;
 
             if (bookingPatchDto.getPickupDateTime() != null) {
-                pickupDateTime = LocalDateTime.parse(bookingPatchDto.getPickupDateTime(), DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+                pickupDateTime = LocalDateTime.parse(bookingPatchDto.getPickupDateTime(), ISO_LOCAL_DATE_TIME);
             }
 
             TourBooking response = tourBookingService.updateBooking(tourId, bookingPatchDto.getCustomerId(),
@@ -105,7 +109,7 @@ public class TourBookingController {
         }
 
         throw new ResponseStatusException(
-                HttpStatus.BAD_REQUEST, "Tour doesn't exist. Provide correct Tour Id.");
+                BAD_REQUEST, "Tour doesn't exist. Provide correct Tour Id.");
     }
 
     @DeleteMapping("/{tourId}/bookings")
@@ -125,8 +129,8 @@ public class TourBookingController {
                 .badRequest()
                 .body(ErrorDto.builder()
                         .timestamp(new Timestamp(System.currentTimeMillis()))
-                        .status(HttpStatus.BAD_REQUEST.value())
-                        .error(HttpStatus.BAD_REQUEST.name())
+                        .status(BAD_REQUEST.value())
+                        .error(BAD_REQUEST.name().toLowerCase().replace('_', ' '))
                         .message("Tour doesn't exist. Provide correct Tour Id.")
                         .path("/tours/" + tourId + "/bookings")
                         .build());
@@ -149,8 +153,8 @@ public class TourBookingController {
                 .badRequest()
                 .body(ErrorDto.builder()
                         .timestamp(new Timestamp(System.currentTimeMillis()))
-                        .status(HttpStatus.BAD_REQUEST.value())
-                        .error(HttpStatus.BAD_REQUEST.name())
+                        .status(BAD_REQUEST.value())
+                        .error(BAD_REQUEST.name().toLowerCase().replace('_', ' '))
                         .message("Tour doesn't exist. Provide correct Tour Id.")
                         .path("/tours/" + tourId + "/bookings/" + customerId)
                         .build());

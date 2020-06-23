@@ -17,6 +17,8 @@ import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
 
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
+
 @RestController
 @RequestMapping("/tours")
 @Slf4j
@@ -35,7 +37,7 @@ public class TourController {
 
         if (existingTour.isPresent()) {
             throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST, "Tour with that Tour Package Code and Tour Title already exists.");
+                    BAD_REQUEST, "Tour with that Tour Package Code and Tour Title already exists.");
         }
 
         Optional<Tour> tour = tourService.createTour(tourDto.getTourPackageCode(), tourDto.getTitle(), tourDto.getDuration(), tourDto.getPrice());
@@ -45,7 +47,7 @@ public class TourController {
         }
 
         throw new ResponseStatusException(
-                HttpStatus.BAD_REQUEST, "Tour doesn't exist. Provide correct Tour Package Id.");
+                BAD_REQUEST, "Tour doesn't exist. Provide correct Tour Package Id.");
     }
 
     @GetMapping
@@ -64,7 +66,7 @@ public class TourController {
         }
 
         throw new ResponseStatusException(
-                HttpStatus.BAD_REQUEST, "Tour doesn't exist. Provide correct Tour Id.");
+                BAD_REQUEST, "Tour doesn't exist. Provide correct Tour Id.");
     }
 
     @GetMapping(path = "/byLocation/{tourLocation}")
@@ -82,8 +84,8 @@ public class TourController {
                 .badRequest()
                 .body(ErrorDto.builder()
                         .timestamp(new Timestamp(System.currentTimeMillis()))
-                        .status(HttpStatus.BAD_REQUEST.value())
-                        .error(HttpStatus.BAD_REQUEST.name())
+                        .status(BAD_REQUEST.value())
+                        .error(BAD_REQUEST.name().toLowerCase().replace('_', ' '))
                         .message("Tour with that location doesn't exist. Provide correct Tour Location.")
                         .path("/tours/byLocation/" + location)
                         .build());
@@ -98,7 +100,7 @@ public class TourController {
 
             if (tourBookingService.lookupTourBookings(tourId).size() > 0) {
                 throw new ResponseStatusException(
-                        HttpStatus.BAD_REQUEST, "Can't delete tour that has bookings.");
+                        BAD_REQUEST, "Can't delete tour that has bookings.");
             }
 
             tourService.deleteTour(tourId);
@@ -107,6 +109,6 @@ public class TourController {
         }
 
         throw new ResponseStatusException(
-                HttpStatus.BAD_REQUEST, "Tour doesn't exist. Provide correct Tour Id.");
+                BAD_REQUEST, "Tour doesn't exist. Provide correct Tour Id.");
     }
 }

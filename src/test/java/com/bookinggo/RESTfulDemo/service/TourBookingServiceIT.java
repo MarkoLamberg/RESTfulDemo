@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -30,7 +31,7 @@ public class TourBookingServiceIT extends AbstractRESTfulDemoIT {
 
     @Sql
     @Test
-    public void shouldCreateABooking_whenCreateBooking_givenValidBooking() {
+    public void shouldCreateABooking_whenCreateBooking_givenValidBooking() throws SQLException {
         List<TourBooking> bookingsBefore = tourBookingService.lookupAllBookings();
         assertThat(bookingsBefore.size()).isEqualTo(0);
 

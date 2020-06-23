@@ -40,11 +40,11 @@ public class TourBooking {
 
     @CreationTimestamp
     @ToString.Exclude
-    @Column(name = "created_when", columnDefinition = "TIMESTAMP")
+    @Column(columnDefinition = "TIMESTAMP")
     private LocalDateTime createdWhen;
 
     @ToString.Exclude
-    @Column(name = "modified_when", columnDefinition = "TIMESTAMP")
+    @Column(columnDefinition = "TIMESTAMP")
     private LocalDateTime modifiedWhen;
 
     @PreUpdate

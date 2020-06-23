@@ -16,6 +16,8 @@ import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
 
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
+
 @RestController
 @RequestMapping("/customers")
 @Slf4j
@@ -32,7 +34,7 @@ public class CustomerController {
 
         if (customer.isPresent()) {
             throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST, "Customer with that name already exists.");
+                    BAD_REQUEST, "Customer with that name already exists.");
         }
 
         return customerService.createCustomer(customerDto.getTitle(), customerDto.getName());
@@ -49,7 +51,7 @@ public class CustomerController {
 
             if (customerWithNewName.isPresent()) {
                 throw new ResponseStatusException(
-                        HttpStatus.BAD_REQUEST, "Can't change the customer name to match with other existing customer.");
+                        BAD_REQUEST, "Can't change the customer name to match with other existing customer.");
             } else {
                 Customer response = customerService.updateCustomer(customerId, customerPatchDto.getTitle(), customerPatchDto.getName());
 
@@ -64,7 +66,7 @@ public class CustomerController {
         }
 
         throw new ResponseStatusException(
-                HttpStatus.BAD_REQUEST, "Customer doesn't exist. Provide correct Customer Id.");
+                BAD_REQUEST, "Customer doesn't exist. Provide correct Customer Id.");
     }
 
     @GetMapping
@@ -83,7 +85,7 @@ public class CustomerController {
         }
 
         throw new ResponseStatusException(
-                HttpStatus.BAD_REQUEST, "Customer doesn't exist. Provide correct Customer Id.");
+                BAD_REQUEST, "Customer doesn't exist. Provide correct Customer Id.");
     }
 
     @GetMapping("/{customerId}/bookings")
@@ -103,8 +105,8 @@ public class CustomerController {
                 .badRequest()
                 .body(ErrorDto.builder()
                         .timestamp(new Timestamp(System.currentTimeMillis()))
-                        .status(HttpStatus.BAD_REQUEST.value())
-                        .error(HttpStatus.BAD_REQUEST.name())
+                        .status(BAD_REQUEST.value())
+                        .error(BAD_REQUEST.name().toLowerCase().replace('_', ' '))
                         .message("Customer doesn't exist. Provide correct Customer Id.")
                         .path("/customers/" + customerId + "/bookings")
                         .build());
@@ -122,6 +124,6 @@ public class CustomerController {
         }
 
         throw new ResponseStatusException(
-                HttpStatus.BAD_REQUEST, "Customer doesn't exist. Provide correct Customer Id.");
+                BAD_REQUEST, "Customer doesn't exist. Provide correct Customer Id.");
     }
 }

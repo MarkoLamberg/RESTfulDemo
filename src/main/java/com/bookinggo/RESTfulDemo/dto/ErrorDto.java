@@ -1,5 +1,6 @@
 package com.bookinggo.RESTfulDemo.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
 import java.sql.Timestamp;
@@ -10,6 +11,7 @@ import java.sql.Timestamp;
 @Builder
 public class ErrorDto {
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'hh:mm:ss")
     private Timestamp timestamp;
 
     private int status;

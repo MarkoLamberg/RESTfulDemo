@@ -29,6 +29,6 @@ public class Customer {
 
     @CreationTimestamp
     @ToString.Exclude
-    @Column(name = "created_when", columnDefinition = "TIMESTAMP")
+    @Column(columnDefinition = "TIMESTAMP")
     private LocalDateTime createdWhen;
 }

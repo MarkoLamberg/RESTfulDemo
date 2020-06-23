@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -20,11 +21,13 @@ import java.util.stream.Collectors;
 public class TourBookingServiceImpl implements TourBookingService {
 
     private final TourBookingRepository tourBookingRepository;
+
     private final TourService tourService;
+
     private final CustomerRepository customerRepository;
 
     @Override
-    public TourBooking createBooking(int tourId, Integer customerId, LocalDateTime pickupDateTime, String pickupLocation, Integer participants) {
+    public TourBooking createBooking(int tourId, Integer customerId, LocalDateTime pickupDateTime, String pickupLocation, Integer participants) throws SQLException {
         log.info("createBooking - tourId: {}, customerId: {}, date: {}, location {}, participants {}", tourId, customerId, pickupDateTime, pickupLocation, participants);
 
         Optional<Tour> tour = tourService.lookupTourById(tourId);
@@ -45,6 +48,12 @@ public class TourBookingServiceImpl implements TourBookingService {
             }
         }
 
+        throw new SQLException("createBooking - failed - tour doesn't exist.");
+    }
+
+    @Override
+    public TourBooking recover(SQLException e, int tourId, Integer customerId, LocalDateTime pickupDateTime, String pickupLocation, Integer participants) {
+        log.info("Called createBooking - recover called instead: {}", e.getMessage());
         return null;
     }
 

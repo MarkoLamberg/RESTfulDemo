@@ -1,13 +1,22 @@
 package com.bookinggo.RESTfulDemo.service;
 
 import com.bookinggo.RESTfulDemo.entity.TourBooking;
+import org.springframework.retry.annotation.*;
 
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.List;
 
 public interface TourBookingService {
 
-    public TourBooking createBooking(int tourId, Integer customerId, LocalDateTime pickupDateTime, String pickupLocation, Integer participants);
+    @Retryable(
+            value = {SQLException.class},
+            maxAttempts = 2,
+            backoff = @Backoff(delay = 1000))
+    public TourBooking createBooking(int tourId, Integer customerId, LocalDateTime pickupDateTime, String pickupLocation, Integer participants) throws SQLException;
+
+    @Recover
+    public TourBooking recover(SQLException e, int tourId, Integer customerId, LocalDateTime pickupDateTime, String pickupLocation, Integer participants);
 
     public List<TourBooking> lookupTourBookings(int tourId);
 

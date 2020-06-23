@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -27,7 +28,7 @@ public class TourBookingServiceTest {
 
     private static final int TOUR_ID = 234;
 
-    private static final LocalDateTime PICKUP_DATE_TIME = LocalDateTime.of(2020, 03, 20, 12, 00);
+    private static final LocalDateTime PICKUP_DATE_TIME = LocalDateTime.now();
 
     private static final String PICKUP_LOCATION = "Hotel Ibis";
 
@@ -46,7 +47,7 @@ public class TourBookingServiceTest {
     private TourBooking tourBookingMock;
 
     @Test
-    public void shouldNotCreateBooking_whenCreate_givenTourIdDoesNotExist() {
+    public void shouldNotCreateBooking_whenCreate_givenTourIdDoesNotExist() throws SQLException {
         tourBookingService.createBooking(TOUR_ID, CUSTOMER_ID, PICKUP_DATE_TIME, PICKUP_LOCATION, PARTICIPANTS);
 
         verify(tourRepositoryMock, times(1)).findById(TOUR_ID);
