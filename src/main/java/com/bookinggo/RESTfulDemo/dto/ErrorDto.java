@@ -11,7 +11,7 @@ import java.sql.Timestamp;
 @Builder
 public class ErrorDto {
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'hh:mm:ss")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private Timestamp timestamp;
 
     private int status;
