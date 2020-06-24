@@ -72,7 +72,7 @@ public class TourServiceIT extends AbstractRESTfulDemoIT {
 
     @Sql
     @Test
-    public void shouldReturnTour_whenLookupTourPackageCodeAndTitle_givenTourWithThatPackageCodeAndTitleExists() {
+    public void shouldReturnTour_whenLookupTourByPackageCodeAndTitle_givenTourWithThatPackageCodeAndTitleExists() {
         Optional<Tour> tour = tourService.lookupTourByTourPackageCodeAndTitle(TOUR_PACKAGE_CODE, TOUR_TITLE);
 
         assertThat(tour).isPresent();
@@ -80,7 +80,7 @@ public class TourServiceIT extends AbstractRESTfulDemoIT {
 
     @Sql
     @Test
-    public void shouldDeleteTour_whenDeleteTourWithTourId_givenTourWithCTourIdExists() {
+    public void shouldDeleteTour_whenDeleteTourByTourId_givenTourWithCTourIdExists() {
         Optional<Tour> tourBefore = tourService.lookupTourById(TOUR_ID);
 
         assertThat(tourBefore).isPresent();

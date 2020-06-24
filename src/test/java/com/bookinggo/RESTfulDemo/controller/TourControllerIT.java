@@ -57,7 +57,7 @@ public class TourControllerIT extends AbstractRESTfulDemoIT {
     }
 
     @Test
-    public void shouldReturn201_whenTourCreated_givenValidTour() {
+    public void shouldReturn201_whenCreateTour_givenValidTour() {
         TourDto tourDto = TourDto.builder()
                 .tourPackageCode(TOUR_PACKAGE_CODE)
                 .title(TOUR_TITLE)
@@ -73,7 +73,7 @@ public class TourControllerIT extends AbstractRESTfulDemoIT {
 
     @Sql
     @Test
-    public void shouldReturn400_whenTourCreated_givenTourWithThatTourPackageCodeAndNameAlreadyExists() {
+    public void shouldReturn400_whenCreateTour_givenTourWithThatTourPackageCodeAndNameAlreadyExists() {
         TourDto tourDto = TourDto.builder()
                 .tourPackageCode(TOUR_PACKAGE_CODE)
                 .title(NON_EXISTING_TOUR_TITLE)
@@ -137,7 +137,7 @@ public class TourControllerIT extends AbstractRESTfulDemoIT {
 
     @Sql
     @Test
-    public void shouldDeleteTour_whenDeletedTour_givenTourExists() {
+    public void shouldDeleteTour_whenDeleteTour_givenTourExists() {
         Tour[] toursBefore = restTemplate
                 .getForEntity(LOCAL_HOST + port + "/tours", Tour[].class)
                 .getBody();
@@ -155,7 +155,7 @@ public class TourControllerIT extends AbstractRESTfulDemoIT {
 
     @Sql
     @Test
-    public void shouldReturn400_whenDeletedTour_givenTourExistsAndTourHasBookings() {
+    public void shouldReturn400_whenDeleteTour_givenTourExistsAndTourHasBookings() {
         ResponseEntity<Tour> response = restTemplate
                 .exchange(LOCAL_HOST + port + "/tours/" + TOUR_ID, HttpMethod.DELETE, null, Tour.class);
 

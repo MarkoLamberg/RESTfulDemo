@@ -185,7 +185,7 @@ public class CustomerControllerIT extends AbstractRESTfulDemoIT {
 
     @Sql
     @Test
-    public void shouldDeleteCustomer_whenDeletedCustomer_givenCustomerExists() {
+    public void shouldDeleteCustomer_whenDeleteCustomer_givenCustomerExists() {
         Customer[] customersBefore = restTemplate
                 .getForEntity(LOCAL_HOST + port + "/customers", Customer[].class)
                 .getBody();
@@ -202,7 +202,7 @@ public class CustomerControllerIT extends AbstractRESTfulDemoIT {
     }
 
     @Test
-    public void shouldReturn400_whenDeletedCustomer_givenCustomerWithIdDoesntExist() {
+    public void shouldReturn400_whenDeleteCustomer_givenCustomerWithIdDoesntExist() {
         ResponseEntity<Customer> response = restTemplate
                 .exchange(LOCAL_HOST + port + "/customers/" + NON_EXISTING_CUSTOMER_ID, HttpMethod.DELETE, null, Customer.class);
 

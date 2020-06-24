@@ -47,7 +47,7 @@ public class TourBookingServiceTest {
     private TourBooking tourBookingMock;
 
     @Test
-    public void shouldNotCreateBooking_whenCreate_givenTourIdDoesNotExist() throws SQLException {
+    public void shouldNotCreateBooking_whenCreateBooking_givenTourIdDoesNotExist() throws SQLException {
         tourBookingService.createBooking(TOUR_ID, CUSTOMER_ID, PICKUP_DATE_TIME, PICKUP_LOCATION, PARTICIPANTS);
 
         verify(tourRepositoryMock, times(2)).findById(TOUR_ID);

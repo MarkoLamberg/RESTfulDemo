@@ -77,7 +77,7 @@ public class TourServiceTest {
     }
 
     @Test
-    public void shouldCallFindById_whenLookupTourPackageCodeAndTitle_givenNoTourWithThatPackageCodeAndTitleExists() {
+    public void shouldCallgetTourPackageByCode_whenLookupTourPackageCodeAndTitle_givenNoTourWithThatPackageCodeAndTitleExists() {
         Optional<Tour> tour = tourService.lookupTourByTourPackageCodeAndTitle(TOUR_PACKAGE_CODE, TOUR_TITLE);
 
         verify(tourPackageRepositoryMock, times(1)).getTourPackageByCode(TOUR_PACKAGE_CODE);
@@ -85,7 +85,7 @@ public class TourServiceTest {
     }
 
     @Test
-    public void shouldNotDeleteAnyCustomer_whenDeleteCustomerById_givenNoCustomer() {
+    public void shouldCallDeleteById_whenDeleteTourById() {
         tourService.deleteTour(TOUR_ID);
 
         verify(tourRepositoryMock, times(1)).deleteById(TOUR_ID);

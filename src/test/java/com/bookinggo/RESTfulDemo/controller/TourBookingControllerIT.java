@@ -44,7 +44,7 @@ public class TourBookingControllerIT extends AbstractRESTfulDemoIT {
 
     @Sql
     @Test
-    public void shouldReturn201_whenBookingCreated_givenValidBooking() {
+    public void shouldReturn201_whenCreateBooking_givenValidBooking() {
         BookingDto bookingDto = BookingDto.builder()
                 .pickupDateTime(PICKUP_DATE_TIME)
                 .pickupLocation(PICKUP_LOCATION)
@@ -61,7 +61,7 @@ public class TourBookingControllerIT extends AbstractRESTfulDemoIT {
 
     @Sql
     @Test
-    public void shouldReturn400_whenBookingCreated_givenNotValidTourId() {
+    public void shouldReturn400_whenCreateBooking_givenNotValidTourId() {
         BookingDto bookingDto = BookingDto.builder()
                 .pickupDateTime(PICKUP_DATE_TIME)
                 .pickupLocation(PICKUP_LOCATION)
@@ -107,7 +107,7 @@ public class TourBookingControllerIT extends AbstractRESTfulDemoIT {
 
     @Sql
     @Test
-    public void shouldReturn200_whenBookingUpdated_givenValidBooking() {
+    public void shouldReturn200_whenUpdateBooking_givenValidBooking() {
         BookingPatchDto bookingPatchDto = BookingPatchDto.builder()
                 .pickupDateTime(PICKUP_DATE_TIME)
                 .pickupLocation(PICKUP_LOCATION)
@@ -128,7 +128,7 @@ public class TourBookingControllerIT extends AbstractRESTfulDemoIT {
 
     @Sql
     @Test
-    public void shouldReturn200_whenBookingUpdatedSome_givenValidBooking() {
+    public void shouldReturn200_whenUpdateBookingSome_givenValidBooking() {
         BookingPatchDto bookingPatchDto = BookingPatchDto.builder()
                 .pickupDateTime(null)
                 .pickupLocation(null)
@@ -149,7 +149,7 @@ public class TourBookingControllerIT extends AbstractRESTfulDemoIT {
 
     @Sql
     @Test
-    public void shouldReturn400_whenBookingUpdated_givenValidBookingButMoreThanOneBookingsWithSameCustomerAndSameLocation() {
+    public void shouldReturn400_whenUpdateBooking_givenValidBookingButMoreThanOneBookingsWithSameCustomerAndSameLocation() {
         BookingDto bookingDto = BookingDto.builder()
                 .pickupDateTime(PICKUP_DATE_TIME)
                 .pickupLocation(PICKUP_LOCATION)
@@ -168,7 +168,7 @@ public class TourBookingControllerIT extends AbstractRESTfulDemoIT {
 
     @Sql
     @Test
-    public void shouldReturn400_whenBookingUpdated_givenNotValidTourId() {
+    public void shouldReturn400_whenUpdateBooking_givenNotValidTourId() {
         BookingDto bookingDto = BookingDto.builder()
                 .pickupDateTime(PICKUP_DATE_TIME)
                 .pickupLocation(PICKUP_LOCATION)
@@ -205,7 +205,7 @@ public class TourBookingControllerIT extends AbstractRESTfulDemoIT {
 
     @Sql
     @Test
-    public void shouldReturn400_whenAllBookingsForTourDeleted_givenNotValidTourId() {
+    public void shouldReturn400_whenDeleteAllBookingsForTour_givenNotValidTourId() {
         ResponseEntity<String> response = restTemplate
                 .exchange(LOCAL_HOST + port + "/tours/" + NON_EXISTING_TOUR_ID + "/bookings", HttpMethod.DELETE, null, String.class);
 

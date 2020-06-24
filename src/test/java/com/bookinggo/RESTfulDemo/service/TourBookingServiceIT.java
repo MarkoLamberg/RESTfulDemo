@@ -69,7 +69,7 @@ public class TourBookingServiceIT extends AbstractRESTfulDemoIT {
 
     @Sql
     @Test
-    public void shouldUpdateBooking_whenUpdate_givenBookingWithTourIdAndCustomerIdExists() {
+    public void shouldUpdateBooking_whenUpdateBooking_givenBookingWithTourIdAndCustomerIdExists() {
         List<TourBooking> filteredBookingsBefore = tourBookingService.lookupTourBookings(TOUR_ID)
                 .stream()
                 .filter(booking -> booking.getCustomer().getId().equals(CUSTOMER_ID))
@@ -91,7 +91,7 @@ public class TourBookingServiceIT extends AbstractRESTfulDemoIT {
 
     @Sql
     @Test
-    public void shouldNotUpdateBooking_whenUpdate_givenMoreThanOneBookingsWithTourIdAndCustomerIdExist() {
+    public void shouldNotUpdateBooking_whenUpdateBooking_givenMoreThanOneBookingsWithTourIdAndCustomerIdExist() {
         List<TourBooking> filteredBookingsBefore = tourBookingService.lookupTourBookings(TOUR_ID)
                 .stream()
                 .filter(booking -> booking.getCustomer().getId().equals(CUSTOMER_ID))
@@ -111,7 +111,7 @@ public class TourBookingServiceIT extends AbstractRESTfulDemoIT {
 
     @Sql
     @Test
-    public void shouldUpdateBooking_whenUpdateSome_givenBookingWithTourIdAndCustomerExists() {
+    public void shouldUpdateBooking_whenUpdateBookingSome_givenBookingWithTourIdAndCustomerExists() {
         List<TourBooking> filteredBookingsBefore = tourBookingService.lookupTourBookings(TOUR_ID)
                 .stream()
                 .filter(booking -> booking.getCustomer().getId().equals(CUSTOMER_ID))

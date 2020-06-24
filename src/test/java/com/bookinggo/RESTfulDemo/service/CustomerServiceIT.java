@@ -89,7 +89,7 @@ public class CustomerServiceIT extends AbstractRESTfulDemoIT {
 
     @Sql
     @Test
-    public void shouldDeleteCustomer_whenDeleteCustomerWithCustomerId_givenCustomerWithCustomerIdExists() {
+    public void shouldDeleteCustomer_whenDeleteCustomerByCustomerId_givenCustomerWithCustomerIdExists() {
         Optional<Customer> customerBefore = customerService.lookupCustomerById(CUSTOMER_ID);
         assertThat(customerBefore).isPresent();
 
