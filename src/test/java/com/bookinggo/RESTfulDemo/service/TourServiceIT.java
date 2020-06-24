@@ -49,7 +49,7 @@ public class TourServiceIT extends AbstractRESTfulDemoIT {
 
     @Sql
     @Test
-    public void shouldReturnEightTours_whenLookupAllTours_givenToursExist() {
+    public void shouldReturnFourTours_whenLookupAllTours_givenToursExist() {
         List<Tour> tours = tourService.lookupAllTours();
 
         assertThat(tours.size()).isEqualTo(4);

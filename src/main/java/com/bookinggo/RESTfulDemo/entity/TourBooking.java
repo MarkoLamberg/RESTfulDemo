@@ -35,7 +35,7 @@ public class TourBooking {
     @Column(nullable = false)
     private String pickupLocation;
 
-    @Column(name = "num_of_participants")
+    @Column
     private Integer participants;
 
     @CreationTimestamp
