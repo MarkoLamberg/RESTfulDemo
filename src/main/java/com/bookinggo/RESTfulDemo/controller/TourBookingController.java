@@ -36,7 +36,7 @@ public class TourBookingController {
     @ResponseStatus(HttpStatus.CREATED)
     public TourBooking createTourBooking(@PathVariable(value = "tourId") int tourId, @Valid @RequestBody BookingDto bookingDto) throws SQLException {
         log.info("POST /tours/{}/bookings", tourId);
-        Optional<Tour> tour = tourService.lookupTourById(tourId);
+        Optional<Tour> tour = tourService.getTourById(tourId);
 
         if (tour.isPresent()) {
             LocalDateTime pickupDateTime = LocalDateTime.parse(bookingDto.getPickupDateTime(), ISO_LOCAL_DATE_TIME);
@@ -52,10 +52,10 @@ public class TourBookingController {
     @GetMapping("/{tourId}/bookings")
     public ResponseEntity<?> getAllBookingsForTour(@PathVariable(value = "tourId") int tourId) {
         log.info("GET /tours/{}/bookings", tourId);
-        Optional<Tour> tour = tourService.lookupTourById(tourId);
+        Optional<Tour> tour = tourService.getTourById(tourId);
 
         if (tour.isPresent()) {
-            List<TourBooking> tourBookings = tourBookingService.lookupTourBookings(tourId);
+            List<TourBooking> tourBookings = tourBookingService.getBookingsByTourId(tourId);
 
             return ResponseEntity
                     .ok()
@@ -79,7 +79,7 @@ public class TourBookingController {
     @GetMapping("/bookings")
     public List<ExpandedBookingDto> getAllBookings() {
         log.info("GET /tours/bookings");
-        List<TourBooking> tourBookings = tourBookingService.lookupAllBookings();
+        List<TourBooking> tourBookings = tourBookingService.getAllBookings();
 
         return tourBookings.stream().map(tourBooking -> toExpandedDto(tourBooking)).collect(Collectors.toList());
     }
@@ -87,7 +87,7 @@ public class TourBookingController {
     @PutMapping("/{tourId}/bookings")
     public ResponseEntity<BookingDto> updateBooking(@PathVariable(value = "tourId") int tourId, @Valid @RequestBody BookingPatchDto bookingPatchDto) {
         log.info("PUT /tours/{}/bookings", tourId);
-        Optional<Tour> tour = tourService.lookupTourById(tourId);
+        Optional<Tour> tour = tourService.getTourById(tourId);
 
         if (tour.isPresent()) {
             LocalDateTime pickupDateTime = null;
@@ -115,7 +115,7 @@ public class TourBookingController {
     @DeleteMapping("/{tourId}/bookings")
     public ResponseEntity<?> deleteAllBookingsForTour(@PathVariable(value = "tourId") int tourId) {
         log.info("DELETE /tours/{}/bookings", tourId);
-        Optional<Tour> tour = tourService.lookupTourById(tourId);
+        Optional<Tour> tour = tourService.getTourById(tourId);
 
         if (tour.isPresent()) {
             List<TourBooking> bookings = tourBookingService.deleteAllBookingsWithTourId(tourId);
@@ -139,7 +139,7 @@ public class TourBookingController {
     @DeleteMapping("/{tourId}/bookings/{customerId}")
     public ResponseEntity<?> deleteAllBookingsForTourAndCustomer(@PathVariable(value = "tourId") int tourId, @PathVariable(value = "customerId") int customerId) {
         log.info("DELETE /tours/{}/bookings/{}", tourId, customerId);
-        Optional<Tour> tour = tourService.lookupTourById(tourId);
+        Optional<Tour> tour = tourService.getTourById(tourId);
 
         if (tour.isPresent()) {
             List<TourBooking> bookings = tourBookingService.deleteAllBookingsWithTourIdAndCustomerId(tourId, customerId);

@@ -33,7 +33,7 @@ public class TourController {
     @ResponseStatus(HttpStatus.CREATED)
     public Tour createTour(@Valid @RequestBody TourDto tourDto) {
         log.info("POST /tours");
-        Optional<Tour> existingTour = tourService.lookupTourByTourPackageCodeAndTitle(tourDto.getTourPackageCode(), tourDto.getTitle());
+        Optional<Tour> existingTour = tourService.getTourByTourPackageCodeAndTitle(tourDto.getTourPackageCode(), tourDto.getTitle());
 
         if (existingTour.isPresent()) {
             throw new ResponseStatusException(
@@ -53,13 +53,13 @@ public class TourController {
     @GetMapping
     public List<Tour> getAllTours() {
         log.info("GET /tours");
-        return tourService.lookupAllTours();
+        return tourService.getAllTours();
     }
 
     @GetMapping(path = "/{tourId}")
     public Tour getToursById(@PathVariable(value = "tourId") int tourId) {
         log.info("GET /tours/{}", tourId);
-        Optional<Tour> tour = tourService.lookupTourById(tourId);
+        Optional<Tour> tour = tourService.getTourById(tourId);
 
         if (tour.isPresent()) {
             return tour.get();
@@ -72,7 +72,7 @@ public class TourController {
     @GetMapping(path = "/byLocation/{tourLocation}")
     public ResponseEntity<?> getToursByLocation(@PathVariable(value = "tourLocation") String location) {
         log.info("GET /tours/byLocation/{}", location);
-        List<Tour> tours = tourService.lookupToursByLocation(location);
+        List<Tour> tours = tourService.getToursByLocation(location);
 
         if (tours.size() > 0) {
             return ResponseEntity
@@ -94,16 +94,16 @@ public class TourController {
     @DeleteMapping("/{tourId}")
     public Tour deleteTour(@PathVariable(value = "tourId") int tourId) {
         log.info("DELETE /tours/{}", tourId);
-        Optional<Tour> tour = tourService.lookupTourById(tourId);
+        Optional<Tour> tour = tourService.getTourById(tourId);
 
         if (tour.isPresent()) {
 
-            if (tourBookingService.lookupTourBookings(tourId).size() > 0) {
+            if (tourBookingService.getBookingsByTourId(tourId).size() > 0) {
                 throw new ResponseStatusException(
                         BAD_REQUEST, "Can't delete tour that has bookings.");
             }
 
-            tourService.deleteTour(tourId);
+            tourService.deleteTourById(tourId);
 
             return tour.get();
         }

@@ -43,21 +43,22 @@ public class TourServiceImpl implements TourService {
     }
 
     @Override
-    public List<Tour> lookupAllTours() {
+    public List<Tour> getAllTours() {
+        log.info("getAllTours");
         return tourRepository.findAll();
     }
 
     @Override
-    public Optional<Tour> lookupTourById(int tourId) {
-        log.info("lookupTourById - id: {}", tourId);
+    public Optional<Tour> getTourById(int tourId) {
+        log.info("getTourById - id: {}", tourId);
         Optional<Tour> tour = tourRepository.findById(tourId);
 
         return tour;
     }
 
     @Override
-    public List<Tour> lookupToursByLocation(String location) {
-        log.info("lookupToursByLocation - location: {}", location);
+    public List<Tour> getToursByLocation(String location) {
+        log.info("getToursByLocation - location: {}", location);
         List<Tour> tours = tourRepository.findAll();
         List<Tour> toursByLocation = tours.stream()
                 .filter(tour -> tour.getTourPackage().getLocation().equalsIgnoreCase(location))
@@ -67,8 +68,8 @@ public class TourServiceImpl implements TourService {
     }
 
     @Override
-    public Optional<Tour> lookupTourByTourPackageCodeAndTitle(String tourPackageCode, String title) {
-        log.info("lookupTourByTourPackageCodeAndTitle - tourPackageCode: {}, title: {}", tourPackageCode, title);
+    public Optional<Tour> getTourByTourPackageCodeAndTitle(String tourPackageCode, String title) {
+        log.info("getTourByTourPackageCodeAndTitle - tourPackageCode: {}, title: {}", tourPackageCode, title);
 
         Optional<TourPackage> tourPackage = tourPackageRepository.getTourPackageByCode(tourPackageCode);
 
@@ -82,7 +83,8 @@ public class TourServiceImpl implements TourService {
     }
 
     @Override
-    public void deleteTour(int tourId) {
+    public void deleteTourById(int tourId) {
+        log.info("deleteTourById - tourId: {}", tourId);
         tourRepository.deleteById(tourId);
     }
 }

@@ -53,25 +53,26 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public List<Customer> lookupAllCustomers() {
+    public List<Customer> getAllCustomers() {
+        log.info("getAllCustomers");
         return customerRepository.findAll();
     }
 
     @Override
-    public Optional<Customer> lookupCustomerById(int customerId) {
-        log.info("lookupCustomerById - customerId: {}", customerId);
+    public Optional<Customer> getCustomerById(int customerId) {
+        log.info("getCustomerById - customerId: {}", customerId);
         return customerRepository.findById(customerId);
     }
 
     @Override
-    public Optional<Customer> lookupCustomerByName(String customerName) {
-        log.info("lookupCustomerByName - customerName: {}", customerName);
+    public Optional<Customer> getCustomerByName(String customerName) {
+        log.info("getCustomerByName - customerName: {}", customerName);
         return customerRepository.findCustomerByName(customerName);
     }
 
     @Override
-    public List<TourBooking> lookupBookingsByCustomerId(int customerId) {
-        log.info("lookupBookingsByCustomerId - customerId: {}", customerId);
+    public List<TourBooking> getBookingsByCustomerId(int customerId) {
+        log.info("getBookingsByCustomerId - customerId: {}", customerId);
         Optional<Customer> customer = customerRepository.findById(customerId);
 
         if (customer.isPresent()) {
@@ -82,7 +83,8 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public void deleteCustomer(int customerId) {
+    public void deleteCustomerById(int customerId) {
+        log.info("deleteCustomerById - customerId: {}", customerId);
         customerRepository.deleteById(customerId);
     }
 }

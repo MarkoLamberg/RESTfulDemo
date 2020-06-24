@@ -18,9 +18,9 @@ public interface TourBookingService {
     @Recover
     public TourBooking recover(SQLException e, int tourId, Integer customerId, LocalDateTime pickupDateTime, String pickupLocation, Integer participants);
 
-    public List<TourBooking> lookupTourBookings(int tourId);
+    public List<TourBooking> getBookingsByTourId(int tourId);
 
-    public List<TourBooking> lookupAllBookings();
+    public List<TourBooking> getAllBookings();
 
     public TourBooking updateBooking(int tourId, Integer customerId, LocalDateTime pickupDateTime, String pickupLocation, Integer participants);
 

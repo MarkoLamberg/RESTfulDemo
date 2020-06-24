@@ -12,13 +12,13 @@ public interface CustomerService {
 
     public Customer updateCustomer(int customerId, String title, String name);
 
-    public List<Customer> lookupAllCustomers();
+    public List<Customer> getAllCustomers();
 
-    public Optional<Customer> lookupCustomerById(int customerId);
+    public Optional<Customer> getCustomerById(int customerId);
 
-    public Optional<Customer> lookupCustomerByName(String customerName);
+    public Optional<Customer> getCustomerByName(String customerName);
 
-    public List<TourBooking> lookupBookingsByCustomerId(int customerId);
+    public List<TourBooking> getBookingsByCustomerId(int customerId);
 
-    public void deleteCustomer(int customerId);
+    public void deleteCustomerById(int customerId);
 }

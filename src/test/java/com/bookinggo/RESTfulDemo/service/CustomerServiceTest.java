@@ -42,32 +42,32 @@ public class CustomerServiceTest {
     }
 
     @Test
-    public void shouldCallFindAll_whenLookupAllCustomers_givenNoCustomersExist() {
-        List<Customer> customers = customerService.lookupAllCustomers();
+    public void shouldCallFindAll_whenGetAllCustomers_givenNoCustomersExist() {
+        List<Customer> customers = customerService.getAllCustomers();
 
         verify(customerRepositoryMock, times(1)).findAll();
         assertThat(customers.size()).isEqualTo(0);
     }
 
     @Test
-    public void shouldCallFindById_whenLookupCustomerById_givenNoCustomersWithIdExists() {
-        Optional<Customer> customer = customerService.lookupCustomerById(CUSTOMER_ID);
+    public void shouldCallFindById_whenGetCustomerById_givenNoCustomersWithIdExists() {
+        Optional<Customer> customer = customerService.getCustomerById(CUSTOMER_ID);
 
         verify(customerRepositoryMock, times(1)).findById(CUSTOMER_ID);
         assertThat(customer).isEmpty();
     }
 
     @Test
-    public void shouldCallFindById_whenLookupCustomerByName_givenNoCustomersWithIdExists() {
-        Optional<Customer> customer = customerService.lookupCustomerByName(CUSTOMER_NAME);
+    public void shouldCallFindById_whenGetCustomerByName_givenNoCustomersWithIdExists() {
+        Optional<Customer> customer = customerService.getCustomerByName(CUSTOMER_NAME);
 
         verify(customerRepositoryMock, times(1)).findCustomerByName(CUSTOMER_NAME);
         assertThat(customer).isEmpty();
     }
 
     @Test
-    public void shouldCallFindById_whenLookupBookingByCustomerId_givenNoCustomersWithIdExists() {
-        List<TourBooking> bookings = customerService.lookupBookingsByCustomerId(CUSTOMER_ID);
+    public void shouldCallFindById_whenGetBookingsByCustomerId_givenNoCustomersWithIdExists() {
+        List<TourBooking> bookings = customerService.getBookingsByCustomerId(CUSTOMER_ID);
 
         verify(customerRepositoryMock, times(1)).findById(CUSTOMER_ID);
         assertThat(bookings).isNull();
@@ -75,7 +75,7 @@ public class CustomerServiceTest {
 
     @Test
     public void shouldNotDeleteAnyCustomer_whenDeleteCustomerById_givenNoCustomer() {
-        customerService.deleteCustomer(CUSTOMER_ID);
+        customerService.deleteCustomerById(CUSTOMER_ID);
 
         verify(customerRepositoryMock, times(1)).deleteById(CUSTOMER_ID);
     }

@@ -9,13 +9,13 @@ public interface TourService {
 
     public Optional<Tour> createTour(String tourPackageCode, String title, String duration, int price);
 
-    public List<Tour> lookupAllTours();
+    public List<Tour> getAllTours();
 
-    public Optional<Tour> lookupTourById(int tourId);
+    public Optional<Tour> getTourById(int tourId);
 
-    public List<Tour> lookupToursByLocation(String location);
+    public List<Tour> getToursByLocation(String location);
 
-    public Optional<Tour> lookupTourByTourPackageCodeAndTitle(String tourPackageCode, String title);
+    public Optional<Tour> getTourByTourPackageCodeAndTitle(String tourPackageCode, String title);
 
-    public void deleteTour(int tourId);
+    public void deleteTourById(int tourId);
 }

@@ -32,12 +32,12 @@ public class TourServiceIT extends AbstractRESTfulDemoIT {
     @Sql
     @Test
     public void shouldCreateTour_whenCreateTour_givenValidTour() {
-        List<Tour> toursBefore = tourService.lookupAllTours();
+        List<Tour> toursBefore = tourService.getAllTours();
         assertThat(toursBefore.size()).isEqualTo(4);
 
         tourService.createTour(TOUR_PACKAGE_CODE, TOUR_TITLE, TOUR_DURATION, TOUR_PRICE);
 
-        List<Tour> toursAfter = tourService.lookupAllTours();
+        List<Tour> toursAfter = tourService.getAllTours();
         Tour tour = toursAfter.get(4);
 
         assertThat(toursAfter.size()).isEqualTo(5);
@@ -49,45 +49,46 @@ public class TourServiceIT extends AbstractRESTfulDemoIT {
 
     @Sql
     @Test
-    public void shouldReturnFourTours_whenLookupAllTours_givenToursExist() {
-        List<Tour> tours = tourService.lookupAllTours();
+    public void shouldReturnFourTours_whenGetAllTours_givenToursExist() {
+        List<Tour> tours = tourService.getAllTours();
 
         assertThat(tours.size()).isEqualTo(4);
     }
 
+    @Sql
     @Test
-    public void shouldReturnATour_whenLookupTourById_givenTourWithIdExists() {
-        Optional<Tour> tour = tourService.lookupTourById(TOUR_ID);
+    public void shouldReturnATour_whenGetTourById_givenTourWithIdExists() {
+        Optional<Tour> tour = tourService.getTourById(TOUR_ID);
 
         assertThat(tour).isPresent();
     }
 
     @Sql
     @Test
-    public void shouldReturnTwoTours_whenLookupToursByLocation_givenToursWithLocationExist() {
-        List<Tour> tours = tourService.lookupToursByLocation(TOUR_LOCATION);
+    public void shouldReturnTwoTours_whenGetToursByLocation_givenToursWithLocationExist() {
+        List<Tour> tours = tourService.getToursByLocation(TOUR_LOCATION);
 
         assertThat(tours.size()).isEqualTo(2);
     }
 
     @Sql
     @Test
-    public void shouldReturnTour_whenLookupTourByPackageCodeAndTitle_givenTourWithThatPackageCodeAndTitleExists() {
-        Optional<Tour> tour = tourService.lookupTourByTourPackageCodeAndTitle(TOUR_PACKAGE_CODE, TOUR_TITLE);
+    public void shouldReturnTour_whenGetTourByPackageCodeAndTitle_givenTourWithThatPackageCodeAndTitleExists() {
+        Optional<Tour> tour = tourService.getTourByTourPackageCodeAndTitle(TOUR_PACKAGE_CODE, TOUR_TITLE);
 
         assertThat(tour).isPresent();
     }
 
     @Sql
     @Test
-    public void shouldDeleteTour_whenDeleteTourByTourId_givenTourWithCTourIdExists() {
-        Optional<Tour> tourBefore = tourService.lookupTourById(TOUR_ID);
+    public void shouldDeleteTour_whenDeleteTourById_givenTourWithTourIdExists() {
+        Optional<Tour> tourBefore = tourService.getTourById(TOUR_ID);
 
         assertThat(tourBefore).isPresent();
 
-        tourService.deleteTour(TOUR_ID);
+        tourService.deleteTourById(TOUR_ID);
 
-        Optional<Tour> tourAfter = tourService.lookupTourById(TOUR_ID);
+        Optional<Tour> tourAfter = tourService.getTourById(TOUR_ID);
 
         assertThat(tourAfter).isEmpty();
     }

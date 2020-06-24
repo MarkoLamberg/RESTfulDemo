@@ -30,7 +30,7 @@ public class CustomerController {
     @ResponseStatus(HttpStatus.CREATED)
     public Customer createCustomer(@Valid @RequestBody CustomerDto customerDto) {
         log.info("POST /customers");
-        Optional<Customer> customer = customerService.lookupCustomerByName(customerDto.getName());
+        Optional<Customer> customer = customerService.getCustomerByName(customerDto.getName());
 
         if (customer.isPresent()) {
             throw new ResponseStatusException(
@@ -43,11 +43,11 @@ public class CustomerController {
     @PutMapping("/{customerId}")
     public ResponseEntity<Customer> updateCustomer(@PathVariable(value = "customerId") int customerId, @Valid @RequestBody CustomerPatchDto customerPatchDto) {
         log.info("PUT /customers/{}", customerId);
-        Optional<Customer> customer = customerService.lookupCustomerById(customerId);
+        Optional<Customer> customer = customerService.getCustomerById(customerId);
 
         if (customer.isPresent()) {
             Optional<Customer> customerWithNewName = ((customerPatchDto.getName() == null) || customer.get().getName().equals(customerPatchDto.getName())) ? Optional.empty() :
-                    customerService.lookupCustomerByName(customerPatchDto.getName());
+                    customerService.getCustomerByName(customerPatchDto.getName());
 
             if (customerWithNewName.isPresent()) {
                 throw new ResponseStatusException(
@@ -72,13 +72,13 @@ public class CustomerController {
     @GetMapping
     public List<Customer> getAllCustomers() {
         log.info("GET /customers");
-        return customerService.lookupAllCustomers();
+        return customerService.getAllCustomers();
     }
 
     @GetMapping("/{customerId}")
     public Customer getCustomersById(@PathVariable(value = "customerId") int customerId) {
         log.info("GET /customers/{}", customerId);
-        Optional<Customer> customer = customerService.lookupCustomerById(customerId);
+        Optional<Customer> customer = customerService.getCustomerById(customerId);
 
         if (customer.isPresent()) {
             return customer.get();
@@ -91,10 +91,10 @@ public class CustomerController {
     @GetMapping("/{customerId}/bookings")
     public ResponseEntity<?> getCustomersBookingsById(@PathVariable(value = "customerId") int customerId) {
         log.info("GET /customers/{}/bookings", customerId);
-        Optional<Customer> customer = customerService.lookupCustomerById(customerId);
+        Optional<Customer> customer = customerService.getCustomerById(customerId);
 
         if (customer.isPresent()) {
-            List<TourBooking> bookings = customerService.lookupBookingsByCustomerId(customerId);
+            List<TourBooking> bookings = customerService.getBookingsByCustomerId(customerId);
 
             return ResponseEntity
                     .ok()
@@ -115,10 +115,10 @@ public class CustomerController {
     @DeleteMapping("/{customerId}")
     public Customer deleteCustomer(@PathVariable(value = "customerId") int customerId) {
         log.info("DELETE /customers/{}", customerId);
-        Optional<Customer> customer = customerService.lookupCustomerById(customerId);
+        Optional<Customer> customer = customerService.getCustomerById(customerId);
 
         if (customer.isPresent()) {
-            customerService.deleteCustomer(customerId);
+            customerService.deleteCustomerById(customerId);
 
             return customer.get();
         }

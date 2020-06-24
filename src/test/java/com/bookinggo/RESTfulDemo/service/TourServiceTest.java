@@ -53,32 +53,32 @@ public class TourServiceTest {
     }
 
     @Test
-    public void shouldCallFindAll_whenLookupAllTours_givenNoToursExist() {
-        List<Tour> tours = tourService.lookupAllTours();
+    public void shouldCallFindAll_whenGetAllTours_givenNoToursExist() {
+        List<Tour> tours = tourService.getAllTours();
 
         verify(tourRepositoryMock, times(1)).findAll();
         assertThat(tours.size()).isEqualTo(0);
     }
 
     @Test
-    public void shouldCallFindById_whenLookupTourById_givenNoTourWithIdExists() {
-        Optional<Tour> tour = tourService.lookupTourById(TOUR_ID);
+    public void shouldCallFindById_whenGetTourById_givenNoTourWithIdExists() {
+        Optional<Tour> tour = tourService.getTourById(TOUR_ID);
 
         verify(tourRepositoryMock, times(1)).findById(TOUR_ID);
         assertThat(tour).isEmpty();
     }
 
     @Test
-    public void shouldCallFindAll_whenLookupToursByLocation_givenNoTourWithLocationExists() {
-        List<Tour> tours = tourService.lookupToursByLocation(TOUR_LOCATION);
+    public void shouldCallFindAll_whenGetToursByLocation_givenNoTourWithLocationExists() {
+        List<Tour> tours = tourService.getToursByLocation(TOUR_LOCATION);
 
         verify(tourRepositoryMock, times(1)).findAll();
         assertThat(tours.size()).isEqualTo(0);
     }
 
     @Test
-    public void shouldCallgetTourPackageByCode_whenLookupTourPackageCodeAndTitle_givenNoTourWithThatPackageCodeAndTitleExists() {
-        Optional<Tour> tour = tourService.lookupTourByTourPackageCodeAndTitle(TOUR_PACKAGE_CODE, TOUR_TITLE);
+    public void shouldCallGetTourPackageByCode_whenGetTourPackageCodeAndTitle_givenNoTourWithThatPackageCodeAndTitleExists() {
+        Optional<Tour> tour = tourService.getTourByTourPackageCodeAndTitle(TOUR_PACKAGE_CODE, TOUR_TITLE);
 
         verify(tourPackageRepositoryMock, times(1)).getTourPackageByCode(TOUR_PACKAGE_CODE);
         assertThat(tour).isEmpty();
@@ -86,7 +86,7 @@ public class TourServiceTest {
 
     @Test
     public void shouldCallDeleteById_whenDeleteTourById() {
-        tourService.deleteTour(TOUR_ID);
+        tourService.deleteTourById(TOUR_ID);
 
         verify(tourRepositoryMock, times(1)).deleteById(TOUR_ID);
     }

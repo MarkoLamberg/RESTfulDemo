@@ -30,7 +30,7 @@ public class TourBookingServiceImpl implements TourBookingService {
     public TourBooking createBooking(int tourId, Integer customerId, LocalDateTime pickupDateTime, String pickupLocation, Integer participants) throws SQLException {
         log.info("createBooking - tourId: {}, customerId: {}, date: {}, location {}, participants {}", tourId, customerId, pickupDateTime, pickupLocation, participants);
 
-        Optional<Tour> tour = tourService.lookupTourById(tourId);
+        Optional<Tour> tour = tourService.getTourById(tourId);
 
         if (tour.isPresent()) {
             Optional<Customer> customer = customerRepository.findById(customerId);
@@ -58,13 +58,14 @@ public class TourBookingServiceImpl implements TourBookingService {
     }
 
     @Override
-    public List<TourBooking> lookupTourBookings(int tourId) {
-        log.info("lookupTourBookings - tourId: {}", tourId);
+    public List<TourBooking> getBookingsByTourId(int tourId) {
+        log.info("getBookingsByTourId - tourId: {}", tourId);
         return tourBookingRepository.findByTourId(tourId);
     }
 
     @Override
-    public List<TourBooking> lookupAllBookings() {
+    public List<TourBooking> getAllBookings() {
+        log.info("getAllBookings");
         return tourBookingRepository.findAll();
     }
 
