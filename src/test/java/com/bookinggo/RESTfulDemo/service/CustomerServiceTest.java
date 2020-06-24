@@ -58,7 +58,7 @@ public class CustomerServiceTest {
     }
 
     @Test
-    public void shouldCallFindById_whenGetCustomerByName_givenNoCustomersWithIdExists() {
+    public void shouldCallFindCustomerByName_whenGetCustomerByName_givenNoCustomersWithIdExists() {
         Optional<Customer> customer = customerService.getCustomerByName(CUSTOMER_NAME);
 
         verify(customerRepositoryMock, times(1)).findCustomerByName(CUSTOMER_NAME);
