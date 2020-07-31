@@ -2,19 +2,19 @@ package com.bookinggo.RESTfulDemo.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
+import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
+@Table(name = "tour_booking")
 @Data
-@Builder
+@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "tour_booking")
-@EqualsAndHashCode
-public class TourBooking {
+@EqualsAndHashCode(callSuper = true)
+public class TourBooking extends AbstractEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,20 +37,6 @@ public class TourBooking {
 
     @Column
     private Integer participants;
-
-    @CreationTimestamp
-    @ToString.Exclude
-    @Column(columnDefinition = "TIMESTAMP")
-    private LocalDateTime createdWhen;
-
-    @ToString.Exclude
-    @Column(columnDefinition = "TIMESTAMP")
-    private LocalDateTime modifiedWhen;
-
-    @PreUpdate
-    public void onUpdate() {
-        modifiedWhen = LocalDateTime.now();
-    }
 
     public String getTotalPriceString() {
         int total = getParticipants() * getTour().getPrice();

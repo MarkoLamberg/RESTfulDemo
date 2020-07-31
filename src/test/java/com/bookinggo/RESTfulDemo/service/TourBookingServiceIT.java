@@ -9,6 +9,7 @@ import org.springframework.test.context.jdbc.Sql;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -158,9 +159,9 @@ public class TourBookingServiceIT extends AbstractRESTfulDemoIT {
 
         assertThat(filteredBookingsBefore.size()).isEqualTo(1);
 
-        List<TourBooking> deletedBookings = tourBookingService.deleteAllBookingsWithTourIdAndCustomerId(TOUR_ID, CUSTOMER_ID);
+        Optional<List<TourBooking>> deletedBookings = tourBookingService.deleteAllBookingsWithTourIdAndCustomerId(TOUR_ID, CUSTOMER_ID);
 
-        assertThat(deletedBookings.size()).isEqualTo(1);
+        assertThat(deletedBookings.get().size()).isEqualTo(1);
 
         List<TourBooking> filteredBookingsAfter = tourBookingService.getBookingsByTourId(TOUR_ID)
                 .stream()
@@ -180,9 +181,9 @@ public class TourBookingServiceIT extends AbstractRESTfulDemoIT {
 
         assertThat(filteredBookingsBefore.size()).isEqualTo(2);
 
-        List<TourBooking> deletedBookings = tourBookingService.deleteAllBookingsWithCustomerId(CUSTOMER_ID);
+        Optional<List<TourBooking>> deletedBookings = tourBookingService.deleteAllBookingsWithCustomerId(CUSTOMER_ID);
 
-        assertThat(deletedBookings.size()).isEqualTo(2);
+        assertThat(deletedBookings.get().size()).isEqualTo(2);
 
         List<TourBooking> filteredBookingsAfter = tourBookingService.getAllBookings()
                 .stream()

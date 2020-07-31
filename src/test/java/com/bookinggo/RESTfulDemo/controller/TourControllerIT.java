@@ -2,6 +2,7 @@ package com.bookinggo.RESTfulDemo.controller;
 
 import com.bookinggo.RESTfulDemo.RestfulDemoApplication;
 import com.bookinggo.RESTfulDemo.dto.TourDto;
+import com.bookinggo.RESTfulDemo.dto.TourPatchDto;
 import com.bookinggo.RESTfulDemo.entity.Tour;
 import com.bookinggo.RESTfulDemo.service.AbstractRESTfulDemoIT;
 import org.junit.Before;
@@ -10,15 +11,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
-import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.*;
 
 @SpringBootTest(classes = RestfulDemoApplication.class,
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -83,6 +82,88 @@ public class TourControllerIT extends AbstractRESTfulDemoIT {
 
         ResponseEntity<Tour> response = restTemplate
                 .postForEntity(LOCAL_HOST + port + "/tours", tourDto, Tour.class);
+
+        assertThat(response.getStatusCodeValue()).isEqualTo(BAD_REQUEST.value());
+    }
+
+    @Sql
+    @Test
+    public void shouldReturn200_whenUpdateTour_givenValidTour() {
+        TourPatchDto tourPatchDto = TourPatchDto.builder()
+                .tourPackageCode(TOUR_PACKAGE_CODE)
+                .title(TOUR_TITLE)
+                .duration(TOUR_DURATION)
+                .price(TOUR_PRICE)
+                .build();
+
+        HttpEntity<TourPatchDto> entity = new HttpEntity<>(tourPatchDto);
+        ResponseEntity<Tour> response = restTemplate
+                .exchange(LOCAL_HOST + port + "/tours/" + TOUR_ID, HttpMethod.PUT, entity, Tour.class);
+
+        assertThat(response.getStatusCodeValue()).isEqualTo(OK.value());
+        assertThat(response.getBody().getTitle()).isEqualTo(TOUR_TITLE);
+        assertThat(response.getBody().getDuration()).isEqualTo(TOUR_DURATION);
+        assertThat(response.getBody().getPrice()).isEqualTo(TOUR_PRICE);
+    }
+
+    @Sql
+    @Test
+    public void shouldReturn200_whenUpdateTourSome_givenValidTour() {
+        TourPatchDto tourPatchDto = TourPatchDto.builder()
+                .title(NON_EXISTING_TOUR_TITLE)
+                .price(TOUR_PRICE)
+                .build();
+
+        HttpEntity<TourPatchDto> entity = new HttpEntity<>(tourPatchDto);
+        ResponseEntity<Tour> response = restTemplate
+                .exchange(LOCAL_HOST + port + "/tours/" + TOUR_ID, HttpMethod.PUT, entity, Tour.class);
+
+        assertThat(response.getStatusCodeValue()).isEqualTo(OK.value());
+        assertThat(response.getBody().getTitle()).isEqualTo(NON_EXISTING_TOUR_TITLE);
+        assertThat(response.getBody().getPrice()).isEqualTo(TOUR_PRICE);
+    }
+
+    @Sql
+    @Test
+    public void shouldReturn400_whenUpdateTour_givenTourWithIdDoesntExist() {
+        TourPatchDto tourPatchDto = TourPatchDto.builder()
+                .tourPackageCode(TOUR_PACKAGE_CODE)
+                .title(NON_EXISTING_TOUR_TITLE)
+                .duration(TOUR_DURATION)
+                .price(TOUR_PRICE)
+                .build();
+
+        HttpEntity<TourPatchDto> entity = new HttpEntity<>(tourPatchDto);
+        ResponseEntity<Tour> response = restTemplate
+                .exchange(LOCAL_HOST + port + "/tours/" + NON_EXISTING_TOUR_ID, HttpMethod.PUT, entity, Tour.class);
+
+        assertThat(response.getStatusCodeValue()).isEqualTo(BAD_REQUEST.value());
+    }
+
+    @Sql
+    @Test
+    public void shouldReturn400_whenUpdateTour_givenAnotherTourWithNewNameExists() {
+        TourPatchDto tourPatchDto = TourPatchDto.builder()
+                .title(TOUR_TITLE)
+                .build();
+
+        HttpEntity<TourPatchDto> entity = new HttpEntity<>(tourPatchDto);
+        ResponseEntity<Tour> response = restTemplate
+                .exchange(LOCAL_HOST + port + "/tours/" + TOUR_ID, HttpMethod.PUT, entity, Tour.class);
+
+        assertThat(response.getStatusCodeValue()).isEqualTo(BAD_REQUEST.value());
+    }
+
+    @Sql
+    @Test
+    public void shouldReturn400_whenUpdateTour_givenTourWithNameExistsWithinNewTourPackage() {
+        TourPatchDto tourPatchDto = TourPatchDto.builder()
+                .tourPackageCode(TOUR_PACKAGE_CODE)
+                .build();
+
+        HttpEntity<TourPatchDto> entity = new HttpEntity<>(tourPatchDto);
+        ResponseEntity<Tour> response = restTemplate
+                .exchange(LOCAL_HOST + port + "/tours/" + TOUR_ID, HttpMethod.PUT, entity, Tour.class);
 
         assertThat(response.getStatusCodeValue()).isEqualTo(BAD_REQUEST.value());
     }

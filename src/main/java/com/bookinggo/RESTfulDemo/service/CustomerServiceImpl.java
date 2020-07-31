@@ -32,7 +32,7 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public Customer updateCustomer(int customerId, String title, String name) {
+    public Optional<Customer> updateCustomer(int customerId, String title, String name) {
         log.info("updateCustomer - customerId: {}, title: {}, name {}", customerId, title, name);
 
         Optional<Customer> customer = customerRepository.findById(customerId);
@@ -46,10 +46,10 @@ public class CustomerServiceImpl implements CustomerService {
                 customer.get().setName(name);
             }
 
-            return customerRepository.saveAndFlush(customer.get());
+            return Optional.of(customerRepository.saveAndFlush(customer.get()));
         }
 
-        return null;
+        return Optional.empty();
     }
 
     @Override
@@ -83,8 +83,16 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public void deleteCustomerById(int customerId) {
+    public Optional<Customer> deleteCustomerById(int customerId) {
         log.info("deleteCustomerById - customerId: {}", customerId);
-        customerRepository.deleteById(customerId);
+
+        Optional<Customer> customer = customerRepository.findById(customerId);
+
+        if (customer.isPresent()) {
+            customerRepository.deleteById(customerId);
+            return customer;
+        }
+
+        return Optional.empty();
     }
 }

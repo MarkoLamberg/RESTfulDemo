@@ -20,7 +20,7 @@ public class TourServiceIT extends AbstractRESTfulDemoIT {
 
     private static final String TOUR_TITLE = "London Tower Bridge";
 
-    private static final String TOUR_DURATION = "2 hours";
+    private static final String TOUR_DURATION = "2.5 hours";
 
     private static final int TOUR_PRICE = 150;
 
@@ -45,6 +45,22 @@ public class TourServiceIT extends AbstractRESTfulDemoIT {
         assertThat(tour.getTitle()).isEqualTo(TOUR_TITLE);
         assertThat(tour.getDuration()).isEqualTo(TOUR_DURATION);
         assertThat(tour.getPrice()).isEqualTo(TOUR_PRICE);
+    }
+
+    @Sql
+    @Test
+    public void shouldUpdateTour_whenUpdateTour_givenValidTour() {
+        Optional<Tour> tourBefore = tourService.getTourById(TOUR_ID);
+        assertThat(tourBefore.get().getTitle()).isNotEqualTo(TOUR_TITLE);
+        assertThat(tourBefore.get().getDuration()).isNotEqualTo(TOUR_DURATION);
+        assertThat(tourBefore.get().getPrice()).isNotEqualTo(TOUR_PRICE);
+
+        tourService.updateTour(TOUR_ID, null, TOUR_TITLE, TOUR_DURATION, TOUR_PRICE);
+
+        Optional<Tour> tourAfter = tourService.getTourById(TOUR_ID);
+        assertThat(tourAfter.get().getTitle()).isEqualTo(TOUR_TITLE);
+        assertThat(tourAfter.get().getDuration()).isEqualTo(TOUR_DURATION);
+        assertThat(tourAfter.get().getPrice()).isEqualTo(TOUR_PRICE);
     }
 
     @Sql

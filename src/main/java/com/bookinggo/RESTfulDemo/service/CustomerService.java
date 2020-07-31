@@ -10,7 +10,7 @@ public interface CustomerService {
 
     public Customer createCustomer(String title, String name);
 
-    public Customer updateCustomer(int customerId, String title, String name);
+    public Optional<Customer> updateCustomer(int customerId, String title, String name);
 
     public List<Customer> getAllCustomers();
 
@@ -20,5 +20,5 @@ public interface CustomerService {
 
     public List<TourBooking> getBookingsByCustomerId(int customerId);
 
-    public void deleteCustomerById(int customerId);
+    public Optional<Customer> deleteCustomerById(int customerId);
 }

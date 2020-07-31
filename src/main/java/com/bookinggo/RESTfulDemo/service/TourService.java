@@ -9,6 +9,8 @@ public interface TourService {
 
     public Optional<Tour> createTour(String tourPackageCode, String title, String duration, int price);
 
+    public Optional<Tour> updateTour(int tourId, String tourPackageCode, String title, String duration, Integer price);
+
     public List<Tour> getAllTours();
 
     public Optional<Tour> getTourById(int tourId);
@@ -17,5 +19,5 @@ public interface TourService {
 
     public Optional<Tour> getTourByTourPackageCodeAndTitle(String tourPackageCode, String title);
 
-    public void deleteTourById(int tourId);
+    public Optional<Tour> deleteTourById(int tourId);
 }

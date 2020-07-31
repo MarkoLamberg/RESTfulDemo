@@ -1,19 +1,18 @@
 package com.bookinggo.RESTfulDemo.entity;
 
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
+import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
-import java.io.Serializable;
-import java.time.LocalDateTime;
 
 @Entity
+@Table
 @Data
-@Builder
+@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode
-public class Tour implements Serializable {
+@EqualsAndHashCode(callSuper = true)
+public class Tour extends AbstractEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,9 +27,4 @@ public class Tour implements Serializable {
     @ManyToOne
     @JoinColumn(name = "tour_package_code")
     private TourPackage tourPackage;
-
-    @CreationTimestamp
-    @ToString.Exclude
-    @Column(columnDefinition = "TIMESTAMP")
-    private LocalDateTime createdWhen;
 }

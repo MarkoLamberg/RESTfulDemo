@@ -10,17 +10,16 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
+import java.net.URI;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static com.bookinggo.RESTfulDemo.util.RestfulDemoUtil.badRequestResponse;
 import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME;
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 @RestController
 @RequestMapping("/tours")
@@ -34,19 +33,26 @@ public class TourBookingController {
 
     @PostMapping("/{tourId}/bookings")
     @ResponseStatus(HttpStatus.CREATED)
-    public TourBooking createTourBooking(@PathVariable(value = "tourId") int tourId, @Valid @RequestBody BookingDto bookingDto) throws SQLException {
+    public ResponseEntity<?> createTourBooking(@PathVariable(value = "tourId") int tourId, @Valid @RequestBody BookingDto bookingDto) throws SQLException {
         log.info("POST /tours/{}/bookings", tourId);
         Optional<Tour> tour = tourService.getTourById(tourId);
 
         if (tour.isPresent()) {
             LocalDateTime pickupDateTime = LocalDateTime.parse(bookingDto.getPickupDateTime(), ISO_LOCAL_DATE_TIME);
 
-            return tourBookingService.createBooking(tourId, bookingDto.getCustomerId(), pickupDateTime,
+            Optional<TourBooking> createdBooking = tourBookingService.createBooking(tourId, bookingDto.getCustomerId(), pickupDateTime,
                     bookingDto.getPickupLocation(), bookingDto.getParticipants());
+
+            if (createdBooking.isPresent()) {
+                return ResponseEntity
+                        .created(URI.create("/tours/" + tourId + "/bookings"))
+                        .body(toDto(createdBooking.get()));
+            }
+
+            return badRequestResponse("Can't create booking. Customer doesn't exist. Provide correct Customer Id.");
         }
 
-        throw new ResponseStatusException(
-                BAD_REQUEST, "Tour doesn't exist. Provide correct Tour Id.");
+        return badRequestResponse("Can't create booking. Tour doesn't exist. Provide correct Tour Id.");
     }
 
     @GetMapping("/{tourId}/bookings")
@@ -65,15 +71,7 @@ public class TourBookingController {
                             .collect(Collectors.toList()));
         }
 
-        return ResponseEntity
-                .badRequest()
-                .body(ErrorDto.builder()
-                        .timestamp(new Timestamp(System.currentTimeMillis()))
-                        .status(BAD_REQUEST.value())
-                        .error(BAD_REQUEST.name().toLowerCase().replace('_', ' '))
-                        .message("Tour doesn't exist. Provide correct Tour Id.")
-                        .path("/tours/" + tourId + "/bookings")
-                        .build());
+        return badRequestResponse("Can't get bookings for tour. Tour doesn't exist. Provide correct Tour Id.");
     }
 
     @GetMapping("/bookings")
@@ -85,7 +83,7 @@ public class TourBookingController {
     }
 
     @PutMapping("/{tourId}/bookings")
-    public ResponseEntity<BookingDto> updateBooking(@PathVariable(value = "tourId") int tourId, @Valid @RequestBody BookingPatchDto bookingPatchDto) {
+    public ResponseEntity<?> updateBooking(@PathVariable(value = "tourId") int tourId, @Valid @RequestBody BookingPatchDto bookingPatchDto) {
         log.info("PUT /tours/{}/bookings", tourId);
         Optional<Tour> tour = tourService.getTourById(tourId);
 
@@ -96,20 +94,19 @@ public class TourBookingController {
                 pickupDateTime = LocalDateTime.parse(bookingPatchDto.getPickupDateTime(), ISO_LOCAL_DATE_TIME);
             }
 
-            TourBooking response = tourBookingService.updateBooking(tourId, bookingPatchDto.getCustomerId(),
+            Optional<TourBooking> response = tourBookingService.updateBooking(tourId, bookingPatchDto.getCustomerId(),
                     pickupDateTime, bookingPatchDto.getPickupLocation(), bookingPatchDto.getParticipants());
 
-            if (response == null) {
-                return ResponseEntity.badRequest().body(null);
+            if (response.isPresent()) {
+                return ResponseEntity
+                        .ok()
+                        .body(toDto(response.get()));
             }
 
-            return ResponseEntity
-                    .ok()
-                    .body(toDto(response));
+            return badRequestResponse("Can't update booking. No bookings for this customer id or more than one bookings for this customer id.");
         }
 
-        throw new ResponseStatusException(
-                BAD_REQUEST, "Tour doesn't exist. Provide correct Tour Id.");
+        return badRequestResponse("Can't update booking. Tour doesn't exist. Provide correct Tour Id.");
     }
 
     @DeleteMapping("/{tourId}/bookings")
@@ -125,15 +122,7 @@ public class TourBookingController {
                     .body(listOfDtos(bookings));
         }
 
-        return ResponseEntity
-                .badRequest()
-                .body(ErrorDto.builder()
-                        .timestamp(new Timestamp(System.currentTimeMillis()))
-                        .status(BAD_REQUEST.value())
-                        .error(BAD_REQUEST.name().toLowerCase().replace('_', ' '))
-                        .message("Tour doesn't exist. Provide correct Tour Id.")
-                        .path("/tours/" + tourId + "/bookings")
-                        .build());
+        return badRequestResponse("Can't delete bookings. Tour doesn't exist. Provide correct Tour Id.");
     }
 
     @DeleteMapping("/{tourId}/bookings/{customerId}")
@@ -142,30 +131,33 @@ public class TourBookingController {
         Optional<Tour> tour = tourService.getTourById(tourId);
 
         if (tour.isPresent()) {
-            List<TourBooking> bookings = tourBookingService.deleteAllBookingsWithTourIdAndCustomerId(tourId, customerId);
+            Optional<List<TourBooking>> bookings = tourBookingService.deleteAllBookingsWithTourIdAndCustomerId(tourId, customerId);
 
-            return ResponseEntity
-                    .ok()
-                    .body(listOfDtos(bookings));
+            if (bookings.isPresent()) {
+                return ResponseEntity
+                        .ok()
+                        .body(listOfDtos(bookings.get()));
+            }
+
+            return badRequestResponse("Can't delete bookings. Customer doesn't exist. Provide correct Customer Id.");
         }
 
-        return ResponseEntity
-                .badRequest()
-                .body(ErrorDto.builder()
-                        .timestamp(new Timestamp(System.currentTimeMillis()))
-                        .status(BAD_REQUEST.value())
-                        .error(BAD_REQUEST.name().toLowerCase().replace('_', ' '))
-                        .message("Tour doesn't exist. Provide correct Tour Id.")
-                        .path("/tours/" + tourId + "/bookings/" + customerId)
-                        .build());
+        return badRequestResponse("Can't delete bookings. Tour doesn't exist. Provide correct Tour Id.");
     }
 
     @DeleteMapping("/bookings/{customerId}")
-    public List<BookingDto> deleteAllBookingsForCustomer(@PathVariable(value = "customerId") int customerId) {
+    public ResponseEntity<?> deleteAllBookingsForCustomer(@PathVariable(value = "customerId") int customerId) {
         log.info("DELETE /tours/bookings/{}", customerId);
-        List<TourBooking> bookings = tourBookingService.deleteAllBookingsWithCustomerId(customerId);
 
-        return listOfDtos(bookings);
+        Optional<List<TourBooking>> bookings = tourBookingService.deleteAllBookingsWithCustomerId(customerId);
+
+        if (bookings.isPresent()) {
+            return ResponseEntity
+                    .ok()
+                    .body(listOfDtos(bookings.get()));
+        }
+
+        return badRequestResponse("Can't delete customer bookings. Customer doesn't exist. Provide correct Customer Id.");
     }
 
     @DeleteMapping("/bookings")

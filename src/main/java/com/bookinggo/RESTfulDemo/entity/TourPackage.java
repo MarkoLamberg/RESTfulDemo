@@ -1,16 +1,17 @@
 package com.bookinggo.RESTfulDemo.entity;
 
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
-import java.io.Serializable;
 
-@Table(name = "tour_package")
 @Entity
+@Table(name = "tour_package")
 @Data
+@SuperBuilder
 @NoArgsConstructor
-@EqualsAndHashCode
-public class TourPackage implements Serializable {
+@EqualsAndHashCode(callSuper = true)
+public class TourPackage extends AbstractEntity {
 
     @Id
     private String code;

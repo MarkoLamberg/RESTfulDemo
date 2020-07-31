@@ -43,6 +43,42 @@ public class TourServiceImpl implements TourService {
     }
 
     @Override
+    public Optional<Tour> updateTour(int tourId, String tourPackageCode, String title, String duration, Integer price) {
+        log.info("updateTour - tourId: {}, tourPackageCode: {}, title: {}, duration: {}, price: {}", tourId, tourPackageCode, title, duration, price);
+
+        Optional<Tour> tour = tourRepository.findById(tourId);
+
+        if (tour.isPresent()) {
+            if (tourPackageCode != null) {
+                Optional<TourPackage> tourPackage = tourPackageRepository.getTourPackageByCode(tourPackageCode);
+
+                if (tourPackage.isPresent()) {
+                    tour.get().setTourPackage(tourPackage.get());
+                } else {
+                    return Optional.empty();
+                }
+
+            }
+
+            if (title != null) {
+                tour.get().setTitle(title);
+            }
+
+            if (duration != null) {
+                tour.get().setDuration(duration);
+            }
+
+            if (price != null) {
+                tour.get().setPrice(price);
+            }
+
+            return Optional.of(tourRepository.saveAndFlush(tour.get()));
+        }
+
+        return Optional.empty();
+    }
+
+    @Override
     public List<Tour> getAllTours() {
         log.info("getAllTours");
         return tourRepository.findAll();
@@ -83,8 +119,17 @@ public class TourServiceImpl implements TourService {
     }
 
     @Override
-    public void deleteTourById(int tourId) {
+    public Optional<Tour> deleteTourById(int tourId) {
         log.info("deleteTourById - tourId: {}", tourId);
-        tourRepository.deleteById(tourId);
+
+        Optional<Tour> tour = tourRepository.findById(tourId);
+
+        if (tour.isPresent()) {
+            tourRepository.deleteById(tourId);
+
+            return tour;
+        }
+
+        return Optional.empty();
     }
 }
