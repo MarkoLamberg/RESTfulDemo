@@ -7,6 +7,7 @@ import com.bookinggo.RESTfulDemo.service.TourBookingService;
 import com.bookinggo.RESTfulDemo.service.TourService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -30,6 +31,8 @@ public class TourBookingController {
     private final TourBookingService tourBookingService;
 
     private final TourService tourService;
+
+    private final ModelMapper modelMapper;
 
     @PostMapping("/{tourId}/bookings")
     @ResponseStatus(HttpStatus.CREATED)
@@ -136,7 +139,7 @@ public class TourBookingController {
             if (bookings.isPresent()) {
                 return ResponseEntity
                         .ok()
-                        .body(listOfDtos(bookings.get()));
+                        .body(listOfExpandedDtos(bookings.get()));
             }
 
             return badRequestResponse("Can't delete bookings. Customer doesn't exist. Provide correct Customer Id.");
@@ -154,28 +157,22 @@ public class TourBookingController {
         if (bookings.isPresent()) {
             return ResponseEntity
                     .ok()
-                    .body(listOfDtos(bookings.get()));
+                    .body(listOfExpandedDtos(bookings.get()));
         }
 
         return badRequestResponse("Can't delete customer bookings. Customer doesn't exist. Provide correct Customer Id.");
     }
 
     @DeleteMapping("/bookings")
-    public List<BookingDto> deleteAllBookings() {
+    public List<ExpandedBookingDto> deleteAllBookings() {
         log.info("DELETE /tours/bookings");
         List<TourBooking> bookings = tourBookingService.deleteAllBookings();
 
-        return listOfDtos(bookings);
+        return listOfExpandedDtos(bookings);
     }
 
     private BookingDto toDto(TourBooking tourBooking) {
-        return BookingDto.builder()
-                .pickupDateTime(tourBooking.getPickupDateTime().toString())
-                .pickupLocation(tourBooking.getPickupLocation())
-                .customerId(tourBooking.getCustomer().getId())
-                .participants(tourBooking.getParticipants())
-                .totalPrice(tourBooking.getTotalPriceString())
-                .build();
+        return modelMapper.map(tourBooking, BookingDto.class);
     }
 
     private List<BookingDto> listOfDtos(List<TourBooking> bookings) {
@@ -186,13 +183,13 @@ public class TourBookingController {
     }
 
     private ExpandedBookingDto toExpandedDto(TourBooking tourBooking) {
-        return ExpandedBookingDto.childBuilder()
-                .pickupDateTime(tourBooking.getPickupDateTime().toString())
-                .pickupLocation(tourBooking.getPickupLocation())
-                .customerId(tourBooking.getCustomer().getId())
-                .participants(tourBooking.getParticipants())
-                .totalPrice(tourBooking.getTotalPriceString())
-                .tourId(tourBooking.getTour().getId())
-                .build();
+        return modelMapper.map(tourBooking, ExpandedBookingDto.class);
+    }
+
+    private List<ExpandedBookingDto> listOfExpandedDtos(List<TourBooking> bookings) {
+        List<ExpandedBookingDto> bookingDtos = new LinkedList<>();
+        bookings.forEach(b -> bookingDtos.add(toExpandedDto(b)));
+
+        return bookingDtos;
     }
 }

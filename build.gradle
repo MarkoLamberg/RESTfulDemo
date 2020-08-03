@@ -19,6 +19,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.retry:spring-retry:1.2.4.RELEASE'
 	implementation 'mysql:mysql-connector-java:8.0.19'
+	implementation 'org.modelmapper:modelmapper:2.3.6'
 	testImplementation 'com.h2database:h2:1.4.+'
 	testImplementation('org.springframework.boot:spring-boot-starter-test') {
 		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
@@ -28,7 +29,7 @@ dependencies {
 
 	testCompileOnly 'org.projectlombok:lombok:1.18.12'
 	testAnnotationProcessor 'org.projectlombok:lombok:1.18.12'
-    implementation 'junit:junit:4.12'
+	implementation 'junit:junit:4.12'
 
 	testImplementation 'com.wix:wix-embedded-mysql:4.6.+'
 	testImplementation 'org.flywaydb:flyway-core:6.0.+'

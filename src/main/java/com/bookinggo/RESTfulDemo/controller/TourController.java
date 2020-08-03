@@ -55,13 +55,7 @@ public class TourController {
         Optional<Tour> tour = tourService.getTourById(tourId);
 
         if (tour.isPresent()) {
-            Optional<Tour> tourWithNewTitleOrTourPackage =
-                    (((tourPatchDto.getTitle() == null) || tour.get().getTitle().equals(tourPatchDto.getTitle())) &&
-                            ((tourPatchDto.getTourPackageCode() == null) || tour.get().getTourPackage().getCode().equals(tourPatchDto.getTourPackageCode())))
-                            ? Optional.empty()
-                            : tourService.getTourByTourPackageCodeAndTitle(
-                            (tourPatchDto.getTourPackageCode() == null) ? tour.get().getTourPackage().getCode() : tourPatchDto.getTourPackageCode(),
-                            (tourPatchDto.getTitle() == null) ? tour.get().getTitle() : tourPatchDto.getTitle());
+            Optional<Tour> tourWithNewTitleOrTourPackage = getTourWithNewTitleOrTourPackage(tourPatchDto, tour);
 
             if (tourWithNewTitleOrTourPackage.isPresent()) {
                 return badRequestResponse("Can't update tour. Can't change the tour name to match with other existing tour.");
@@ -79,6 +73,17 @@ public class TourController {
         }
 
         return badRequestResponse("Can't update tour. The tour doesn't exist. Provide correct Tour Id.");
+    }
+
+    private Optional<Tour> getTourWithNewTitleOrTourPackage(@RequestBody @Valid TourPatchDto tourPatchDto, Optional<Tour> tour) {
+        if (((tourPatchDto.getTitle() == null) || tour.get().getTitle().equals(tourPatchDto.getTitle())) &&
+                ((tourPatchDto.getTourPackageCode() == null) || tour.get().getTourPackage().getCode().equals(tourPatchDto.getTourPackageCode()))) {
+            return Optional.empty();
+        }
+
+        return tourService.getTourByTourPackageCodeAndTitle(
+                (tourPatchDto.getTourPackageCode() == null) ? tour.get().getTourPackage().getCode() : tourPatchDto.getTourPackageCode(),
+                (tourPatchDto.getTitle() == null) ? tour.get().getTitle() : tourPatchDto.getTitle());
     }
 
     @GetMapping

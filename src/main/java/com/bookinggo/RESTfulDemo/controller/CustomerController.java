@@ -49,8 +49,7 @@ public class CustomerController {
         Optional<Customer> customer = customerService.getCustomerById(customerId);
 
         if (customer.isPresent()) {
-            Optional<Customer> customerWithNewName = ((customerPatchDto.getName() == null) || customer.get().getName().equals(customerPatchDto.getName())) ? Optional.empty() :
-                    customerService.getCustomerByName(customerPatchDto.getName());
+            Optional<Customer> customerWithNewName = getCustomerWithNewName(customerPatchDto, customer);
 
             if (customerWithNewName.isPresent()) {
                 return badRequestResponse("Can't change the customer name to match with other existing customer.");
@@ -68,6 +67,11 @@ public class CustomerController {
         }
 
         return badRequestResponse("Can't update customer. Customer doesn't exist. Provide correct Customer Id.");
+    }
+
+    private Optional<Customer> getCustomerWithNewName(@RequestBody @Valid CustomerPatchDto customerPatchDto, Optional<Customer> customer) {
+        return ((customerPatchDto.getName() == null) || customer.get().getName().equals(customerPatchDto.getName())) ? Optional.empty() :
+                customerService.getCustomerByName(customerPatchDto.getName());
     }
 
     @GetMapping
