@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
@@ -45,11 +46,14 @@ public class TourBookingServiceTest {
     @Autowired
     private TourBookingService tourBookingService;
 
+    @Value("${retry.attempts}")
+    private int retryAttempts;
+
     @Test
     public void shouldNotCreateBooking_whenCreateBooking_givenTourIdDoesNotExist() throws SQLException {
         tourBookingService.createBooking(TOUR_ID, CUSTOMER_ID, PICKUP_DATE_TIME, PICKUP_LOCATION, PARTICIPANTS);
 
-        verify(tourRepositoryMock, times(2)).findById(TOUR_ID);
+        verify(tourRepositoryMock, times(retryAttempts)).findById(TOUR_ID);
         verify(tourRepositoryMock, times(0)).save(any());
     }
 

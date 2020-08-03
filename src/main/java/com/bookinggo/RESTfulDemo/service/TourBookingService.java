@@ -12,8 +12,8 @@ public interface TourBookingService {
 
     @Retryable(
             value = {SQLException.class},
-            maxAttempts = 2,
-            backoff = @Backoff(delay = 1000))
+            maxAttemptsExpression = "${retry.attempts:3}",
+            backoff = @Backoff(delayExpression = "${retry.backoff.delay:500}"))
     public Optional<TourBooking> createBooking(int tourId, Integer customerId, LocalDateTime pickupDateTime, String pickupLocation, Integer participants) throws SQLException;
 
     @Recover

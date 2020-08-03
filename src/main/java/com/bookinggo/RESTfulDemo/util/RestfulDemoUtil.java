@@ -17,7 +17,7 @@ public class RestfulDemoUtil {
                 .body(ErrorDto.builder()
                         .timestamp(new Timestamp(System.currentTimeMillis()))
                         .status(BAD_REQUEST.value())
-                        .error(BAD_REQUEST.name().toLowerCase().replace('_', ' '))
+                        .error(BAD_REQUEST.name().toLowerCase().replace("bad_request", "Bad Request"))
                         .message(message)
                         .path(path)
                         .build());
