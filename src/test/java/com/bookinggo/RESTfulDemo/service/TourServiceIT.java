@@ -67,7 +67,6 @@ public class TourServiceIT extends AbstractRESTfulDemoIT {
     @Test
     public void shouldReturnFourTours_whenGetAllTours_givenToursExist() {
         List<Tour> tours = tourService.getAllTours();
-
         assertThat(tours.size()).isEqualTo(4);
     }
 
@@ -75,7 +74,6 @@ public class TourServiceIT extends AbstractRESTfulDemoIT {
     @Test
     public void shouldReturnATour_whenGetTourById_givenTourWithIdExists() {
         Optional<Tour> tour = tourService.getTourById(TOUR_ID);
-
         assertThat(tour).isPresent();
     }
 
@@ -83,7 +81,6 @@ public class TourServiceIT extends AbstractRESTfulDemoIT {
     @Test
     public void shouldReturnTwoTours_whenGetToursByLocation_givenToursWithLocationExist() {
         List<Tour> tours = tourService.getToursByLocation(TOUR_LOCATION);
-
         assertThat(tours.size()).isEqualTo(2);
     }
 
@@ -91,7 +88,6 @@ public class TourServiceIT extends AbstractRESTfulDemoIT {
     @Test
     public void shouldReturnTour_whenGetTourByPackageCodeAndTitle_givenTourWithThatPackageCodeAndTitleExists() {
         Optional<Tour> tour = tourService.getTourByTourPackageCodeAndTitle(TOUR_PACKAGE_CODE, TOUR_TITLE);
-
         assertThat(tour).isPresent();
     }
 
@@ -99,13 +95,11 @@ public class TourServiceIT extends AbstractRESTfulDemoIT {
     @Test
     public void shouldDeleteTour_whenDeleteTourById_givenTourWithTourIdExists() {
         Optional<Tour> tourBefore = tourService.getTourById(TOUR_ID);
-
         assertThat(tourBefore).isPresent();
 
         tourService.deleteTourById(TOUR_ID);
 
         Optional<Tour> tourAfter = tourService.getTourById(TOUR_ID);
-
         assertThat(tourAfter).isEmpty();
     }
 }

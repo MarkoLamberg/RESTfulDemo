@@ -67,7 +67,7 @@ public class CustomerServiceIT extends AbstractRESTfulDemoIT {
     public void shouldReturnACustomer_whenGetCustomerById_givenCustomerWithIdExists() {
         Optional<Customer> customers = customerService.getCustomerById(CUSTOMER_ID);
 
-        assertThat(customers.isPresent()).isTrue();
+        assertThat(customers).isPresent();
     }
 
     @Sql

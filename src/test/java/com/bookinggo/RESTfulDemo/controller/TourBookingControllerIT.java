@@ -45,16 +45,10 @@ public class TourBookingControllerIT extends AbstractRESTfulDemoIT {
     @Sql
     @Test
     public void shouldReturn201_whenCreateBooking_givenValidBooking() {
-        BookingDto bookingDto = BookingDto.builder()
-                .pickupDateTime(PICKUP_DATE_TIME)
-                .pickupLocation(PICKUP_LOCATION)
-                .customerId(CUSTOMER_ID)
-                .participants(PARTICIPANTS)
-                .totalPrice(TOTAL_PRICE)
-                .build();
-
         ResponseEntity<BookingDto> response = restTemplate
-                .postForEntity(LOCAL_HOST + port + "/tours/" + TOUR_ID + "/bookings", bookingDto, BookingDto.class);
+                .postForEntity(LOCAL_HOST + port + "/tours/" + TOUR_ID + "/bookings",
+                        buildBookingDto(),
+                        BookingDto.class);
 
         assertThat(response.getStatusCodeValue()).isEqualTo(CREATED.value());
     }
@@ -62,16 +56,10 @@ public class TourBookingControllerIT extends AbstractRESTfulDemoIT {
     @Sql
     @Test
     public void shouldReturn400_whenCreateBooking_givenNotValidTourId() {
-        BookingDto bookingDto = BookingDto.builder()
-                .pickupDateTime(PICKUP_DATE_TIME)
-                .pickupLocation(PICKUP_LOCATION)
-                .customerId(CUSTOMER_ID)
-                .participants(PARTICIPANTS)
-                .totalPrice(TOTAL_PRICE)
-                .build();
-
         ResponseEntity<BookingDto> response = restTemplate
-                .postForEntity(LOCAL_HOST + port + "/tours/" + NON_EXISTING_TOUR_ID + "/bookings", bookingDto, BookingDto.class);
+                .postForEntity(LOCAL_HOST + port + "/tours/" + NON_EXISTING_TOUR_ID + "/bookings",
+                        buildBookingDto(),
+                        BookingDto.class);
 
         assertThat(response.getStatusCodeValue()).isEqualTo(BAD_REQUEST.value());
     }
@@ -90,7 +78,10 @@ public class TourBookingControllerIT extends AbstractRESTfulDemoIT {
     @Test
     public void shouldReturn400_whenGetAllBookingsForTour_givenNotValidTourId() {
         ResponseEntity<String> response = restTemplate
-                .exchange(LOCAL_HOST + port + "/tours/" + NON_EXISTING_TOUR_ID + "/bookings", HttpMethod.GET, null, String.class);
+                .exchange(LOCAL_HOST + port + "/tours/" + NON_EXISTING_TOUR_ID + "/bookings",
+                        HttpMethod.GET,
+                        null,
+                        String.class);
 
         assertThat(response.getStatusCodeValue()).isEqualTo(BAD_REQUEST.value());
     }
@@ -108,18 +99,11 @@ public class TourBookingControllerIT extends AbstractRESTfulDemoIT {
     @Sql
     @Test
     public void shouldReturn200_whenUpdateBooking_givenValidBooking() {
-        BookingPatchDto bookingPatchDto = BookingPatchDto.builder()
-                .pickupDateTime(PICKUP_DATE_TIME)
-                .pickupLocation(PICKUP_LOCATION)
-                .customerId(CUSTOMER_ID)
-                .participants(PARTICIPANTS)
-                .totalPrice(TOTAL_PRICE)
-                .build();
-
-        HttpEntity<BookingPatchDto> entity = new HttpEntity<>(bookingPatchDto);
-
         ResponseEntity<BookingDto> response = restTemplate
-                .exchange(LOCAL_HOST + port + "/tours/" + TOUR_ID + "/bookings", HttpMethod.PUT, entity, BookingDto.class);
+                .exchange(LOCAL_HOST + port + "/tours/" + TOUR_ID + "/bookings",
+                        HttpMethod.PUT,
+                        new HttpEntity<>(buildBookingPatchDto(PICKUP_DATE_TIME, PICKUP_LOCATION)),
+                        BookingDto.class);
 
         assertThat(response.getStatusCodeValue()).isEqualTo(OK.value());
         assertThat(response.getBody().getPickupLocation()).isEqualTo(PICKUP_LOCATION);
@@ -129,18 +113,10 @@ public class TourBookingControllerIT extends AbstractRESTfulDemoIT {
     @Sql
     @Test
     public void shouldReturn200_whenUpdateBookingSome_givenValidBooking() {
-        BookingPatchDto bookingPatchDto = BookingPatchDto.builder()
-                .pickupDateTime(null)
-                .pickupLocation(null)
-                .customerId(CUSTOMER_ID)
-                .participants(PARTICIPANTS)
-                .totalPrice(TOTAL_PRICE)
-                .build();
-
-        HttpEntity<BookingPatchDto> entity = new HttpEntity<>(bookingPatchDto);
-
         ResponseEntity<BookingDto> response = restTemplate
-                .exchange(LOCAL_HOST + port + "/tours/" + TOUR_ID + "/bookings", HttpMethod.PUT, entity, BookingDto.class);
+                .exchange(LOCAL_HOST + port + "/tours/" + TOUR_ID + "/bookings",
+                        HttpMethod.PUT,
+                        new HttpEntity<>(buildBookingPatchDto(null, null)), BookingDto.class);
 
         assertThat(response.getStatusCodeValue()).isEqualTo(OK.value());
         assertThat(response.getBody().getPickupLocation()).isNotEqualTo(PICKUP_LOCATION);
@@ -150,18 +126,11 @@ public class TourBookingControllerIT extends AbstractRESTfulDemoIT {
     @Sql
     @Test
     public void shouldReturn400_whenUpdateBooking_givenValidBookingButMoreThanOneBookingsWithSameCustomerAndSameLocation() {
-        BookingDto bookingDto = BookingDto.builder()
-                .pickupDateTime(PICKUP_DATE_TIME)
-                .pickupLocation(PICKUP_LOCATION)
-                .customerId(CUSTOMER_ID)
-                .participants(PARTICIPANTS)
-                .totalPrice(TOTAL_PRICE)
-                .build();
-
-        HttpEntity<BookingDto> entity = new HttpEntity<>(bookingDto);
-
         ResponseEntity<BookingDto> response = restTemplate
-                .exchange(LOCAL_HOST + port + "/tours/" + TOUR_ID + "/bookings", HttpMethod.PUT, entity, BookingDto.class);
+                .exchange(LOCAL_HOST + port + "/tours/" + TOUR_ID + "/bookings",
+                        HttpMethod.PUT,
+                        new HttpEntity<>(buildBookingDto()),
+                        BookingDto.class);
 
         assertThat(response.getStatusCodeValue()).isEqualTo(BAD_REQUEST.value());
     }
@@ -169,18 +138,11 @@ public class TourBookingControllerIT extends AbstractRESTfulDemoIT {
     @Sql
     @Test
     public void shouldReturn400_whenUpdateBooking_givenNotValidTourId() {
-        BookingDto bookingDto = BookingDto.builder()
-                .pickupDateTime(PICKUP_DATE_TIME)
-                .pickupLocation(PICKUP_LOCATION)
-                .customerId(CUSTOMER_ID)
-                .participants(PARTICIPANTS)
-                .totalPrice(TOTAL_PRICE)
-                .build();
-
-        HttpEntity<BookingDto> entity = new HttpEntity<>(bookingDto);
-
         ResponseEntity<BookingDto> response = restTemplate
-                .exchange(LOCAL_HOST + port + "/tours/" + NON_EXISTING_TOUR_ID + "/bookings", HttpMethod.PUT, entity, BookingDto.class);
+                .exchange(LOCAL_HOST + port + "/tours/" + NON_EXISTING_TOUR_ID + "/bookings",
+                        HttpMethod.PUT,
+                        new HttpEntity<>(buildBookingDto()),
+                        BookingDto.class);
 
         assertThat(response.getStatusCodeValue()).isEqualTo(BAD_REQUEST.value());
     }
@@ -264,14 +226,33 @@ public class TourBookingControllerIT extends AbstractRESTfulDemoIT {
                 .getForEntity(LOCAL_HOST + port + "/tours/bookings", TourBooking[].class)
                 .getBody();
 
-
         restTemplate.delete(LOCAL_HOST + port + "/tours/bookings");
+
         TourBooking[] tourBookingsAfter = restTemplate
                 .getForEntity(LOCAL_HOST + port + "/tours/bookings", TourBooking[].class)
                 .getBody();
 
-
         assertThat(tourBookingsAfter.length).isNotEqualTo(tourBookingsBefore.length);
         assertThat(tourBookingsAfter.length).isEqualTo(0);
+    }
+
+    private BookingDto buildBookingDto() {
+        return BookingDto.builder()
+                .pickupDateTime(PICKUP_DATE_TIME)
+                .pickupLocation(PICKUP_LOCATION)
+                .customerId(CUSTOMER_ID)
+                .participants(PARTICIPANTS)
+                .totalPrice(TOTAL_PRICE)
+                .build();
+    }
+
+    private BookingPatchDto buildBookingPatchDto(String pickupDateTime, String pickupLocation) {
+        return BookingPatchDto.builder()
+                .pickupDateTime(pickupDateTime)
+                .pickupLocation(pickupLocation)
+                .customerId(CUSTOMER_ID)
+                .participants(PARTICIPANTS)
+                .totalPrice(TOTAL_PRICE)
+                .build();
     }
 }

@@ -52,11 +52,9 @@ public class TourBookingServiceIT extends AbstractRESTfulDemoIT {
     @Test
     public void shouldReturnBooking_whenGetTourBookings_givenBookingWithTourIdExists() {
         List<TourBooking> bookings = tourBookingService.getBookingsByTourId(TOUR_ID);
-
         assertThat(bookings.size()).isEqualTo(1);
 
-        int tourId = bookings.get(0).getTour().getId();
-
+        bookings.get(0).getTour().getId();
         assertThat(bookings.get(0).getTour().getId().intValue()).isEqualTo(TOUR_ID);
     }
 
@@ -64,7 +62,6 @@ public class TourBookingServiceIT extends AbstractRESTfulDemoIT {
     @Test
     public void shouldReturnTwoBookings_whenGetAllBookings_givenBookingsExist() {
         List<TourBooking> bookings = tourBookingService.getAllBookings();
-
         assertThat(bookings.size()).isEqualTo(2);
     }
 
@@ -98,7 +95,7 @@ public class TourBookingServiceIT extends AbstractRESTfulDemoIT {
                 .filter(booking -> booking.getCustomer().getId().equals(CUSTOMER_ID))
                 .collect(Collectors.toList());
 
-        assertThat(filteredBookingsBefore.size() == 1).isFalse();
+        assertThat(filteredBookingsBefore.size()).isNotEqualTo(1);
 
         tourBookingService.updateBooking(TOUR_ID, CUSTOMER_ID, PICKUP_DATE_TIME, PICKUP_LOCATION, PARTICIPANTS);
 
@@ -137,15 +134,12 @@ public class TourBookingServiceIT extends AbstractRESTfulDemoIT {
     @Test
     public void shouldDeleteBooking_whenDeleteAllBookingsWithTourId_givenBookingWithTourIdExists() {
         List<TourBooking> bookingsBefore = tourBookingService.getBookingsByTourId(TOUR_ID);
-
         assertThat(bookingsBefore.size()).isEqualTo(1);
 
         List<TourBooking> deletedBookings = tourBookingService.deleteAllBookingsWithTourId(TOUR_ID);
-
         assertThat(deletedBookings.size()).isEqualTo(1);
 
         List<TourBooking> bookingsAfter = tourBookingService.getBookingsByTourId(TOUR_ID);
-
         assertThat(bookingsAfter.size()).isEqualTo(0);
     }
 
@@ -182,7 +176,6 @@ public class TourBookingServiceIT extends AbstractRESTfulDemoIT {
         assertThat(filteredBookingsBefore.size()).isEqualTo(2);
 
         Optional<List<TourBooking>> deletedBookings = tourBookingService.deleteAllBookingsWithCustomerId(CUSTOMER_ID);
-
         assertThat(deletedBookings.get().size()).isEqualTo(2);
 
         List<TourBooking> filteredBookingsAfter = tourBookingService.getAllBookings()
@@ -197,15 +190,12 @@ public class TourBookingServiceIT extends AbstractRESTfulDemoIT {
     @Test
     public void shouldDeleteAllBookings_whenDeleteAllBookings_givenBookingsExists() {
         List<TourBooking> bookingsBefore = tourBookingService.getAllBookings();
-
         assertThat(bookingsBefore.size()).isEqualTo(3);
 
         List<TourBooking> deletedBookings = tourBookingService.deleteAllBookings();
-
         assertThat(deletedBookings.size()).isEqualTo(3);
 
         List<TourBooking> bookingsAfter = tourBookingService.getAllBookings();
-
         assertThat(bookingsAfter.size()).isEqualTo(0);
     }
 }

@@ -42,24 +42,45 @@ public class CustomerServiceTest {
     }
 
     @Test
-    public void shouldUpdateACustomer_whenUpdateCustomer_givenCustomerWithCustomerIdExists() {
-        Customer customer = spy(Customer
-                .builder()
-                .id(CUSTOMER_ID)
-                .build());
+    public void shouldUpdateACustomer_whenUpdateCustomerWithTwoFields_givenCustomerWithCustomerIdExists() {
+        Customer customer = spy(buildCustomer());
         when(customerRepositoryMock.findById(CUSTOMER_ID)).thenReturn(Optional.of(customer));
-        when(customerRepositoryMock.saveAndFlush(customer)).thenReturn(Customer
-                .builder()
-                .id(CUSTOMER_ID)
-                .title(CUSTOMER_TITLE)
-                .name(CUSTOMER_NAME)
-                .build());
+        when(customerRepositoryMock.saveAndFlush(customer)).thenReturn(customer);
 
         Optional<Customer> newCustomer = customerService.updateCustomer(CUSTOMER_ID, CUSTOMER_TITLE, CUSTOMER_NAME);
 
         verify(customerRepositoryMock, times(1)).findById(CUSTOMER_ID);
         verify(customer, times(1)).setTitle(CUSTOMER_TITLE);
         verify(customer, times(1)).setName(CUSTOMER_NAME);
+        verify(customerRepositoryMock, times(1)).saveAndFlush(any());
+        assertThat(newCustomer).isPresent();
+    }
+
+    @Test
+    public void shouldUpdateACustomer_whenUpdateCustomerWithOneField_givenCustomerWithCustomerIdExists() {
+        Customer customer = spy(buildCustomer());
+        when(customerRepositoryMock.findById(CUSTOMER_ID)).thenReturn(Optional.of(customer));
+        when(customerRepositoryMock.saveAndFlush(customer)).thenReturn(customer);
+
+        Optional<Customer> newCustomer = customerService.updateCustomer(CUSTOMER_ID, CUSTOMER_TITLE, null);
+
+        verify(customerRepositoryMock, times(1)).findById(CUSTOMER_ID);
+        verify(customer, times(1)).setTitle(CUSTOMER_TITLE);
+        verify(customer, times(0)).setName(CUSTOMER_NAME);
+        verify(customerRepositoryMock, times(1)).saveAndFlush(any());
+        assertThat(newCustomer).isPresent();
+    }
+
+    @Test
+    public void shouldUpdateACustomer_whenUpdateCustomerWithZeroFields_givenCustomerWithCustomerIdExists() {
+        Customer customer = spy(buildCustomer());
+        when(customerRepositoryMock.findById(CUSTOMER_ID)).thenReturn(Optional.of(customer));
+        when(customerRepositoryMock.saveAndFlush(customer)).thenReturn(customer);
+
+        Optional<Customer> newCustomer = customerService.updateCustomer(CUSTOMER_ID, null, null);
+
+        verify(customerRepositoryMock, times(1)).findById(CUSTOMER_ID);
+        verifyNoMoreInteractions(customer);
         verify(customerRepositoryMock, times(1)).saveAndFlush(any());
         assertThat(newCustomer).isPresent();
     }
@@ -74,9 +95,7 @@ public class CustomerServiceTest {
 
     @Test
     public void shouldCallFindAll_whenGetAllCustomers_givenCustomerExists() {
-        when(customerRepositoryMock.findAll()).thenReturn(of(Customer
-                .builder()
-                .build()));
+        when(customerRepositoryMock.findAll()).thenReturn(of(buildCustomer()));
 
         List<Customer> customers = customerService.getAllCustomers();
 
@@ -94,10 +113,7 @@ public class CustomerServiceTest {
 
     @Test
     public void shouldCallFindById_whenGetCustomerById_givenCustomerWithIdExists() {
-        when(customerRepositoryMock.findById(CUSTOMER_ID)).thenReturn(Optional.of(Customer
-                .builder()
-                .id(CUSTOMER_ID)
-                .build()));
+        when(customerRepositoryMock.findById(CUSTOMER_ID)).thenReturn(Optional.of(buildCustomer()));
 
         Optional<Customer> customer = customerService.getCustomerById(CUSTOMER_ID);
 
@@ -157,21 +173,25 @@ public class CustomerServiceTest {
         Optional<Customer> customer = customerService.deleteCustomerById(CUSTOMER_ID);
 
         verify(customerRepositoryMock, times(1)).findById(CUSTOMER_ID);
-        verify(customerRepositoryMock, times(0)).deleteById(CUSTOMER_ID);
+        verifyNoMoreInteractions(customerRepositoryMock);
         assertThat(customer).isEmpty();
     }
 
     @Test
     public void shouldDeleteACustomer_whenDeleteCustomerById_givenCustomerExists() {
-        when(customerRepositoryMock.findById(CUSTOMER_ID)).thenReturn(Optional.of(Customer
-                .builder()
-                .id(CUSTOMER_ID)
-                .build()));
+        when(customerRepositoryMock.findById(CUSTOMER_ID)).thenReturn(Optional.of(buildCustomer()));
 
         Optional<Customer> customer = customerService.deleteCustomerById(CUSTOMER_ID);
 
         verify(customerRepositoryMock, times(1)).findById(CUSTOMER_ID);
         verify(customerRepositoryMock, times(1)).deleteById(CUSTOMER_ID);
         assertThat(customer).isPresent();
+    }
+
+    private Customer buildCustomer() {
+        return Customer
+                .builder()
+                .id(CUSTOMER_ID)
+                .build();
     }
 }

@@ -57,15 +57,10 @@ public class TourControllerIT extends AbstractRESTfulDemoIT {
 
     @Test
     public void shouldReturn201_whenCreateTour_givenValidTour() {
-        TourDto tourDto = TourDto.builder()
-                .tourPackageCode(TOUR_PACKAGE_CODE)
-                .title(TOUR_TITLE)
-                .duration(TOUR_DURATION)
-                .price(TOUR_PRICE)
-                .build();
-
         ResponseEntity<Tour> response = restTemplate
-                .postForEntity(LOCAL_HOST + port + "/tours", tourDto, Tour.class);
+                .postForEntity(LOCAL_HOST + port + "/tours",
+                        buildTourDto(TOUR_TITLE),
+                        Tour.class);
 
         assertThat(response.getStatusCodeValue()).isEqualTo(CREATED.value());
     }
@@ -73,15 +68,10 @@ public class TourControllerIT extends AbstractRESTfulDemoIT {
     @Sql
     @Test
     public void shouldReturn400_whenCreateTour_givenTourWithThatTourPackageCodeAndNameAlreadyExists() {
-        TourDto tourDto = TourDto.builder()
-                .tourPackageCode(TOUR_PACKAGE_CODE)
-                .title(NON_EXISTING_TOUR_TITLE)
-                .duration(TOUR_DURATION)
-                .price(TOUR_PRICE)
-                .build();
-
         ResponseEntity<Tour> response = restTemplate
-                .postForEntity(LOCAL_HOST + port + "/tours", tourDto, Tour.class);
+                .postForEntity(LOCAL_HOST + port + "/tours",
+                        buildTourDto(NON_EXISTING_TOUR_TITLE),
+                        Tour.class);
 
         assertThat(response.getStatusCodeValue()).isEqualTo(BAD_REQUEST.value());
     }
@@ -89,16 +79,11 @@ public class TourControllerIT extends AbstractRESTfulDemoIT {
     @Sql
     @Test
     public void shouldReturn200_whenUpdateTour_givenValidTour() {
-        TourPatchDto tourPatchDto = TourPatchDto.builder()
-                .tourPackageCode(TOUR_PACKAGE_CODE)
-                .title(TOUR_TITLE)
-                .duration(TOUR_DURATION)
-                .price(TOUR_PRICE)
-                .build();
-
-        HttpEntity<TourPatchDto> entity = new HttpEntity<>(tourPatchDto);
         ResponseEntity<Tour> response = restTemplate
-                .exchange(LOCAL_HOST + port + "/tours/" + TOUR_ID, HttpMethod.PUT, entity, Tour.class);
+                .exchange(LOCAL_HOST + port + "/tours/" + TOUR_ID,
+                        HttpMethod.PUT,
+                        new HttpEntity<>(buildTourPatchDto(TOUR_TITLE)),
+                        Tour.class);
 
         assertThat(response.getStatusCodeValue()).isEqualTo(OK.value());
         assertThat(response.getBody().getTitle()).isEqualTo(TOUR_TITLE);
@@ -109,14 +94,14 @@ public class TourControllerIT extends AbstractRESTfulDemoIT {
     @Sql
     @Test
     public void shouldReturn200_whenUpdateTourSome_givenValidTour() {
-        TourPatchDto tourPatchDto = TourPatchDto.builder()
-                .title(NON_EXISTING_TOUR_TITLE)
-                .price(TOUR_PRICE)
-                .build();
-
-        HttpEntity<TourPatchDto> entity = new HttpEntity<>(tourPatchDto);
         ResponseEntity<Tour> response = restTemplate
-                .exchange(LOCAL_HOST + port + "/tours/" + TOUR_ID, HttpMethod.PUT, entity, Tour.class);
+                .exchange(LOCAL_HOST + port + "/tours/" + TOUR_ID,
+                        HttpMethod.PUT,
+                        new HttpEntity<>(TourPatchDto.builder()
+                                .title(NON_EXISTING_TOUR_TITLE)
+                                .price(TOUR_PRICE)
+                                .build()),
+                        Tour.class);
 
         assertThat(response.getStatusCodeValue()).isEqualTo(OK.value());
         assertThat(response.getBody().getTitle()).isEqualTo(NON_EXISTING_TOUR_TITLE);
@@ -126,16 +111,11 @@ public class TourControllerIT extends AbstractRESTfulDemoIT {
     @Sql
     @Test
     public void shouldReturn400_whenUpdateTour_givenTourWithIdDoesntExist() {
-        TourPatchDto tourPatchDto = TourPatchDto.builder()
-                .tourPackageCode(TOUR_PACKAGE_CODE)
-                .title(NON_EXISTING_TOUR_TITLE)
-                .duration(TOUR_DURATION)
-                .price(TOUR_PRICE)
-                .build();
-
-        HttpEntity<TourPatchDto> entity = new HttpEntity<>(tourPatchDto);
         ResponseEntity<Tour> response = restTemplate
-                .exchange(LOCAL_HOST + port + "/tours/" + NON_EXISTING_TOUR_ID, HttpMethod.PUT, entity, Tour.class);
+                .exchange(LOCAL_HOST + port + "/tours/" + NON_EXISTING_TOUR_ID,
+                        HttpMethod.PUT,
+                        new HttpEntity<>(buildTourPatchDto(NON_EXISTING_TOUR_TITLE)),
+                        Tour.class);
 
         assertThat(response.getStatusCodeValue()).isEqualTo(BAD_REQUEST.value());
     }
@@ -143,13 +123,13 @@ public class TourControllerIT extends AbstractRESTfulDemoIT {
     @Sql
     @Test
     public void shouldReturn400_whenUpdateTour_givenAnotherTourWithNewNameExists() {
-        TourPatchDto tourPatchDto = TourPatchDto.builder()
-                .title(TOUR_TITLE)
-                .build();
-
-        HttpEntity<TourPatchDto> entity = new HttpEntity<>(tourPatchDto);
         ResponseEntity<Tour> response = restTemplate
-                .exchange(LOCAL_HOST + port + "/tours/" + TOUR_ID, HttpMethod.PUT, entity, Tour.class);
+                .exchange(LOCAL_HOST + port + "/tours/" + TOUR_ID,
+                        HttpMethod.PUT,
+                        new HttpEntity<>(TourPatchDto.builder()
+                                .title(TOUR_TITLE)
+                                .build()),
+                        Tour.class);
 
         assertThat(response.getStatusCodeValue()).isEqualTo(BAD_REQUEST.value());
     }
@@ -157,13 +137,13 @@ public class TourControllerIT extends AbstractRESTfulDemoIT {
     @Sql
     @Test
     public void shouldReturn400_whenUpdateTour_givenTourWithNameExistsWithinNewTourPackage() {
-        TourPatchDto tourPatchDto = TourPatchDto.builder()
-                .tourPackageCode(TOUR_PACKAGE_CODE)
-                .build();
-
-        HttpEntity<TourPatchDto> entity = new HttpEntity<>(tourPatchDto);
         ResponseEntity<Tour> response = restTemplate
-                .exchange(LOCAL_HOST + port + "/tours/" + TOUR_ID, HttpMethod.PUT, entity, Tour.class);
+                .exchange(LOCAL_HOST + port + "/tours/" + TOUR_ID,
+                        HttpMethod.PUT,
+                        new HttpEntity<>(TourPatchDto.builder()
+                                .tourPackageCode(TOUR_PACKAGE_CODE)
+                                .build()),
+                        Tour.class);
 
         assertThat(response.getStatusCodeValue()).isEqualTo(BAD_REQUEST.value());
     }
@@ -192,7 +172,10 @@ public class TourControllerIT extends AbstractRESTfulDemoIT {
     @Test
     public void shouldReturn400_whenGetTourById_givenTourDoesntExist() {
         ResponseEntity<Tour> response = restTemplate
-                .exchange(LOCAL_HOST + port + "/tours/" + NON_EXISTING_TOUR_ID, HttpMethod.GET, null, Tour.class);
+                .exchange(LOCAL_HOST + port + "/tours/" + NON_EXISTING_TOUR_ID,
+                        HttpMethod.GET,
+                        null,
+                        Tour.class);
 
         assertThat(response.getStatusCodeValue()).isEqualTo(BAD_REQUEST.value());
     }
@@ -211,7 +194,10 @@ public class TourControllerIT extends AbstractRESTfulDemoIT {
     @Test
     public void shouldReturn400_whenGetToursByLocation_givenLocationDoesntExist() {
         ResponseEntity<String> response = restTemplate
-                .exchange(LOCAL_HOST + port + "/tours/byLocation/" + NON_EXISTING_TOUR_LOCATION, HttpMethod.GET, null, String.class);
+                .exchange(LOCAL_HOST + port + "/tours/byLocation/" + NON_EXISTING_TOUR_LOCATION,
+                        HttpMethod.GET,
+                        null,
+                        String.class);
 
         assertThat(response.getStatusCodeValue()).isEqualTo(BAD_REQUEST.value());
     }
@@ -238,8 +224,29 @@ public class TourControllerIT extends AbstractRESTfulDemoIT {
     @Test
     public void shouldReturn400_whenDeleteTour_givenTourExistsAndTourHasBookings() {
         ResponseEntity<Tour> response = restTemplate
-                .exchange(LOCAL_HOST + port + "/tours/" + TOUR_ID, HttpMethod.DELETE, null, Tour.class);
+                .exchange(LOCAL_HOST + port + "/tours/" + TOUR_ID,
+                        HttpMethod.DELETE,
+                        null,
+                        Tour.class);
 
         assertThat(response.getStatusCodeValue()).isEqualTo(BAD_REQUEST.value());
+    }
+
+    private TourDto buildTourDto(String tourTitle) {
+        return TourDto.builder()
+                .tourPackageCode(TOUR_PACKAGE_CODE)
+                .title(tourTitle)
+                .duration(TOUR_DURATION)
+                .price(TOUR_PRICE)
+                .build();
+    }
+
+    private TourPatchDto buildTourPatchDto(String tourTitle) {
+        return TourPatchDto.builder()
+                .tourPackageCode(TOUR_PACKAGE_CODE)
+                .title(tourTitle)
+                .duration(TOUR_DURATION)
+                .price(TOUR_PRICE)
+                .build();
     }
 }
