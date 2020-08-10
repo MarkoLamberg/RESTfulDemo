@@ -11,7 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.http.*;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
@@ -150,6 +152,22 @@ public class TourControllerIT extends AbstractRESTfulDemoIT {
 
     @Sql
     @Test
+    public void shouldReturn200_whenUpdateTour_givenTourNameAndTourPackageHasNotChanged() {
+        ResponseEntity<Tour> response = restTemplate
+                .exchange(LOCAL_HOST + port + "/tours/" + TOUR_ID,
+                        HttpMethod.PUT,
+                        new HttpEntity<>(TourPatchDto.builder()
+                                .tourPackageCode(TOUR_PACKAGE_CODE)
+                                .price(TOUR_PRICE)
+                                .build()),
+                        Tour.class);
+
+        assertThat(response.getStatusCodeValue()).isEqualTo(OK.value());
+        assertThat(response.getBody().getPrice()).isEqualTo(TOUR_PRICE);
+    }
+
+    @Sql
+    @Test
     public void shouldReturnFourTours_whenGetAllTours_givenToursExist() {
         Tour[] tours = restTemplate
                 .getForEntity(LOCAL_HOST + port + "/tours", Tour[].class)
@@ -225,6 +243,18 @@ public class TourControllerIT extends AbstractRESTfulDemoIT {
     public void shouldReturn400_whenDeleteTour_givenTourExistsAndTourHasBookings() {
         ResponseEntity<Tour> response = restTemplate
                 .exchange(LOCAL_HOST + port + "/tours/" + TOUR_ID,
+                        HttpMethod.DELETE,
+                        null,
+                        Tour.class);
+
+        assertThat(response.getStatusCodeValue()).isEqualTo(BAD_REQUEST.value());
+    }
+
+    @Sql
+    @Test
+    public void shouldReturn400_whenDeleteTour_givenTourDoesntExist() {
+        ResponseEntity<Tour> response = restTemplate
+                .exchange(LOCAL_HOST + port + "/tours/" + NON_EXISTING_TOUR_ID,
                         HttpMethod.DELETE,
                         null,
                         Tour.class);

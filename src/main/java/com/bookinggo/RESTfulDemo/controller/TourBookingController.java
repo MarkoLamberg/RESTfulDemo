@@ -1,6 +1,8 @@
 package com.bookinggo.RESTfulDemo.controller;
 
-import com.bookinggo.RESTfulDemo.dto.*;
+import com.bookinggo.RESTfulDemo.dto.BookingDto;
+import com.bookinggo.RESTfulDemo.dto.BookingPatchDto;
+import com.bookinggo.RESTfulDemo.dto.ExpandedBookingDto;
 import com.bookinggo.RESTfulDemo.entity.Tour;
 import com.bookinggo.RESTfulDemo.entity.TourBooking;
 import com.bookinggo.RESTfulDemo.service.TourBookingService;
@@ -16,7 +18,9 @@ import javax.validation.Valid;
 import java.net.URI;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static com.bookinggo.RESTfulDemo.util.RestfulDemoUtil.badRequestResponse;
@@ -51,8 +55,6 @@ public class TourBookingController {
                         .created(URI.create("/tours/" + tourId + "/bookings"))
                         .body(toDto(createdBooking.get()));
             }
-
-            return badRequestResponse("Can't create booking. Customer doesn't exist. Provide correct Customer Id.");
         }
 
         return badRequestResponse("Can't create booking. Tour doesn't exist. Provide correct Tour Id.");
@@ -141,8 +143,6 @@ public class TourBookingController {
                         .ok()
                         .body(listOfExpandedDtos(bookings.get()));
             }
-
-            return badRequestResponse("Can't delete bookings. Customer doesn't exist. Provide correct Customer Id.");
         }
 
         return badRequestResponse("Can't delete bookings. Tour doesn't exist. Provide correct Tour Id.");

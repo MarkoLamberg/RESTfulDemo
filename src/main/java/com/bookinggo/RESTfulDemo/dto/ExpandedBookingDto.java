@@ -1,8 +1,11 @@
 package com.bookinggo.RESTfulDemo.dto;
 
-import lombok.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
 
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
@@ -12,11 +15,4 @@ public class ExpandedBookingDto extends BookingDto {
     @NotNull
     @Positive
     private Integer tourId;
-
-    @Builder(builderMethodName = "childBuilder")
-    public ExpandedBookingDto(@Size(max = 255) String pickupDateTime, @Size(max = 255) String pickupLocation, @NotNull Integer customerId,
-                              @NotNull @Min(1) Integer participants, String totalPrice, @NotNull Integer tourId) {
-        super(pickupDateTime, pickupLocation, customerId, participants, totalPrice);
-        this.tourId = tourId;
-    }
 }

@@ -61,8 +61,6 @@ public class CustomerController {
                             .ok()
                             .body(response.get());
                 }
-
-                return badRequestResponse("Can't update customer.");
             }
         }
 

@@ -40,13 +40,9 @@ public class TourController {
 
         Optional<Tour> tour = tourService.createTour(tourDto.getTourPackageCode(), tourDto.getTitle(), tourDto.getDuration(), tourDto.getPrice());
 
-        if (tour.isPresent()) {
-            return ResponseEntity
-                    .created(URI.create("/tours"))
-                    .body(tour.get());
-        }
-
-        return badRequestResponse("Can't create tour. Tour package doesn't exist. Provide correct Tour Package Id.");
+        return ResponseEntity
+                .created(URI.create("/tours"))
+                .body(tour.get());
     }
 
     @PutMapping("/{tourId}")
@@ -67,8 +63,6 @@ public class TourController {
                             .ok()
                             .body(response.get());
                 }
-
-                return badRequestResponse("Can't update tour. The tour package doesn't exist. Provide correct Tour Package Id.");
             }
         }
 

@@ -10,7 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.http.*;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.jdbc.Sql;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -21,6 +23,8 @@ import static org.springframework.http.HttpStatus.*;
 public class TourBookingControllerIT extends AbstractRESTfulDemoIT {
 
     private static final int CUSTOMER_ID = 4;
+
+    private static final int NON_EXISTING_CUSTOMER_ID = 123;
 
     private static final int TOUR_ID = 1;
 
@@ -217,6 +221,14 @@ public class TourBookingControllerIT extends AbstractRESTfulDemoIT {
                 .getBody();
 
         assertThat(tourBookingsAfter.length).isEqualTo(1);
+    }
+
+    @Sql
+    @Test
+    public void shouldReturn400_whenDeleteAllBookingsForCustomer_givenNoCustomerExists() {
+        ResponseEntity<?> response = restTemplate.exchange(LOCAL_HOST + port + "/tours/bookings/" + NON_EXISTING_CUSTOMER_ID,
+                HttpMethod.DELETE, null, String.class);
+        assertThat(response.getStatusCodeValue()).isEqualTo(BAD_REQUEST.value());
     }
 
     @Sql

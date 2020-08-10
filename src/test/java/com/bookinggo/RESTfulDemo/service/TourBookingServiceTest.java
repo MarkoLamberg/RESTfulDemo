@@ -1,9 +1,15 @@
 package com.bookinggo.RESTfulDemo.service;
 
-import com.bookinggo.RESTfulDemo.entity.*;
-import com.bookinggo.RESTfulDemo.repository.*;
+import com.bookinggo.RESTfulDemo.entity.Customer;
+import com.bookinggo.RESTfulDemo.entity.Tour;
+import com.bookinggo.RESTfulDemo.entity.TourBooking;
+import com.bookinggo.RESTfulDemo.repository.CustomerRepository;
+import com.bookinggo.RESTfulDemo.repository.TourBookingRepository;
+import com.bookinggo.RESTfulDemo.repository.TourRepository;
+import org.junit.Rule;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.rules.ExpectedException;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -49,12 +55,29 @@ public class TourBookingServiceTest {
     @Value("${retry.attempts}")
     private int retryAttempts;
 
+    @Rule
+    public ExpectedException expectedException = ExpectedException.none();
+
     @Test
     public void shouldNotCreateBooking_whenCreateBooking_givenTourIdDoesNotExist() throws SQLException {
+        expectedException.expect(SQLException.class);
+        expectedException.expectMessage("createBooking - failed - tour doesn't exist.");
         tourBookingService.createBooking(TOUR_ID, CUSTOMER_ID, PICKUP_DATE_TIME, PICKUP_LOCATION, PARTICIPANTS);
 
         verify(tourRepositoryMock, times(retryAttempts)).findById(TOUR_ID);
         verify(tourRepositoryMock, times(0)).save(any());
+    }
+
+    @Test
+    public void shouldNotCreateBooking_whenCreateBooking_givenCustomerDoesNotExist() throws SQLException {
+        when(tourRepositoryMock.findById(TOUR_ID)).thenReturn(Optional.of(buildTour()));
+
+        Optional<TourBooking> booking = tourBookingService.createBooking(TOUR_ID, CUSTOMER_ID, PICKUP_DATE_TIME, PICKUP_LOCATION, PARTICIPANTS);
+
+        verify(tourRepositoryMock, times(1)).findById(TOUR_ID);
+        verify(customerRepositoryMock, times(1)).findById(CUSTOMER_ID);
+        verify(tourBookingRepositoryMock, times(0)).save(any());
+        assertThat(booking).isEmpty();
     }
 
     @Test
