@@ -37,7 +37,7 @@ public class CustomerServiceTest {
     public void shouldNotUpdateCustomer_whenUpdateCustomer_givenCustomerWithCustomerIdNonExisting() {
         Optional<Customer> customer = customerService.updateCustomer(CUSTOMER_ID, CUSTOMER_TITLE, CUSTOMER_NAME);
 
-        verify(customerRepositoryMock, times(1)).findById(CUSTOMER_ID);
+        verify(customerRepositoryMock).findById(CUSTOMER_ID);
         assertThat(customer).isEmpty();
     }
 
@@ -49,10 +49,10 @@ public class CustomerServiceTest {
 
         Optional<Customer> newCustomer = customerService.updateCustomer(CUSTOMER_ID, CUSTOMER_TITLE, CUSTOMER_NAME);
 
-        verify(customerRepositoryMock, times(1)).findById(CUSTOMER_ID);
-        verify(customer, times(1)).setTitle(CUSTOMER_TITLE);
-        verify(customer, times(1)).setName(CUSTOMER_NAME);
-        verify(customerRepositoryMock, times(1)).saveAndFlush(any());
+        verify(customerRepositoryMock).findById(CUSTOMER_ID);
+        verify(customer).setTitle(CUSTOMER_TITLE);
+        verify(customer).setName(CUSTOMER_NAME);
+        verify(customerRepositoryMock).saveAndFlush(any());
         assertThat(newCustomer).isPresent();
     }
 
@@ -64,10 +64,10 @@ public class CustomerServiceTest {
 
         Optional<Customer> newCustomer = customerService.updateCustomer(CUSTOMER_ID, CUSTOMER_TITLE, null);
 
-        verify(customerRepositoryMock, times(1)).findById(CUSTOMER_ID);
-        verify(customer, times(1)).setTitle(CUSTOMER_TITLE);
+        verify(customerRepositoryMock).findById(CUSTOMER_ID);
+        verify(customer).setTitle(CUSTOMER_TITLE);
         verify(customer, times(0)).setName(CUSTOMER_NAME);
-        verify(customerRepositoryMock, times(1)).saveAndFlush(any());
+        verify(customerRepositoryMock).saveAndFlush(any());
         assertThat(newCustomer).isPresent();
     }
 
@@ -79,9 +79,9 @@ public class CustomerServiceTest {
 
         Optional<Customer> newCustomer = customerService.updateCustomer(CUSTOMER_ID, null, null);
 
-        verify(customerRepositoryMock, times(1)).findById(CUSTOMER_ID);
+        verify(customerRepositoryMock).findById(CUSTOMER_ID);
         verifyNoMoreInteractions(customer);
-        verify(customerRepositoryMock, times(1)).saveAndFlush(any());
+        verify(customerRepositoryMock).saveAndFlush(any());
         assertThat(newCustomer).isPresent();
     }
 
@@ -89,7 +89,7 @@ public class CustomerServiceTest {
     public void shouldCallFindAll_whenGetAllCustomers_givenNoCustomersExist() {
         List<Customer> customers = customerService.getAllCustomers();
 
-        verify(customerRepositoryMock, times(1)).findAll();
+        verify(customerRepositoryMock).findAll();
         assertThat(customers.size()).isEqualTo(0);
     }
 
@@ -99,7 +99,7 @@ public class CustomerServiceTest {
 
         List<Customer> customers = customerService.getAllCustomers();
 
-        verify(customerRepositoryMock, times(1)).findAll();
+        verify(customerRepositoryMock).findAll();
         assertThat(customers.size()).isEqualTo(1);
     }
 
@@ -107,7 +107,7 @@ public class CustomerServiceTest {
     public void shouldCallFindById_whenGetCustomerById_givenNoCustomersWithIdExists() {
         Optional<Customer> customer = customerService.getCustomerById(CUSTOMER_ID);
 
-        verify(customerRepositoryMock, times(1)).findById(CUSTOMER_ID);
+        verify(customerRepositoryMock).findById(CUSTOMER_ID);
         assertThat(customer).isEmpty();
     }
 
@@ -117,7 +117,7 @@ public class CustomerServiceTest {
 
         Optional<Customer> customer = customerService.getCustomerById(CUSTOMER_ID);
 
-        verify(customerRepositoryMock, times(1)).findById(CUSTOMER_ID);
+        verify(customerRepositoryMock).findById(CUSTOMER_ID);
         assertThat(customer).isPresent();
     }
 
@@ -125,7 +125,7 @@ public class CustomerServiceTest {
     public void shouldCallFindCustomerByName_whenGetCustomerByName_givenNoCustomersWithIdExists() {
         Optional<Customer> customer = customerService.getCustomerByName(CUSTOMER_NAME);
 
-        verify(customerRepositoryMock, times(1)).findCustomerByName(CUSTOMER_NAME);
+        verify(customerRepositoryMock).findCustomerByName(CUSTOMER_NAME);
         assertThat(customer).isEmpty();
     }
 
@@ -138,7 +138,7 @@ public class CustomerServiceTest {
 
         Optional<Customer> customer = customerService.getCustomerByName(CUSTOMER_NAME);
 
-        verify(customerRepositoryMock, times(1)).findCustomerByName(CUSTOMER_NAME);
+        verify(customerRepositoryMock).findCustomerByName(CUSTOMER_NAME);
         assertThat(customer).isPresent();
     }
 
@@ -146,7 +146,7 @@ public class CustomerServiceTest {
     public void shouldCallFindById_whenGetBookingsByCustomerId_givenNoCustomersWithIdExists() {
         List<TourBooking> bookings = customerService.getBookingsByCustomerId(CUSTOMER_ID);
 
-        verify(customerRepositoryMock, times(1)).findById(CUSTOMER_ID);
+        verify(customerRepositoryMock).findById(CUSTOMER_ID);
         assertThat(bookings).isNull();
     }
 
@@ -163,8 +163,8 @@ public class CustomerServiceTest {
 
         List<TourBooking> bookings = customerService.getBookingsByCustomerId(CUSTOMER_ID);
 
-        verify(customerRepositoryMock, times(1)).findById(CUSTOMER_ID);
-        verify(customer, times(1)).getBookings();
+        verify(customerRepositoryMock).findById(CUSTOMER_ID);
+        verify(customer).getBookings();
         assertThat(bookings.size()).isEqualTo(1);
     }
 
@@ -172,7 +172,7 @@ public class CustomerServiceTest {
     public void shouldNotDeleteAnyCustomer_whenDeleteCustomerById_givenNoCustomer() {
         Optional<Customer> customer = customerService.deleteCustomerById(CUSTOMER_ID);
 
-        verify(customerRepositoryMock, times(1)).findById(CUSTOMER_ID);
+        verify(customerRepositoryMock).findById(CUSTOMER_ID);
         verifyNoMoreInteractions(customerRepositoryMock);
         assertThat(customer).isEmpty();
     }
@@ -183,8 +183,8 @@ public class CustomerServiceTest {
 
         Optional<Customer> customer = customerService.deleteCustomerById(CUSTOMER_ID);
 
-        verify(customerRepositoryMock, times(1)).findById(CUSTOMER_ID);
-        verify(customerRepositoryMock, times(1)).deleteById(CUSTOMER_ID);
+        verify(customerRepositoryMock).findById(CUSTOMER_ID);
+        verify(customerRepositoryMock).deleteById(CUSTOMER_ID);
         assertThat(customer).isPresent();
     }
 
