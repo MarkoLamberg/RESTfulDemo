@@ -10,13 +10,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
-
-import static com.bookinggo.RESTfulDemo.util.RestfulDemoUtil.badRequestResponse;
 
 @RestController
 @RequestMapping("/customers")
@@ -33,7 +32,7 @@ public class CustomerController {
         final Optional<Customer> customer = customerService.getCustomerByName(customerDto.getName());
 
         if (customer.isPresent()) {
-            return badRequestResponse("Can't create customer. Customer with that name already exists.");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Can't create customer. Customer with that name already exists.");
         }
 
         final Customer createdCustomer = customerService.createCustomer(customerDto.getTitle(), customerDto.getName());
@@ -52,7 +51,7 @@ public class CustomerController {
             final Optional<Customer> customerWithNewName = getCustomerWithNewName(customerPatchDto, customer);
 
             if (customerWithNewName.isPresent()) {
-                return badRequestResponse("Can't change the customer name to match with other existing customer.");
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Can't change the customer name to match with other existing customer.");
             } else {
                 final Optional<Customer> response = customerService.updateCustomer(customerId, customerPatchDto.getTitle(), customerPatchDto.getName());
 
@@ -64,7 +63,7 @@ public class CustomerController {
             }
         }
 
-        return badRequestResponse("Can't update customer. Customer doesn't exist. Provide correct Customer Id.");
+        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Can't update customer. Customer doesn't exist. Provide correct Customer Id.");
     }
 
     private Optional<Customer> getCustomerWithNewName(@RequestBody @Valid CustomerPatchDto customerPatchDto, Optional<Customer> customer) {
@@ -89,7 +88,7 @@ public class CustomerController {
                     .body(customer.get());
         }
 
-        return badRequestResponse("Can't get customer by id. Customer doesn't exist. Provide correct Customer Id.");
+        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Can't get customer by id. Customer doesn't exist. Provide correct Customer Id.");
     }
 
     @GetMapping("/{customerId}/bookings")
@@ -105,7 +104,7 @@ public class CustomerController {
                     .body(bookings);
         }
 
-        return badRequestResponse("Can't get customer's bookings by id. Customer doesn't exist. Provide correct Customer Id.");
+        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Can't get customer's bookings by id. Customer doesn't exist. Provide correct Customer Id.");
     }
 
     @DeleteMapping("/{customerId}")
@@ -121,6 +120,6 @@ public class CustomerController {
                     .body(deletedCustomer.get());
         }
 
-        return badRequestResponse("Can't delete customer. Customer doesn't exist. Provide correct Customer Id.");
+        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Can't delete customer. Customer doesn't exist. Provide correct Customer Id.");
     }
 }

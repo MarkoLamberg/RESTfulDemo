@@ -10,13 +10,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
-
-import static com.bookinggo.RESTfulDemo.util.RestfulDemoUtil.badRequestResponse;
 
 @RestController
 @RequestMapping("/tours")
@@ -35,7 +34,7 @@ public class TourController {
         final Optional<Tour> existingTour = tourService.getTourByTourPackageCodeAndTitle(tourDto.getTourPackageCode(), tourDto.getTitle());
 
         if (existingTour.isPresent()) {
-            return badRequestResponse("Can't create tour. Tour with that Tour Package Code and Tour Title already exists.");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Can't create tour. Tour with that Tour Package Code and Tour Title already exists.");
         }
 
         final Optional<Tour> tour = tourService.createTour(tourDto.getTourPackageCode(), tourDto.getTitle(), tourDto.getDuration(), tourDto.getPrice());
@@ -54,7 +53,7 @@ public class TourController {
             final Optional<Tour> tourWithNewTitleOrTourPackage = getTourWithNewTitleOrTourPackage(tourPatchDto, tour);
 
             if (tourWithNewTitleOrTourPackage.isPresent()) {
-                return badRequestResponse("Can't update tour. Can't change the tour name to match with other existing tour.");
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Can't update tour. Can't change the tour name to match with other existing tour.");
             } else {
                 final Optional<Tour> response = tourService.updateTour(tourId, tourPatchDto.getTourPackageCode(), tourPatchDto.getTitle(), tourPatchDto.getDuration(), tourPatchDto.getPrice());
 
@@ -66,7 +65,7 @@ public class TourController {
             }
         }
 
-        return badRequestResponse("Can't update tour. The tour doesn't exist. Provide correct Tour Id.");
+        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Can't update tour. The tour doesn't exist. Provide correct Tour Id.");
     }
 
     private Optional<Tour> getTourWithNewTitleOrTourPackage(@RequestBody @Valid TourPatchDto tourPatchDto, Optional<Tour> tour) {
@@ -97,7 +96,7 @@ public class TourController {
                     .body(tour.get());
         }
 
-        return badRequestResponse("Can't get tour by id. Tour doesn't exist. Provide correct Tour Id.");
+        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Can't get tour by id. Tour doesn't exist. Provide correct Tour Id.");
     }
 
     @GetMapping(path = "/byLocation/{tourLocation}")
@@ -111,7 +110,7 @@ public class TourController {
                     .body(tours);
         }
 
-        return badRequestResponse("Can't get tours by location. Tour location doesn't exist. Provide correct Tour Location.");
+        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Can't get tours by location. Tour location doesn't exist. Provide correct Tour Location.");
     }
 
     @DeleteMapping("/{tourId}")
@@ -122,7 +121,7 @@ public class TourController {
         if (tour.isPresent()) {
 
             if (tourBookingService.getBookingsByTourId(tourId).size() > 0) {
-                return badRequestResponse("Can't delete tour that has bookings.");
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Can't delete tour that has bookings.");
             }
 
             final Optional<Tour> deletedTour = tourService.deleteTourById(tourId);
@@ -132,6 +131,6 @@ public class TourController {
                     .body(deletedTour.get());
         }
 
-        return badRequestResponse("Can't delete tour. Tour doesn't exist. Provide correct Tour Id.");
+        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Can't delete tour. Tour doesn't exist. Provide correct Tour Id.");
     }
 }

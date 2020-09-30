@@ -13,6 +13,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
 import java.net.URI;
@@ -23,7 +24,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static com.bookinggo.RESTfulDemo.util.RestfulDemoUtil.badRequestResponse;
 import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 
 @RestController
@@ -57,7 +57,7 @@ public class TourBookingController {
             }
         }
 
-        return badRequestResponse("Can't create booking. Tour doesn't exist. Provide correct Tour Id.");
+        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Can't create booking. Tour doesn't exist. Provide correct Tour Id.");
     }
 
     @GetMapping("/{tourId}/bookings")
@@ -76,7 +76,7 @@ public class TourBookingController {
                             .collect(Collectors.toList()));
         }
 
-        return badRequestResponse("Can't get bookings for tour. Tour doesn't exist. Provide correct Tour Id.");
+        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Can't get bookings for tour. Tour doesn't exist. Provide correct Tour Id.");
     }
 
     @GetMapping("/bookings")
@@ -108,10 +108,10 @@ public class TourBookingController {
                         .body(toDto(response.get()));
             }
 
-            return badRequestResponse("Can't update booking. No bookings for this customer id or more than one bookings for this customer id.");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Can't update booking. No bookings for this customer id or more than one bookings for this customer id.");
         }
 
-        return badRequestResponse("Can't update booking. Tour doesn't exist. Provide correct Tour Id.");
+        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Can't update booking. Tour doesn't exist. Provide correct Tour Id.");
     }
 
     @DeleteMapping("/{tourId}/bookings")
@@ -127,7 +127,7 @@ public class TourBookingController {
                     .body(listOfDtos(bookings));
         }
 
-        return badRequestResponse("Can't delete bookings. Tour doesn't exist. Provide correct Tour Id.");
+        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Can't delete bookings. Tour doesn't exist. Provide correct Tour Id.");
     }
 
     @DeleteMapping("/{tourId}/bookings/{customerId}")
@@ -145,7 +145,7 @@ public class TourBookingController {
             }
         }
 
-        return badRequestResponse("Can't delete bookings. Tour doesn't exist. Provide correct Tour Id.");
+        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Can't delete bookings. Tour doesn't exist. Provide correct Tour Id.");
     }
 
     @DeleteMapping("/bookings/{customerId}")
@@ -159,7 +159,7 @@ public class TourBookingController {
                     .body(listOfExpandedDtos(bookings.get()));
         }
 
-        return badRequestResponse("Can't delete customer bookings. Customer doesn't exist. Provide correct Customer Id.");
+        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Can't delete customer bookings. Customer doesn't exist. Provide correct Customer Id.");
     }
 
     @DeleteMapping("/bookings")
