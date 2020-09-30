@@ -1,6 +1,9 @@
 package com.bookinggo.RESTfulDemo.dto;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.Size;
@@ -23,4 +26,9 @@ public class TourPatchDto {
     @Min(1)
     private Integer price;
 
+    @Override
+    public String toString() {
+        return String.format("TourPatchDto: %s, %s, %s, %d",
+                tourPackageCode, title, duration, price);
+    }
 }

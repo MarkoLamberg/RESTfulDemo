@@ -1,8 +1,13 @@
 package com.bookinggo.RESTfulDemo.dto;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.Size;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -24,4 +29,10 @@ public class BookingPatchDto {
     private Integer participants;
 
     private String totalPrice;
+
+    @Override
+    public String toString() {
+        return String.format("BookingPatchDto: %s, %s, %d, %d, %s",
+                pickupDateTime, pickupLocation, customerId, participants, totalPrice);
+    }
 }

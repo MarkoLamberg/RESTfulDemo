@@ -41,13 +41,13 @@ public class TourBookingController {
     @PostMapping("/{tourId}/bookings")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<?> createTourBooking(@PathVariable(value = "tourId") int tourId, @Valid @RequestBody BookingDto bookingDto) throws SQLException {
-        log.info("POST /tours/{}/bookings", tourId);
-        Optional<Tour> tour = tourService.getTourById(tourId);
+        log.info("POST /tours/{}/bookings: {}", tourId, bookingDto.toString());
+        final Optional<Tour> tour = tourService.getTourById(tourId);
 
         if (tour.isPresent()) {
-            LocalDateTime pickupDateTime = LocalDateTime.parse(bookingDto.getPickupDateTime(), ISO_LOCAL_DATE_TIME);
+            final LocalDateTime pickupDateTime = LocalDateTime.parse(bookingDto.getPickupDateTime(), ISO_LOCAL_DATE_TIME);
 
-            Optional<TourBooking> createdBooking = tourBookingService.createBooking(tourId, bookingDto.getCustomerId(), pickupDateTime,
+            final Optional<TourBooking> createdBooking = tourBookingService.createBooking(tourId, bookingDto.getCustomerId(), pickupDateTime,
                     bookingDto.getPickupLocation(), bookingDto.getParticipants());
 
             if (createdBooking.isPresent()) {
@@ -63,10 +63,10 @@ public class TourBookingController {
     @GetMapping("/{tourId}/bookings")
     public ResponseEntity<?> getAllBookingsForTour(@PathVariable(value = "tourId") int tourId) {
         log.info("GET /tours/{}/bookings", tourId);
-        Optional<Tour> tour = tourService.getTourById(tourId);
+        final Optional<Tour> tour = tourService.getTourById(tourId);
 
         if (tour.isPresent()) {
-            List<TourBooking> tourBookings = tourBookingService.getBookingsByTourId(tourId);
+            final List<TourBooking> tourBookings = tourBookingService.getBookingsByTourId(tourId);
 
             return ResponseEntity
                     .ok()
@@ -82,15 +82,15 @@ public class TourBookingController {
     @GetMapping("/bookings")
     public List<ExpandedBookingDto> getAllBookings() {
         log.info("GET /tours/bookings");
-        List<TourBooking> tourBookings = tourBookingService.getAllBookings();
+        final List<TourBooking> tourBookings = tourBookingService.getAllBookings();
 
         return tourBookings.stream().map(tourBooking -> toExpandedDto(tourBooking)).collect(Collectors.toList());
     }
 
     @PutMapping("/{tourId}/bookings")
     public ResponseEntity<?> updateBooking(@PathVariable(value = "tourId") int tourId, @Valid @RequestBody BookingPatchDto bookingPatchDto) {
-        log.info("PUT /tours/{}/bookings", tourId);
-        Optional<Tour> tour = tourService.getTourById(tourId);
+        log.info("PUT /tours/{}/bookings: {}", tourId, bookingPatchDto.toString());
+        final Optional<Tour> tour = tourService.getTourById(tourId);
 
         if (tour.isPresent()) {
             LocalDateTime pickupDateTime = null;
@@ -99,7 +99,7 @@ public class TourBookingController {
                 pickupDateTime = LocalDateTime.parse(bookingPatchDto.getPickupDateTime(), ISO_LOCAL_DATE_TIME);
             }
 
-            Optional<TourBooking> response = tourBookingService.updateBooking(tourId, bookingPatchDto.getCustomerId(),
+            final Optional<TourBooking> response = tourBookingService.updateBooking(tourId, bookingPatchDto.getCustomerId(),
                     pickupDateTime, bookingPatchDto.getPickupLocation(), bookingPatchDto.getParticipants());
 
             if (response.isPresent()) {
@@ -117,10 +117,10 @@ public class TourBookingController {
     @DeleteMapping("/{tourId}/bookings")
     public ResponseEntity<?> deleteAllBookingsForTour(@PathVariable(value = "tourId") int tourId) {
         log.info("DELETE /tours/{}/bookings", tourId);
-        Optional<Tour> tour = tourService.getTourById(tourId);
+        final Optional<Tour> tour = tourService.getTourById(tourId);
 
         if (tour.isPresent()) {
-            List<TourBooking> bookings = tourBookingService.deleteAllBookingsWithTourId(tourId);
+            final List<TourBooking> bookings = tourBookingService.deleteAllBookingsWithTourId(tourId);
 
             return ResponseEntity
                     .ok()
@@ -133,10 +133,10 @@ public class TourBookingController {
     @DeleteMapping("/{tourId}/bookings/{customerId}")
     public ResponseEntity<?> deleteAllBookingsForTourAndCustomer(@PathVariable(value = "tourId") int tourId, @PathVariable(value = "customerId") int customerId) {
         log.info("DELETE /tours/{}/bookings/{}", tourId, customerId);
-        Optional<Tour> tour = tourService.getTourById(tourId);
+        final Optional<Tour> tour = tourService.getTourById(tourId);
 
         if (tour.isPresent()) {
-            Optional<List<TourBooking>> bookings = tourBookingService.deleteAllBookingsWithTourIdAndCustomerId(tourId, customerId);
+            final Optional<List<TourBooking>> bookings = tourBookingService.deleteAllBookingsWithTourIdAndCustomerId(tourId, customerId);
 
             if (bookings.isPresent()) {
                 return ResponseEntity
@@ -151,8 +151,7 @@ public class TourBookingController {
     @DeleteMapping("/bookings/{customerId}")
     public ResponseEntity<?> deleteAllBookingsForCustomer(@PathVariable(value = "customerId") int customerId) {
         log.info("DELETE /tours/bookings/{}", customerId);
-
-        Optional<List<TourBooking>> bookings = tourBookingService.deleteAllBookingsWithCustomerId(customerId);
+        final Optional<List<TourBooking>> bookings = tourBookingService.deleteAllBookingsWithCustomerId(customerId);
 
         if (bookings.isPresent()) {
             return ResponseEntity
@@ -166,7 +165,7 @@ public class TourBookingController {
     @DeleteMapping("/bookings")
     public List<ExpandedBookingDto> deleteAllBookings() {
         log.info("DELETE /tours/bookings");
-        List<TourBooking> bookings = tourBookingService.deleteAllBookings();
+        final List<TourBooking> bookings = tourBookingService.deleteAllBookings();
 
         return listOfExpandedDtos(bookings);
     }
@@ -176,7 +175,7 @@ public class TourBookingController {
     }
 
     private List<BookingDto> listOfDtos(List<TourBooking> bookings) {
-        List<BookingDto> bookingDtos = new LinkedList<>();
+        final List<BookingDto> bookingDtos = new LinkedList<>();
         bookings.forEach(b -> bookingDtos.add(toDto(b)));
 
         return bookingDtos;
@@ -187,7 +186,7 @@ public class TourBookingController {
     }
 
     private List<ExpandedBookingDto> listOfExpandedDtos(List<TourBooking> bookings) {
-        List<ExpandedBookingDto> bookingDtos = new LinkedList<>();
+        final List<ExpandedBookingDto> bookingDtos = new LinkedList<>();
         bookings.forEach(b -> bookingDtos.add(toExpandedDto(b)));
 
         return bookingDtos;

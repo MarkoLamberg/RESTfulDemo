@@ -1,7 +1,10 @@
 package com.bookinggo.RESTfulDemo.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
@@ -39,7 +42,7 @@ public class TourBooking extends AbstractEntity {
     private Integer participants;
 
     public String getTotalPriceString() {
-        int total = getParticipants() * getTour().getPrice();
+        int total = participants * tour.getPrice();
 
         return "£" + total + ".00";
     }

@@ -1,6 +1,8 @@
 package com.bookinggo.RESTfulDemo.service;
 
-import com.bookinggo.RESTfulDemo.entity.*;
+import com.bookinggo.RESTfulDemo.entity.Customer;
+import com.bookinggo.RESTfulDemo.entity.Tour;
+import com.bookinggo.RESTfulDemo.entity.TourBooking;
 import com.bookinggo.RESTfulDemo.repository.CustomerRepository;
 import com.bookinggo.RESTfulDemo.repository.TourBookingRepository;
 import lombok.AllArgsConstructor;
@@ -72,7 +74,7 @@ public class TourBookingServiceImpl implements TourBookingService {
 
     @Override
     public Optional<TourBooking> updateBooking(int tourId, Integer customerId, LocalDateTime pickupDateTime, String pickupLocation, Integer participants) {
-        log.info("updateBooking - tourId: {}, customerId: {}, date: {}, location {}", tourId, customerId, pickupDateTime, pickupLocation);
+        log.info("updateBooking - tourId: {}, customerId: {}, date: {}, location {}, participants {}", tourId, customerId, pickupDateTime, pickupLocation, participants);
 
         if (customerRepository.findById(customerId).isPresent()) {
             List<TourBooking> bookings = tourBookingRepository.findByTourIdAndCustomerId(tourId, customerId);

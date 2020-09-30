@@ -3,6 +3,7 @@ package com.bookinggo.RESTfulDemo.controller;
 import com.bookinggo.RESTfulDemo.RestfulDemoApplication;
 import com.bookinggo.RESTfulDemo.dto.BookingDto;
 import com.bookinggo.RESTfulDemo.dto.BookingPatchDto;
+import com.bookinggo.RESTfulDemo.dto.ExpandedBookingDto;
 import com.bookinggo.RESTfulDemo.entity.TourBooking;
 import com.bookinggo.RESTfulDemo.service.AbstractRESTfulDemoIT;
 import org.junit.jupiter.api.Test;
@@ -93,8 +94,8 @@ public class TourBookingControllerIT extends AbstractRESTfulDemoIT {
     @Sql
     @Test
     public void shouldReturnThreeBookings_whenGetTourBookings_givenBookingsExist() {
-        TourBooking[] tourBookings = restTemplate
-                .getForEntity(LOCAL_HOST + port + "/tours/bookings", TourBooking[].class)
+        ExpandedBookingDto[] tourBookings = restTemplate
+                .getForEntity(LOCAL_HOST + port + "/tours/bookings", ExpandedBookingDto[].class)
                 .getBody();
 
         assertThat(tourBookings.length).isEqualTo(3);
@@ -240,8 +241,8 @@ public class TourBookingControllerIT extends AbstractRESTfulDemoIT {
 
         restTemplate.delete(LOCAL_HOST + port + "/tours/bookings");
 
-        TourBooking[] tourBookingsAfter = restTemplate
-                .getForEntity(LOCAL_HOST + port + "/tours/bookings", TourBooking[].class)
+        ExpandedBookingDto[] tourBookingsAfter = restTemplate
+                .getForEntity(LOCAL_HOST + port + "/tours/bookings", ExpandedBookingDto[].class)
                 .getBody();
 
         assertThat(tourBookingsAfter.length).isNotEqualTo(tourBookingsBefore.length);

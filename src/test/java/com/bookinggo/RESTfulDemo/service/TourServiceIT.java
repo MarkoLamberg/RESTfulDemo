@@ -2,12 +2,16 @@ package com.bookinggo.RESTfulDemo.service;
 
 import com.bookinggo.RESTfulDemo.entity.Tour;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -20,9 +24,15 @@ public class TourServiceIT extends AbstractRESTfulDemoIT {
 
     private static final String TOUR_TITLE = "London Tower Bridge";
 
+    private static final String ORIGINAL_TOUR_TITLE = "Arsenal Football Tour";
+
     private static final String TOUR_DURATION = "2.5 hours";
 
+    private static final String ORIGINAL_TOUR_DURATION = "3 hours";
+
     private static final int TOUR_PRICE = 150;
+
+    private static final int ORIGINAL_TOUR_PRICE = 50;
 
     private static final String TOUR_LOCATION = "paris";
 
@@ -64,6 +74,18 @@ public class TourServiceIT extends AbstractRESTfulDemoIT {
     }
 
     @Sql
+    @ParameterizedTest
+    @MethodSource("titleAndDurationAndPriceAndTourProvider")
+    public void parameterized_shouldUpdateTour_whenUpdateTour_givenValidTour(String title, String duration, Integer price, Tour updatedTour) {
+        tourService.updateTour(TOUR_ID, null, title, duration, price);
+
+        Optional<Tour> tourAfter = tourService.getTourById(TOUR_ID);
+        assertThat(tourAfter.get().getTitle()).isEqualTo(updatedTour.getTitle());
+        assertThat(tourAfter.get().getDuration()).isEqualTo(updatedTour.getDuration());
+        assertThat(tourAfter.get().getPrice()).isEqualTo(updatedTour.getPrice());
+    }
+
+    @Sql
     @Test
     public void shouldReturnFourTours_whenGetAllTours_givenToursExist() {
         List<Tour> tours = tourService.getAllTours();
@@ -101,5 +123,33 @@ public class TourServiceIT extends AbstractRESTfulDemoIT {
 
         Optional<Tour> tourAfter = tourService.getTourById(TOUR_ID);
         assertThat(tourAfter).isEmpty();
+    }
+
+    private static Stream<Arguments> titleAndDurationAndPriceAndTourProvider() {
+        return Stream.of(
+                Arguments.of(null, null, null,
+                        buildTour(ORIGINAL_TOUR_TITLE, ORIGINAL_TOUR_DURATION, ORIGINAL_TOUR_PRICE)),
+                Arguments.of(TOUR_TITLE, null, null,
+                        buildTour(TOUR_TITLE, ORIGINAL_TOUR_DURATION, ORIGINAL_TOUR_PRICE)),
+                Arguments.of(null, TOUR_DURATION, null,
+                        buildTour(ORIGINAL_TOUR_TITLE, TOUR_DURATION, ORIGINAL_TOUR_PRICE)),
+                Arguments.of(null, null, TOUR_PRICE,
+                        buildTour(ORIGINAL_TOUR_TITLE, ORIGINAL_TOUR_DURATION, TOUR_PRICE)),
+                Arguments.of(TOUR_TITLE, TOUR_DURATION, null,
+                        buildTour(TOUR_TITLE, TOUR_DURATION, ORIGINAL_TOUR_PRICE)),
+                Arguments.of(TOUR_TITLE, null, TOUR_PRICE,
+                        buildTour(TOUR_TITLE, ORIGINAL_TOUR_DURATION, TOUR_PRICE)),
+                Arguments.of(null, TOUR_DURATION, TOUR_PRICE,
+                        buildTour(ORIGINAL_TOUR_TITLE, TOUR_DURATION, TOUR_PRICE)),
+                Arguments.of(TOUR_TITLE, TOUR_DURATION, TOUR_PRICE,
+                        buildTour(TOUR_TITLE, TOUR_DURATION, TOUR_PRICE)));
+    }
+
+    static private Tour buildTour(String title, String duration, Integer price) {
+        return Tour.builder()
+                .title(title)
+                .duration(duration)
+                .price(price)
+                .build();
     }
 }

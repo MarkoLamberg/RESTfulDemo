@@ -29,14 +29,14 @@ public class CustomerController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<?> createCustomer(@Valid @RequestBody CustomerDto customerDto) {
-        log.info("POST /customers");
-        Optional<Customer> customer = customerService.getCustomerByName(customerDto.getName());
+        log.info("POST /customers: {}", customerDto.toString());
+        final Optional<Customer> customer = customerService.getCustomerByName(customerDto.getName());
 
         if (customer.isPresent()) {
             return badRequestResponse("Can't create customer. Customer with that name already exists.");
         }
 
-        Customer createdCustomer = customerService.createCustomer(customerDto.getTitle(), customerDto.getName());
+        final Customer createdCustomer = customerService.createCustomer(customerDto.getTitle(), customerDto.getName());
 
         return ResponseEntity
                 .created(URI.create("/customers"))
@@ -45,16 +45,16 @@ public class CustomerController {
 
     @PutMapping("/{customerId}")
     public ResponseEntity<?> updateCustomer(@PathVariable(value = "customerId") int customerId, @Valid @RequestBody CustomerPatchDto customerPatchDto) {
-        log.info("PUT /customers/{}", customerId);
-        Optional<Customer> customer = customerService.getCustomerById(customerId);
+        log.info("PUT /customers/{}, {}", customerId, customerPatchDto.toString());
+        final Optional<Customer> customer = customerService.getCustomerById(customerId);
 
         if (customer.isPresent()) {
-            Optional<Customer> customerWithNewName = getCustomerWithNewName(customerPatchDto, customer);
+            final Optional<Customer> customerWithNewName = getCustomerWithNewName(customerPatchDto, customer);
 
             if (customerWithNewName.isPresent()) {
                 return badRequestResponse("Can't change the customer name to match with other existing customer.");
             } else {
-                Optional<Customer> response = customerService.updateCustomer(customerId, customerPatchDto.getTitle(), customerPatchDto.getName());
+                final Optional<Customer> response = customerService.updateCustomer(customerId, customerPatchDto.getTitle(), customerPatchDto.getName());
 
                 if (response.isPresent()) {
                     return ResponseEntity
@@ -81,7 +81,7 @@ public class CustomerController {
     @GetMapping("/{customerId}")
     public ResponseEntity<?> getCustomersById(@PathVariable(value = "customerId") int customerId) {
         log.info("GET /customers/{}", customerId);
-        Optional<Customer> customer = customerService.getCustomerById(customerId);
+        final Optional<Customer> customer = customerService.getCustomerById(customerId);
 
         if (customer.isPresent()) {
             return ResponseEntity
@@ -95,10 +95,10 @@ public class CustomerController {
     @GetMapping("/{customerId}/bookings")
     public ResponseEntity<?> getCustomersBookingsById(@PathVariable(value = "customerId") int customerId) {
         log.info("GET /customers/{}/bookings", customerId);
-        Optional<Customer> customer = customerService.getCustomerById(customerId);
+        final Optional<Customer> customer = customerService.getCustomerById(customerId);
 
         if (customer.isPresent()) {
-            List<TourBooking> bookings = customerService.getBookingsByCustomerId(customerId);
+            final List<TourBooking> bookings = customerService.getBookingsByCustomerId(customerId);
 
             return ResponseEntity
                     .ok()
@@ -111,10 +111,10 @@ public class CustomerController {
     @DeleteMapping("/{customerId}")
     public ResponseEntity<?> deleteCustomer(@PathVariable(value = "customerId") int customerId) {
         log.info("DELETE /customers/{}", customerId);
-        Optional<Customer> customer = customerService.getCustomerById(customerId);
+        final Optional<Customer> customer = customerService.getCustomerById(customerId);
 
         if (customer.isPresent()) {
-            Optional<Customer> deletedCustomer = customerService.deleteCustomerById(customerId);
+            final Optional<Customer> deletedCustomer = customerService.deleteCustomerById(customerId);
 
             return ResponseEntity
                     .ok()

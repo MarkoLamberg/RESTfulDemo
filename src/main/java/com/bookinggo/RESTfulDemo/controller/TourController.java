@@ -31,14 +31,14 @@ public class TourController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<?> createTour(@Valid @RequestBody TourDto tourDto) {
-        log.info("POST /tours");
-        Optional<Tour> existingTour = tourService.getTourByTourPackageCodeAndTitle(tourDto.getTourPackageCode(), tourDto.getTitle());
+        log.info("POST /tours: {}", tourDto.toString());
+        final Optional<Tour> existingTour = tourService.getTourByTourPackageCodeAndTitle(tourDto.getTourPackageCode(), tourDto.getTitle());
 
         if (existingTour.isPresent()) {
             return badRequestResponse("Can't create tour. Tour with that Tour Package Code and Tour Title already exists.");
         }
 
-        Optional<Tour> tour = tourService.createTour(tourDto.getTourPackageCode(), tourDto.getTitle(), tourDto.getDuration(), tourDto.getPrice());
+        final Optional<Tour> tour = tourService.createTour(tourDto.getTourPackageCode(), tourDto.getTitle(), tourDto.getDuration(), tourDto.getPrice());
 
         return ResponseEntity
                 .created(URI.create("/tours"))
@@ -47,16 +47,16 @@ public class TourController {
 
     @PutMapping("/{tourId}")
     public ResponseEntity<?> updateTour(@PathVariable(value = "tourId") int tourId, @Valid @RequestBody TourPatchDto tourPatchDto) {
-        log.info("PUT /tours/{}", tourId);
-        Optional<Tour> tour = tourService.getTourById(tourId);
+        log.info("PUT /tours/{}: {}", tourId, tourPatchDto.toString());
+        final Optional<Tour> tour = tourService.getTourById(tourId);
 
         if (tour.isPresent()) {
-            Optional<Tour> tourWithNewTitleOrTourPackage = getTourWithNewTitleOrTourPackage(tourPatchDto, tour);
+            final Optional<Tour> tourWithNewTitleOrTourPackage = getTourWithNewTitleOrTourPackage(tourPatchDto, tour);
 
             if (tourWithNewTitleOrTourPackage.isPresent()) {
                 return badRequestResponse("Can't update tour. Can't change the tour name to match with other existing tour.");
             } else {
-                Optional<Tour> response = tourService.updateTour(tourId, tourPatchDto.getTourPackageCode(), tourPatchDto.getTitle(), tourPatchDto.getDuration(), tourPatchDto.getPrice());
+                final Optional<Tour> response = tourService.updateTour(tourId, tourPatchDto.getTourPackageCode(), tourPatchDto.getTitle(), tourPatchDto.getDuration(), tourPatchDto.getPrice());
 
                 if (response.isPresent()) {
                     return ResponseEntity
@@ -89,7 +89,7 @@ public class TourController {
     @GetMapping(path = "/{tourId}")
     public ResponseEntity<?> getTourById(@PathVariable(value = "tourId") int tourId) {
         log.info("GET /tours/{}", tourId);
-        Optional<Tour> tour = tourService.getTourById(tourId);
+        final Optional<Tour> tour = tourService.getTourById(tourId);
 
         if (tour.isPresent()) {
             return ResponseEntity
@@ -103,7 +103,7 @@ public class TourController {
     @GetMapping(path = "/byLocation/{tourLocation}")
     public ResponseEntity<?> getToursByLocation(@PathVariable(value = "tourLocation") String location) {
         log.info("GET /tours/byLocation/{}", location);
-        List<Tour> tours = tourService.getToursByLocation(location);
+        final List<Tour> tours = tourService.getToursByLocation(location);
 
         if (tours.size() > 0) {
             return ResponseEntity
@@ -117,7 +117,7 @@ public class TourController {
     @DeleteMapping("/{tourId}")
     public ResponseEntity<?> deleteTour(@PathVariable(value = "tourId") int tourId) {
         log.info("DELETE /tours/{}", tourId);
-        Optional<Tour> tour = tourService.getTourById(tourId);
+        final Optional<Tour> tour = tourService.getTourById(tourId);
 
         if (tour.isPresent()) {
 
@@ -125,7 +125,7 @@ public class TourController {
                 return badRequestResponse("Can't delete tour that has bookings.");
             }
 
-            Optional<Tour> deletedTour = tourService.deleteTourById(tourId);
+            final Optional<Tour> deletedTour = tourService.deleteTourById(tourId);
 
             return ResponseEntity
                     .ok()

@@ -1,8 +1,13 @@
 package com.bookinggo.RESTfulDemo.dto;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.*;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -24,5 +29,11 @@ public class TourDto {
 
     @Min(1)
     private Integer price;
+
+    @Override
+    public String toString() {
+        return String.format("TourDto: %s, %s, %s, %d",
+                tourPackageCode, title, duration, price);
+    }
 
 }

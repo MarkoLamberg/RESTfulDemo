@@ -1,6 +1,9 @@
 package com.bookinggo.RESTfulDemo.dto;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.Size;
 
@@ -15,4 +18,9 @@ public class CustomerPatchDto {
 
     @Size(max = 50)
     private String name;
+
+    @Override
+    public String toString() {
+        return String.format("CustomerPatchDto: %s, %s", title, name);
+    }
 }

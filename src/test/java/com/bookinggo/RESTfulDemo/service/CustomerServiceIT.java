@@ -3,12 +3,16 @@ package com.bookinggo.RESTfulDemo.service;
 import com.bookinggo.RESTfulDemo.entity.Customer;
 import com.bookinggo.RESTfulDemo.entity.TourBooking;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -19,7 +23,11 @@ public class CustomerServiceIT extends AbstractRESTfulDemoIT {
 
     private static final String CUSTOMER_TITLE = "Mr";
 
+    private static final String ORIGINAL_CUSTOMER_TITLE = "Mrs";
+
     private static final String CUSTOMER_NAME = "Marko Lamberg";
+
+    private static final String ORIGINAL_CUSTOMER_NAME = "Customer One";
 
     @Autowired
     private CustomerService customerService;
@@ -52,6 +60,17 @@ public class CustomerServiceIT extends AbstractRESTfulDemoIT {
         Optional<Customer> customerAfter = customerService.getCustomerById(CUSTOMER_ID);
         assertThat(customerAfter.get().getTitle()).isEqualTo(CUSTOMER_TITLE);
         assertThat(customerAfter.get().getName()).isEqualTo(CUSTOMER_NAME);
+    }
+
+    @Sql
+    @ParameterizedTest
+    @MethodSource("titleAndNameAndCustomerProvider")
+    public void parameterized_shouldUpdateCustomer_whenUpdateCustomer_givenValidCustomer(String customerTitle, String customerName, Customer updatedCustomer) {
+        customerService.updateCustomer(CUSTOMER_ID, customerTitle, customerName);
+
+        Optional<Customer> customerAfter = customerService.getCustomerById(CUSTOMER_ID);
+        assertThat(customerAfter.get().getTitle()).isEqualTo(updatedCustomer.getTitle());
+        assertThat(customerAfter.get().getName()).isEqualTo(updatedCustomer.getName());
     }
 
     @Sql
@@ -97,5 +116,24 @@ public class CustomerServiceIT extends AbstractRESTfulDemoIT {
 
         Optional<Customer> customerAfter = customerService.getCustomerById(CUSTOMER_ID);
         assertThat(customerAfter).isEmpty();
+    }
+
+    private static Stream<Arguments> titleAndNameAndCustomerProvider() {
+        return Stream.of(
+                Arguments.of(null, null,
+                        buildCustomer(ORIGINAL_CUSTOMER_TITLE, ORIGINAL_CUSTOMER_NAME)),
+                Arguments.of(CUSTOMER_TITLE, null,
+                        buildCustomer(CUSTOMER_TITLE, ORIGINAL_CUSTOMER_NAME)),
+                Arguments.of(null, CUSTOMER_NAME,
+                        buildCustomer(ORIGINAL_CUSTOMER_TITLE, CUSTOMER_NAME)),
+                Arguments.of(CUSTOMER_TITLE, CUSTOMER_NAME,
+                        buildCustomer(CUSTOMER_TITLE, CUSTOMER_NAME)));
+    }
+
+    static private Customer buildCustomer(String title, String name) {
+        return Customer.builder()
+                .title(title)
+                .name(name)
+                .build();
     }
 }
