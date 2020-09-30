@@ -30,14 +30,13 @@ public class TourBookingServiceImpl implements TourBookingService {
     @Override
     public Optional<TourBooking> createBooking(int tourId, Integer customerId, LocalDateTime pickupDateTime, String pickupLocation, Integer participants) throws SQLException {
         log.info("createBooking - tourId: {}, customerId: {}, date: {}, location {}, participants {}", tourId, customerId, pickupDateTime, pickupLocation, participants);
-
-        Optional<Tour> tour = tourService.getTourById(tourId);
+        final Optional<Tour> tour = tourService.getTourById(tourId);
 
         if (tour.isPresent()) {
-            Optional<Customer> customer = customerRepository.findById(customerId);
+            final Optional<Customer> customer = customerRepository.findById(customerId);
 
             if (customer.isPresent()) {
-                TourBooking tourBooking = TourBooking.builder()
+                final TourBooking tourBooking = TourBooking.builder()
                         .tour(tour.get())
                         .customer(customer.get())
                         .pickupDateTime(pickupDateTime)
@@ -77,7 +76,7 @@ public class TourBookingServiceImpl implements TourBookingService {
         log.info("updateBooking - tourId: {}, customerId: {}, date: {}, location {}, participants {}", tourId, customerId, pickupDateTime, pickupLocation, participants);
 
         if (customerRepository.findById(customerId).isPresent()) {
-            List<TourBooking> bookings = tourBookingRepository.findByTourIdAndCustomerId(tourId, customerId);
+            final List<TourBooking> bookings = tourBookingRepository.findByTourIdAndCustomerId(tourId, customerId);
 
             if (bookings.size() == 1) {
                 if (pickupDateTime != null) {
@@ -102,8 +101,7 @@ public class TourBookingServiceImpl implements TourBookingService {
     @Override
     public List<TourBooking> deleteAllBookingsWithTourId(int tourId) {
         log.info("deleteAllBookingsWithTourId - tourId: {}", tourId);
-
-        List<TourBooking> bookings = tourBookingRepository.findByTourId(tourId);
+        final List<TourBooking> bookings = tourBookingRepository.findByTourId(tourId);
 
         bookings.forEach(booking -> tourBookingRepository.delete(booking));
 
@@ -113,15 +111,14 @@ public class TourBookingServiceImpl implements TourBookingService {
     @Override
     public Optional<List<TourBooking>> deleteAllBookingsWithTourIdAndCustomerId(int tourId, Integer customerId) {
         log.info("deleteAllBookingsWithTourIdAndCustomerId - tourId: {}, customerId: {}", tourId, customerId);
-
-        List<TourBooking> bookings = tourBookingRepository.findByTourIdAndCustomerId(tourId, customerId);
+        final List<TourBooking> bookings = tourBookingRepository.findByTourIdAndCustomerId(tourId, customerId);
 
         bookings.forEach(booking -> {
             tourBookingRepository.delete(booking);
             tourBookingRepository.flush();
         });
 
-        Optional<Customer> customer = customerRepository.findById(customerId);
+        final Optional<Customer> customer = customerRepository.findById(customerId);
         if (customer.isPresent()) {
             return Optional.of(bookings);
         }
@@ -133,15 +130,14 @@ public class TourBookingServiceImpl implements TourBookingService {
     @Transactional
     public Optional<List<TourBooking>> deleteAllBookingsWithCustomerId(Integer customerId) {
         log.info("deleteAllBookingsWithCustomerId - tourId: {}", customerId);
-
-        List<TourBooking> bookings = tourBookingRepository.findByCustomerId(customerId);
+        final List<TourBooking> bookings = tourBookingRepository.findByCustomerId(customerId);
 
         for (TourBooking booking : bookings) {
             tourBookingRepository.delete(booking);
             tourBookingRepository.flush();
         }
 
-        Optional<Customer> customer = customerRepository.findById(customerId);
+        final Optional<Customer> customer = customerRepository.findById(customerId);
         if (customer.isPresent()) {
             return Optional.of(bookings);
         }
@@ -152,8 +148,7 @@ public class TourBookingServiceImpl implements TourBookingService {
     @Override
     public List<TourBooking> deleteAllBookings() {
         log.info("deleteAllBookings");
-
-        List<TourBooking> bookings = tourBookingRepository.findAll();
+        final List<TourBooking> bookings = tourBookingRepository.findAll();
 
         if (bookings.size() > 0) {
             tourBookingRepository.deleteAll();

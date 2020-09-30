@@ -23,7 +23,7 @@ public class CustomerServiceImpl implements CustomerService {
     public Customer createCustomer(String title, String name) {
         log.info("createCustomer - title: {}, name: {}", title, name);
 
-        Customer customer = Customer.builder()
+        final Customer customer = Customer.builder()
                 .title(title)
                 .name(name)
                 .build();
@@ -34,8 +34,7 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public Optional<Customer> updateCustomer(int customerId, String title, String name) {
         log.info("updateCustomer - customerId: {}, title: {}, name {}", customerId, title, name);
-
-        Optional<Customer> customer = customerRepository.findById(customerId);
+        final Optional<Customer> customer = customerRepository.findById(customerId);
 
         if (customer.isPresent()) {
             if (title != null) {
@@ -73,7 +72,7 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public List<TourBooking> getBookingsByCustomerId(int customerId) {
         log.info("getBookingsByCustomerId - customerId: {}", customerId);
-        Optional<Customer> customer = customerRepository.findById(customerId);
+        final Optional<Customer> customer = customerRepository.findById(customerId);
 
         if (customer.isPresent()) {
             return customer.get().getBookings();
@@ -85,8 +84,7 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public Optional<Customer> deleteCustomerById(int customerId) {
         log.info("deleteCustomerById - customerId: {}", customerId);
-
-        Optional<Customer> customer = customerRepository.findById(customerId);
+        final Optional<Customer> customer = customerRepository.findById(customerId);
 
         if (customer.isPresent()) {
             customerRepository.deleteById(customerId);

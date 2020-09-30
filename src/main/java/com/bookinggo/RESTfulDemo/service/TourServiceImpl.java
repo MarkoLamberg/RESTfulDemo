@@ -26,10 +26,10 @@ public class TourServiceImpl implements TourService {
     @Override
     public Optional<Tour> createTour(String tourPackageCode, String title, String duration, int price) {
         log.info("createTour - tourPackageCode: {}, title: {}, duration: {}, price: {}", tourPackageCode, title, duration, price);
-        Optional<TourPackage> tourPackage = tourPackageRepository.getTourPackageByCode(tourPackageCode);
+        final Optional<TourPackage> tourPackage = tourPackageRepository.getTourPackageByCode(tourPackageCode);
 
         if (tourPackage.isPresent()) {
-            Tour tour = Tour.builder()
+            final Tour tour = Tour.builder()
                     .tourPackage(tourPackage.get())
                     .title(title)
                     .duration(duration)
@@ -45,12 +45,11 @@ public class TourServiceImpl implements TourService {
     @Override
     public Optional<Tour> updateTour(int tourId, String tourPackageCode, String title, String duration, Integer price) {
         log.info("updateTour - tourId: {}, tourPackageCode: {}, title: {}, duration: {}, price: {}", tourId, tourPackageCode, title, duration, price);
-
-        Optional<Tour> tour = tourRepository.findById(tourId);
+        final Optional<Tour> tour = tourRepository.findById(tourId);
 
         if (tour.isPresent()) {
             if (tourPackageCode != null) {
-                Optional<TourPackage> tourPackage = tourPackageRepository.getTourPackageByCode(tourPackageCode);
+                final Optional<TourPackage> tourPackage = tourPackageRepository.getTourPackageByCode(tourPackageCode);
 
                 if (tourPackage.isPresent()) {
                     tour.get().setTourPackage(tourPackage.get());
@@ -87,7 +86,7 @@ public class TourServiceImpl implements TourService {
     @Override
     public Optional<Tour> getTourById(int tourId) {
         log.info("getTourById - id: {}", tourId);
-        Optional<Tour> tour = tourRepository.findById(tourId);
+        final Optional<Tour> tour = tourRepository.findById(tourId);
 
         return tour;
     }
@@ -95,8 +94,8 @@ public class TourServiceImpl implements TourService {
     @Override
     public List<Tour> getToursByLocation(String location) {
         log.info("getToursByLocation - location: {}", location);
-        List<Tour> tours = tourRepository.findAll();
-        List<Tour> toursByLocation = tours.stream()
+        final List<Tour> tours = tourRepository.findAll();
+        final List<Tour> toursByLocation = tours.stream()
                 .filter(tour -> tour.getTourPackage().getLocation().equalsIgnoreCase(location))
                 .collect(Collectors.toList());
 
@@ -106,8 +105,7 @@ public class TourServiceImpl implements TourService {
     @Override
     public Optional<Tour> getTourByTourPackageCodeAndTitle(String tourPackageCode, String title) {
         log.info("getTourByTourPackageCodeAndTitle - tourPackageCode: {}, title: {}", tourPackageCode, title);
-
-        Optional<TourPackage> tourPackage = tourPackageRepository.getTourPackageByCode(tourPackageCode);
+        final Optional<TourPackage> tourPackage = tourPackageRepository.getTourPackageByCode(tourPackageCode);
 
         if (tourPackage.isPresent()) {
             Optional<Tour> tour = tourRepository.findTourByTourPackageAndTitle(tourPackage.get(), title);
@@ -121,8 +119,7 @@ public class TourServiceImpl implements TourService {
     @Override
     public Optional<Tour> deleteTourById(int tourId) {
         log.info("deleteTourById - tourId: {}", tourId);
-
-        Optional<Tour> tour = tourRepository.findById(tourId);
+        final Optional<Tour> tour = tourRepository.findById(tourId);
 
         if (tour.isPresent()) {
             tourRepository.deleteById(tourId);

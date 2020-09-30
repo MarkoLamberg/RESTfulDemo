@@ -11,7 +11,7 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
 public class RestfulDemoUtil {
 
     public static ResponseEntity<ErrorDto> badRequestResponse(String message) {
-        String path = ServletUriComponentsBuilder.fromCurrentRequest().toUriString();
+        final String path = ServletUriComponentsBuilder.fromCurrentRequest().toUriString();
         return ResponseEntity
                 .badRequest()
                 .body(ErrorDto.builder()
