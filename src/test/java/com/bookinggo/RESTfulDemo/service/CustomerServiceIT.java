@@ -2,6 +2,7 @@ package com.bookinggo.RESTfulDemo.service;
 
 import com.bookinggo.RESTfulDemo.entity.Customer;
 import com.bookinggo.RESTfulDemo.entity.TourBooking;
+import com.bookinggo.RESTfulDemo.exception.CustomerServiceException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -15,6 +16,7 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 @SpringBootTest
 public class CustomerServiceIT extends AbstractRESTfulDemoIT {
@@ -114,8 +116,12 @@ public class CustomerServiceIT extends AbstractRESTfulDemoIT {
 
         customerService.deleteCustomerById(CUSTOMER_ID);
 
-        Optional<Customer> customerAfter = customerService.getCustomerById(CUSTOMER_ID);
-        assertThat(customerAfter).isEmpty();
+        try {
+            customerService.getCustomerById(CUSTOMER_ID);
+        } catch (CustomerServiceException e) {
+        }
+
+        assertThatExceptionOfType(CustomerServiceException.class).isThrownBy(() -> customerService.getCustomerById(CUSTOMER_ID));
     }
 
     private static Stream<Arguments> titleAndNameAndCustomerProvider() {

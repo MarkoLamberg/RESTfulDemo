@@ -2,6 +2,7 @@ package com.bookinggo.RESTfulDemo.service;
 
 import com.bookinggo.RESTfulDemo.entity.Customer;
 import com.bookinggo.RESTfulDemo.entity.TourBooking;
+import com.bookinggo.RESTfulDemo.exception.CustomerServiceException;
 import com.bookinggo.RESTfulDemo.repository.CustomerRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,6 +16,7 @@ import java.util.Optional;
 
 import static java.util.List.of;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest
@@ -35,10 +37,13 @@ public class CustomerServiceTest {
 
     @Test
     public void shouldNotUpdateCustomer_whenUpdateCustomer_givenCustomerWithCustomerIdNonExisting() {
-        Optional<Customer> customer = customerService.updateCustomer(CUSTOMER_ID, CUSTOMER_TITLE, CUSTOMER_NAME);
+        try {
+            customerService.updateCustomer(CUSTOMER_ID, CUSTOMER_TITLE, CUSTOMER_NAME);
+        } catch (CustomerServiceException e) {
+        }
 
         verify(customerRepositoryMock).findById(CUSTOMER_ID);
-        assertThat(customer).isEmpty();
+        assertThatExceptionOfType(CustomerServiceException.class).isThrownBy(() -> customerService.updateCustomer(CUSTOMER_ID, CUSTOMER_TITLE, CUSTOMER_NAME));
     }
 
     @Test
@@ -105,10 +110,13 @@ public class CustomerServiceTest {
 
     @Test
     public void shouldCallFindById_whenGetCustomerById_givenNoCustomersWithIdExists() {
-        Optional<Customer> customer = customerService.getCustomerById(CUSTOMER_ID);
+        try {
+            customerService.getCustomerById(CUSTOMER_ID);
+        } catch (CustomerServiceException e) {
+        }
 
         verify(customerRepositoryMock).findById(CUSTOMER_ID);
-        assertThat(customer).isEmpty();
+        assertThatExceptionOfType(CustomerServiceException.class).isThrownBy(() -> customerService.getCustomerById(CUSTOMER_ID));
     }
 
     @Test
@@ -123,10 +131,13 @@ public class CustomerServiceTest {
 
     @Test
     public void shouldCallFindCustomerByName_whenGetCustomerByName_givenNoCustomersWithIdExists() {
-        Optional<Customer> customer = customerService.getCustomerByName(CUSTOMER_NAME);
+        try {
+            customerService.getCustomerByName(CUSTOMER_NAME);
+        } catch (CustomerServiceException e) {
+        }
 
         verify(customerRepositoryMock).findCustomerByName(CUSTOMER_NAME);
-        assertThat(customer).isEmpty();
+        assertThatExceptionOfType(CustomerServiceException.class).isThrownBy(() -> customerService.getCustomerByName(CUSTOMER_NAME));
     }
 
     @Test
@@ -144,10 +155,13 @@ public class CustomerServiceTest {
 
     @Test
     public void shouldCallFindById_whenGetBookingsByCustomerId_givenNoCustomersWithIdExists() {
-        List<TourBooking> bookings = customerService.getBookingsByCustomerId(CUSTOMER_ID);
+        try {
+            customerService.getBookingsByCustomerId(CUSTOMER_ID);
+        } catch (CustomerServiceException e) {
+        }
 
         verify(customerRepositoryMock).findById(CUSTOMER_ID);
-        assertThat(bookings).isNull();
+        assertThatExceptionOfType(CustomerServiceException.class).isThrownBy(() -> customerService.getBookingsByCustomerId(CUSTOMER_ID));
     }
 
     @Test
@@ -170,11 +184,14 @@ public class CustomerServiceTest {
 
     @Test
     public void shouldNotDeleteAnyCustomer_whenDeleteCustomerById_givenNoCustomer() {
-        Optional<Customer> customer = customerService.deleteCustomerById(CUSTOMER_ID);
+        try {
+            customerService.deleteCustomerById(CUSTOMER_ID);
+        } catch (CustomerServiceException e) {
+        }
 
         verify(customerRepositoryMock).findById(CUSTOMER_ID);
         verifyNoMoreInteractions(customerRepositoryMock);
-        assertThat(customer).isEmpty();
+        assertThatExceptionOfType(CustomerServiceException.class).isThrownBy(() -> customerService.deleteCustomerById(CUSTOMER_ID));
     }
 
     @Test

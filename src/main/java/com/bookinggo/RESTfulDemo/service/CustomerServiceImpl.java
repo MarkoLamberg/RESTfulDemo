@@ -2,6 +2,7 @@ package com.bookinggo.RESTfulDemo.service;
 
 import com.bookinggo.RESTfulDemo.entity.Customer;
 import com.bookinggo.RESTfulDemo.entity.TourBooking;
+import com.bookinggo.RESTfulDemo.exception.CustomerServiceException;
 import com.bookinggo.RESTfulDemo.repository.CustomerRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +23,10 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public Customer createCustomer(String title, String name) {
         log.info("createCustomer - title: {}, name: {}", title, name);
+
+        if (customerRepository.findCustomerByName(name).isPresent()) {
+            throw new CustomerServiceException("Can't create customer. Customer with given name already exists.", null);
+        }
 
         final Customer customer = Customer.builder()
                 .title(title)
@@ -48,7 +53,7 @@ public class CustomerServiceImpl implements CustomerService {
             return Optional.of(customerRepository.saveAndFlush(customer.get()));
         }
 
-        return Optional.empty();
+        throw new CustomerServiceException("Can't update customer. Customer doesn't exist. Provide correct Customer Id.", null);
     }
 
     @Override
@@ -60,13 +65,26 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public Optional<Customer> getCustomerById(int customerId) {
         log.info("getCustomerById - customerId: {}", customerId);
-        return customerRepository.findById(customerId);
+        Optional<Customer> customer = customerRepository.findById(customerId);
+
+        if (customer.isPresent()) {
+            return customer;
+        }
+
+        throw new CustomerServiceException("Can't get customer by id. Customer doesn't exist. Provide correct Customer Id.", null);
     }
 
     @Override
     public Optional<Customer> getCustomerByName(String customerName) {
         log.info("getCustomerByName - customerName: {}", customerName);
-        return customerRepository.findCustomerByName(customerName);
+        Optional<Customer> customer = customerRepository.findCustomerByName(customerName);
+
+        if (customer.isPresent()) {
+            return customer;
+        }
+
+        throw new CustomerServiceException("Can't get customer bookings by name. Customer doesn't exist. Provide correct Customer Id.", null);
+
     }
 
     @Override
@@ -78,7 +96,7 @@ public class CustomerServiceImpl implements CustomerService {
             return customer.get().getBookings();
         }
 
-        return null;
+        throw new CustomerServiceException("Can't get customer's bookings by id. Customer doesn't exist. Provide correct Customer Id.", null);
     }
 
     @Override
@@ -91,6 +109,6 @@ public class CustomerServiceImpl implements CustomerService {
             return customer;
         }
 
-        return Optional.empty();
+        throw new CustomerServiceException("Can't delete customer. Customer doesn't exist. Provide correct Customer Id.", null);
     }
 }
