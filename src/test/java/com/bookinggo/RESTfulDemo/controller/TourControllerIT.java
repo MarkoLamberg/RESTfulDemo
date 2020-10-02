@@ -253,11 +253,11 @@ public class TourControllerIT extends AbstractRESTfulDemoIT {
     @Sql
     @Test
     public void shouldReturn400_whenDeleteTour_givenTourDoesntExist() {
-        ResponseEntity<Tour> response = restTemplate
+        ResponseEntity<String> response = restTemplate
                 .exchange(LOCAL_HOST + port + "/tours/" + NON_EXISTING_TOUR_ID,
                         HttpMethod.DELETE,
                         null,
-                        Tour.class);
+                        String.class);
 
         assertThat(response.getStatusCodeValue()).isEqualTo(BAD_REQUEST.value());
     }

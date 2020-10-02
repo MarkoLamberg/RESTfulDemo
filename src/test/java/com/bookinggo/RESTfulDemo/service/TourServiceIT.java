@@ -1,6 +1,7 @@
 package com.bookinggo.RESTfulDemo.service;
 
 import com.bookinggo.RESTfulDemo.entity.Tour;
+import com.bookinggo.RESTfulDemo.exception.TourServiceException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -14,6 +15,7 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 @SpringBootTest
 public class TourServiceIT extends AbstractRESTfulDemoIT {
@@ -121,8 +123,12 @@ public class TourServiceIT extends AbstractRESTfulDemoIT {
 
         tourService.deleteTourById(TOUR_ID);
 
-        Optional<Tour> tourAfter = tourService.getTourById(TOUR_ID);
-        assertThat(tourAfter).isEmpty();
+        try {
+            tourService.getTourById(TOUR_ID);
+        } catch (TourServiceException e) {
+        }
+
+        assertThatExceptionOfType(TourServiceException.class).isThrownBy(() -> tourService.getTourById(TOUR_ID));
     }
 
     private static Stream<Arguments> titleAndDurationAndPriceAndTourProvider() {

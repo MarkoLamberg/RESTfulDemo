@@ -30,7 +30,6 @@ public class CustomerController {
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<?> createCustomer(@Valid @RequestBody CustomerDto customerDto) {
         log.info("POST /customers: {}", customerDto.toString());
-
         try {
             final Customer createdCustomer = customerService.createCustomer(customerDto.getTitle(), customerDto.getName());
 

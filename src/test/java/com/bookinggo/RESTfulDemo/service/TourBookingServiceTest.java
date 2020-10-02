@@ -3,6 +3,7 @@ package com.bookinggo.RESTfulDemo.service;
 import com.bookinggo.RESTfulDemo.entity.Customer;
 import com.bookinggo.RESTfulDemo.entity.Tour;
 import com.bookinggo.RESTfulDemo.entity.TourBooking;
+import com.bookinggo.RESTfulDemo.exception.TourBookingServiceException;
 import com.bookinggo.RESTfulDemo.repository.CustomerRepository;
 import com.bookinggo.RESTfulDemo.repository.TourBookingRepository;
 import com.bookinggo.RESTfulDemo.repository.TourRepository;
@@ -14,13 +15,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
-import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 import static java.util.List.of;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -54,26 +55,33 @@ public class TourBookingServiceTest {
     private int retryAttempts;
 
     @Test
-    public void shouldNotCreateBooking_whenCreateBooking_givenTourIdDoesNotExist() throws SQLException {
-        tourBookingService.createBooking(TOUR_ID, CUSTOMER_ID, PICKUP_DATE_TIME, PICKUP_LOCATION, PARTICIPANTS);
+    public void shouldNotCreateBooking_whenCreateBooking_givenTourIdDoesNotExist() throws TourBookingServiceException {
+        try {
+            tourBookingService.createBooking(TOUR_ID, CUSTOMER_ID, PICKUP_DATE_TIME, PICKUP_LOCATION, PARTICIPANTS);
+        } catch (TourBookingServiceException e) {
+        }
+
         verify(tourRepositoryMock, times(retryAttempts)).findById(TOUR_ID);
-        verify(tourRepositoryMock, times(0)).save(any());
+        verify(customerRepositoryMock, never()).findById(CUSTOMER_ID);
+        verify(tourRepositoryMock, never()).save(any());
     }
 
     @Test
-    public void shouldNotCreateBooking_whenCreateBooking_givenCustomerDoesNotExist() throws SQLException {
+    public void shouldNotCreateBooking_whenCreateBooking_givenCustomerDoesNotExist() throws TourBookingServiceException {
         when(tourRepositoryMock.findById(TOUR_ID)).thenReturn(Optional.of(buildTour()));
 
-        Optional<TourBooking> booking = tourBookingService.createBooking(TOUR_ID, CUSTOMER_ID, PICKUP_DATE_TIME, PICKUP_LOCATION, PARTICIPANTS);
+        try {
+            tourBookingService.createBooking(TOUR_ID, CUSTOMER_ID, PICKUP_DATE_TIME, PICKUP_LOCATION, PARTICIPANTS);
+        } catch (TourBookingServiceException e) {
+        }
 
-        verify(tourRepositoryMock).findById(TOUR_ID);
-        verify(customerRepositoryMock).findById(CUSTOMER_ID);
-        verify(tourBookingRepositoryMock, times(0)).save(any());
-        assertThat(booking).isEmpty();
+        verify(tourRepositoryMock, times(retryAttempts)).findById(TOUR_ID);
+        verify(customerRepositoryMock, times(retryAttempts)).findById(CUSTOMER_ID);
+        verify(tourBookingRepositoryMock, never()).save(any());
     }
 
     @Test
-    public void shouldCreateABooking_whenCreateBooking_givenTourIdDoesExist() throws SQLException {
+    public void shouldCreateABooking_whenCreateBooking_givenTourIdDoesExist() throws TourBookingServiceException {
         when(tourRepositoryMock.findById(TOUR_ID)).thenReturn(Optional.of(buildTour()));
         when(customerRepositoryMock.findById(CUSTOMER_ID)).thenReturn(Optional.of(buildCustomer()));
         when(tourBookingRepositoryMock.save(any())).thenReturn(buildTourBooking());
@@ -88,10 +96,13 @@ public class TourBookingServiceTest {
 
     @Test
     public void shouldNotReturnAnyBookings_whenGetTourBookings_givenNoBookingsWithIdExist() {
-        List<TourBooking> bookings = tourBookingService.getBookingsByTourId(TOUR_ID);
+        try {
+            tourBookingService.getBookingsByTourId(TOUR_ID);
+        } catch (TourBookingServiceException e) {
+        }
 
         verify(tourBookingRepositoryMock).findByTourId(TOUR_ID);
-        assertThat(bookings.size()).isEqualTo(0);
+        assertThatExceptionOfType(TourBookingServiceException.class).isThrownBy(() -> tourBookingService.getBookingsByTourId(TOUR_ID));
     }
 
     @Test
@@ -124,11 +135,14 @@ public class TourBookingServiceTest {
 
     @Test
     public void shouldNotUpdateBooking_whenUpdateBooking_givenBookingWithTourIdAndCustomerIdNonExisting() {
-        Optional<TourBooking> booking = tourBookingService.updateBooking(TOUR_ID, CUSTOMER_ID, PICKUP_DATE_TIME, PICKUP_LOCATION, PARTICIPANTS);
+        try {
+            tourBookingService.updateBooking(TOUR_ID, CUSTOMER_ID, PICKUP_DATE_TIME, PICKUP_LOCATION, PARTICIPANTS);
+        } catch (TourBookingServiceException e) {
+        }
 
         verify(customerRepositoryMock).findById(CUSTOMER_ID);
         verifyNoInteractions(tourBookingRepositoryMock);
-        assertThat(booking).isEmpty();
+        assertThatExceptionOfType(TourBookingServiceException.class).isThrownBy(() -> tourBookingService.updateBooking(TOUR_ID, CUSTOMER_ID, PICKUP_DATE_TIME, PICKUP_LOCATION, PARTICIPANTS));
     }
 
     @Test
@@ -231,12 +245,14 @@ public class TourBookingServiceTest {
 
     @Test
     public void shouldNotDeleteAnyBookings_whenDeleteAllBookingsWithTourIdAndCustomerId_givenBookingsWithTourIdAndCustomerIdNonExisting() {
-        Optional<List<TourBooking>> bookings = tourBookingService.deleteAllBookingsWithTourIdAndCustomerId(TOUR_ID, CUSTOMER_ID);
+        try {
+            tourBookingService.deleteAllBookingsWithTourIdAndCustomerId(TOUR_ID, CUSTOMER_ID);
+        } catch (TourBookingServiceException e) {
+        }
 
         verify(tourBookingRepositoryMock, times(0)).findByTourId(TOUR_ID);
         verify(tourBookingRepositoryMock, times(0)).delete(any());
-        verify(customerRepositoryMock).findById(CUSTOMER_ID);
-        assertThat(bookings).isEmpty();
+        assertThatExceptionOfType(TourBookingServiceException.class).isThrownBy(() -> tourBookingService.deleteAllBookingsWithTourIdAndCustomerId(TOUR_ID, CUSTOMER_ID));
     }
 
     @Test
@@ -249,18 +265,19 @@ public class TourBookingServiceTest {
 
         verify(tourBookingRepositoryMock).findByTourIdAndCustomerId(TOUR_ID, CUSTOMER_ID);
         verify(tourBookingRepositoryMock).delete(any());
-        verify(customerRepositoryMock).findById(CUSTOMER_ID);
         assertThat(bookings.get().size()).isEqualTo(1);
     }
 
     @Test
     public void shouldNotDeleteAnyBookings_whenDeleteAllBookingsWithCustomerId_givenBookingsWithCustomerIdNonExisting() {
-        Optional<List<TourBooking>> bookings = tourBookingService.deleteAllBookingsWithCustomerId(CUSTOMER_ID);
+        try {
+            tourBookingService.deleteAllBookingsWithCustomerId(CUSTOMER_ID);
+        } catch (TourBookingServiceException e) {
+        }
 
         verify(tourBookingRepositoryMock).findByCustomerId(CUSTOMER_ID);
         verify(tourBookingRepositoryMock, times(0)).delete(any());
-        verify(customerRepositoryMock).findById(CUSTOMER_ID);
-        assertThat(bookings).isEmpty();
+        assertThatExceptionOfType(TourBookingServiceException.class).isThrownBy(() -> tourBookingService.deleteAllBookingsWithCustomerId(CUSTOMER_ID));
     }
 
     @Test
@@ -272,16 +289,19 @@ public class TourBookingServiceTest {
 
         verify(tourBookingRepositoryMock).findByCustomerId(CUSTOMER_ID);
         verify(tourBookingRepositoryMock).delete(any());
-        verify(customerRepositoryMock).findById(CUSTOMER_ID);
         assertThat(bookings.get().size()).isEqualTo(1);
     }
 
     @Test
     public void shouldNotDeleteAnyBookings_whenDeleteAllBookings_givenNoBookings() {
-        List<TourBooking> tourBookings = tourBookingService.deleteAllBookings();
+        try {
+            tourBookingService.deleteAllBookings();
+        } catch (TourBookingServiceException e) {
+        }
+
         verify(tourBookingRepositoryMock).findAll();
         verify(tourBookingRepositoryMock, times(0)).deleteAll();
-        assertThat(tourBookings.size()).isEqualTo(0);
+        assertThatExceptionOfType(TourBookingServiceException.class).isThrownBy(() -> tourBookingService.deleteAllBookings());
     }
 
     @Test

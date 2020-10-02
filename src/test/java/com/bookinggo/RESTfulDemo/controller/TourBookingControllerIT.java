@@ -163,11 +163,10 @@ public class TourBookingControllerIT extends AbstractRESTfulDemoIT {
 
         restTemplate.delete(LOCAL_HOST + port + "/tours/" + TOUR_ID + "/bookings");
 
-        TourBooking[] tourBookingsAfter = restTemplate
-                .getForEntity(LOCAL_HOST + port + "/tours/" + TOUR_ID + "/bookings/", TourBooking[].class)
-                .getBody();
+        ResponseEntity<String> response = restTemplate
+                .exchange(LOCAL_HOST + port + "/tours/" + TOUR_ID + "/bookings/", HttpMethod.GET, null, String.class);
 
-        assertThat(tourBookingsAfter.length).isEqualTo(0);
+        assertThat(response.getStatusCodeValue()).isEqualTo(BAD_REQUEST.value());
     }
 
     @Sql

@@ -5,6 +5,8 @@ import com.bookinggo.RESTfulDemo.dto.BookingPatchDto;
 import com.bookinggo.RESTfulDemo.dto.ExpandedBookingDto;
 import com.bookinggo.RESTfulDemo.entity.Tour;
 import com.bookinggo.RESTfulDemo.entity.TourBooking;
+import com.bookinggo.RESTfulDemo.exception.TourBookingServiceException;
+import com.bookinggo.RESTfulDemo.exception.TourServiceException;
 import com.bookinggo.RESTfulDemo.service.TourBookingService;
 import com.bookinggo.RESTfulDemo.service.TourService;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +19,6 @@ import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
 import java.net.URI;
-import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.List;
@@ -40,32 +41,38 @@ public class TourBookingController {
 
     @PostMapping("/{tourId}/bookings")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<?> createTourBooking(@PathVariable(value = "tourId") int tourId, @Valid @RequestBody BookingDto bookingDto) throws SQLException {
+    public ResponseEntity<?> createTourBooking(@PathVariable(value = "tourId") int tourId, @Valid @RequestBody BookingDto bookingDto) throws TourBookingServiceException {
         log.info("POST /tours/{}/bookings: {}", tourId, bookingDto.toString());
-        final Optional<Tour> tour = tourService.getTourById(tourId);
+        try {
+            tourService.getTourById(tourId);
+        } catch (TourServiceException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
 
-        if (tour.isPresent()) {
-            final LocalDateTime pickupDateTime = LocalDateTime.parse(bookingDto.getPickupDateTime(), ISO_LOCAL_DATE_TIME);
+        final LocalDateTime pickupDateTime = LocalDateTime.parse(bookingDto.getPickupDateTime(), ISO_LOCAL_DATE_TIME);
 
+        try {
             final Optional<TourBooking> createdBooking = tourBookingService.createBooking(tourId, bookingDto.getCustomerId(), pickupDateTime,
                     bookingDto.getPickupLocation(), bookingDto.getParticipants());
 
-            if (createdBooking.isPresent()) {
-                return ResponseEntity
-                        .created(URI.create("/tours/" + tourId + "/bookings"))
-                        .body(toDto(createdBooking.get()));
-            }
+            return ResponseEntity
+                    .created(URI.create("/tours/" + tourId + "/bookings"))
+                    .body(toDto(createdBooking.get()));
+        } catch (TourBookingServiceException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
-
-        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Can't create booking. Tour doesn't exist. Provide correct Tour Id.");
     }
 
     @GetMapping("/{tourId}/bookings")
     public ResponseEntity<?> getAllBookingsForTour(@PathVariable(value = "tourId") int tourId) {
         log.info("GET /tours/{}/bookings", tourId);
-        final Optional<Tour> tour = tourService.getTourById(tourId);
+        try {
+            tourService.getTourById(tourId);
+        } catch (TourServiceException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
 
-        if (tour.isPresent()) {
+        try {
             final List<TourBooking> tourBookings = tourBookingService.getBookingsByTourId(tourId);
 
             return ResponseEntity
@@ -74,9 +81,9 @@ public class TourBookingController {
                             .stream()
                             .map(tourBooking -> toDto(tourBooking))
                             .collect(Collectors.toList()));
+        } catch (TourBookingServiceException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
-
-        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Can't get bookings for tour. Tour doesn't exist. Provide correct Tour Id.");
     }
 
     @GetMapping("/bookings")
@@ -90,84 +97,90 @@ public class TourBookingController {
     @PutMapping("/{tourId}/bookings")
     public ResponseEntity<?> updateBooking(@PathVariable(value = "tourId") int tourId, @Valid @RequestBody BookingPatchDto bookingPatchDto) {
         log.info("PUT /tours/{}/bookings: {}", tourId, bookingPatchDto.toString());
-        final Optional<Tour> tour = tourService.getTourById(tourId);
+        try {
+            tourService.getTourById(tourId);
+        } catch (TourServiceException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
+        LocalDateTime pickupDateTime = null;
 
-        if (tour.isPresent()) {
-            LocalDateTime pickupDateTime = null;
+        if (bookingPatchDto.getPickupDateTime() != null) {
+            pickupDateTime = LocalDateTime.parse(bookingPatchDto.getPickupDateTime(), ISO_LOCAL_DATE_TIME);
+        }
 
-            if (bookingPatchDto.getPickupDateTime() != null) {
-                pickupDateTime = LocalDateTime.parse(bookingPatchDto.getPickupDateTime(), ISO_LOCAL_DATE_TIME);
-            }
-
+        try {
             final Optional<TourBooking> response = tourBookingService.updateBooking(tourId, bookingPatchDto.getCustomerId(),
                     pickupDateTime, bookingPatchDto.getPickupLocation(), bookingPatchDto.getParticipants());
 
-            if (response.isPresent()) {
-                return ResponseEntity
-                        .ok()
-                        .body(toDto(response.get()));
-            }
+            return ResponseEntity
+                    .ok()
+                    .body(toDto(response.get()));
 
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Can't update booking. No bookings for this customer id or more than one bookings for this customer id.");
+        } catch (TourBookingServiceException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
-
-        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Can't update booking. Tour doesn't exist. Provide correct Tour Id.");
     }
 
     @DeleteMapping("/{tourId}/bookings")
     public ResponseEntity<?> deleteAllBookingsForTour(@PathVariable(value = "tourId") int tourId) {
         log.info("DELETE /tours/{}/bookings", tourId);
-        final Optional<Tour> tour = tourService.getTourById(tourId);
+        try {
+            final Optional<Tour> tour = tourService.getTourById(tourId);
 
-        if (tour.isPresent()) {
             final List<TourBooking> bookings = tourBookingService.deleteAllBookingsWithTourId(tourId);
 
             return ResponseEntity
                     .ok()
                     .body(listOfDtos(bookings));
+        } catch (TourServiceException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
-
-        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Can't delete bookings. Tour doesn't exist. Provide correct Tour Id.");
     }
 
     @DeleteMapping("/{tourId}/bookings/{customerId}")
     public ResponseEntity<?> deleteAllBookingsForTourAndCustomer(@PathVariable(value = "tourId") int tourId, @PathVariable(value = "customerId") int customerId) {
         log.info("DELETE /tours/{}/bookings/{}", tourId, customerId);
-        final Optional<Tour> tour = tourService.getTourById(tourId);
-
-        if (tour.isPresent()) {
-            final Optional<List<TourBooking>> bookings = tourBookingService.deleteAllBookingsWithTourIdAndCustomerId(tourId, customerId);
-
-            if (bookings.isPresent()) {
-                return ResponseEntity
-                        .ok()
-                        .body(listOfExpandedDtos(bookings.get()));
-            }
+        try {
+            tourService.getTourById(tourId);
+        } catch (TourServiceException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
 
-        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Can't delete bookings. Tour doesn't exist. Provide correct Tour Id.");
+        try {
+            final Optional<List<TourBooking>> bookings = tourBookingService.deleteAllBookingsWithTourIdAndCustomerId(tourId, customerId);
+
+            return ResponseEntity
+                    .ok()
+                    .body(listOfExpandedDtos(bookings.get()));
+        } catch (TourBookingServiceException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
     }
 
     @DeleteMapping("/bookings/{customerId}")
     public ResponseEntity<?> deleteAllBookingsForCustomer(@PathVariable(value = "customerId") int customerId) {
         log.info("DELETE /tours/bookings/{}", customerId);
-        final Optional<List<TourBooking>> bookings = tourBookingService.deleteAllBookingsWithCustomerId(customerId);
+        try {
+            final Optional<List<TourBooking>> bookings = tourBookingService.deleteAllBookingsWithCustomerId(customerId);
 
-        if (bookings.isPresent()) {
             return ResponseEntity
                     .ok()
                     .body(listOfExpandedDtos(bookings.get()));
+        } catch (TourBookingServiceException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
-
-        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Can't delete customer bookings. Customer doesn't exist. Provide correct Customer Id.");
     }
 
     @DeleteMapping("/bookings")
     public List<ExpandedBookingDto> deleteAllBookings() {
         log.info("DELETE /tours/bookings");
-        final List<TourBooking> bookings = tourBookingService.deleteAllBookings();
+        try {
+            final List<TourBooking> bookings = tourBookingService.deleteAllBookings();
 
-        return listOfExpandedDtos(bookings);
+            return listOfExpandedDtos(bookings);
+        } catch (TourBookingServiceException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
     }
 
     private BookingDto toDto(TourBooking tourBooking) {

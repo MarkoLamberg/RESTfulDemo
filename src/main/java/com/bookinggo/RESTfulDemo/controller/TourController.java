@@ -3,6 +3,8 @@ package com.bookinggo.RESTfulDemo.controller;
 import com.bookinggo.RESTfulDemo.dto.TourDto;
 import com.bookinggo.RESTfulDemo.dto.TourPatchDto;
 import com.bookinggo.RESTfulDemo.entity.Tour;
+import com.bookinggo.RESTfulDemo.exception.TourBookingServiceException;
+import com.bookinggo.RESTfulDemo.exception.TourServiceException;
 import com.bookinggo.RESTfulDemo.service.TourBookingService;
 import com.bookinggo.RESTfulDemo.service.TourService;
 import lombok.AllArgsConstructor;
@@ -47,9 +49,9 @@ public class TourController {
     @PutMapping("/{tourId}")
     public ResponseEntity<?> updateTour(@PathVariable(value = "tourId") int tourId, @Valid @RequestBody TourPatchDto tourPatchDto) {
         log.info("PUT /tours/{}: {}", tourId, tourPatchDto.toString());
-        final Optional<Tour> tour = tourService.getTourById(tourId);
+        try {
+            final Optional<Tour> tour = tourService.getTourById(tourId);
 
-        if (tour.isPresent()) {
             final Optional<Tour> tourWithNewTitleOrTourPackage = getTourWithNewTitleOrTourPackage(tourPatchDto, tour);
 
             if (tourWithNewTitleOrTourPackage.isPresent()) {
@@ -57,26 +59,13 @@ public class TourController {
             } else {
                 final Optional<Tour> response = tourService.updateTour(tourId, tourPatchDto.getTourPackageCode(), tourPatchDto.getTitle(), tourPatchDto.getDuration(), tourPatchDto.getPrice());
 
-                if (response.isPresent()) {
-                    return ResponseEntity
-                            .ok()
-                            .body(response.get());
-                }
+                return ResponseEntity
+                        .ok()
+                        .body(response.get());
             }
+        } catch (TourServiceException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
-
-        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Can't update tour. The tour doesn't exist. Provide correct Tour Id.");
-    }
-
-    private Optional<Tour> getTourWithNewTitleOrTourPackage(@RequestBody @Valid TourPatchDto tourPatchDto, Optional<Tour> tour) {
-        if (((tourPatchDto.getTitle() == null) || tour.get().getTitle().equals(tourPatchDto.getTitle())) &&
-                ((tourPatchDto.getTourPackageCode() == null) || tour.get().getTourPackage().getCode().equals(tourPatchDto.getTourPackageCode()))) {
-            return Optional.empty();
-        }
-
-        return tourService.getTourByTourPackageCodeAndTitle(
-                (tourPatchDto.getTourPackageCode() == null) ? tour.get().getTourPackage().getCode() : tourPatchDto.getTourPackageCode(),
-                (tourPatchDto.getTitle() == null) ? tour.get().getTitle() : tourPatchDto.getTitle());
     }
 
     @GetMapping
@@ -88,49 +77,61 @@ public class TourController {
     @GetMapping(path = "/{tourId}")
     public ResponseEntity<?> getTourById(@PathVariable(value = "tourId") int tourId) {
         log.info("GET /tours/{}", tourId);
-        final Optional<Tour> tour = tourService.getTourById(tourId);
+        try {
+            final Optional<Tour> tour = tourService.getTourById(tourId);
 
-        if (tour.isPresent()) {
             return ResponseEntity
                     .ok()
                     .body(tour.get());
+        } catch (TourServiceException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
-
-        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Can't get tour by id. Tour doesn't exist. Provide correct Tour Id.");
     }
 
     @GetMapping(path = "/byLocation/{tourLocation}")
     public ResponseEntity<?> getToursByLocation(@PathVariable(value = "tourLocation") String location) {
         log.info("GET /tours/byLocation/{}", location);
-        final List<Tour> tours = tourService.getToursByLocation(location);
+        try {
+            final List<Tour> tours = tourService.getToursByLocation(location);
 
-        if (tours.size() > 0) {
             return ResponseEntity
                     .ok()
                     .body(tours);
+        } catch (TourServiceException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
-
-        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Can't get tours by location. Tour location doesn't exist. Provide correct Tour Location.");
     }
 
     @DeleteMapping("/{tourId}")
     public ResponseEntity<?> deleteTour(@PathVariable(value = "tourId") int tourId) {
         log.info("DELETE /tours/{}", tourId);
-        final Optional<Tour> tour = tourService.getTourById(tourId);
 
-        if (tour.isPresent()) {
-
+        try {
             if (tourBookingService.getBookingsByTourId(tourId).size() > 0) {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Can't delete tour that has bookings.");
             }
+        } catch (TourBookingServiceException e) {
+        }
 
+        try {
             final Optional<Tour> deletedTour = tourService.deleteTourById(tourId);
 
             return ResponseEntity
                     .ok()
                     .body(deletedTour.get());
+        } catch (TourServiceException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
+    }
+
+    private Optional<Tour> getTourWithNewTitleOrTourPackage(@RequestBody @Valid TourPatchDto tourPatchDto, Optional<Tour> tour) {
+        if (((tourPatchDto.getTitle() == null) || tour.get().getTitle().equals(tourPatchDto.getTitle())) &&
+                ((tourPatchDto.getTourPackageCode() == null) || tour.get().getTourPackage().getCode().equals(tourPatchDto.getTourPackageCode()))) {
+            return Optional.empty();
         }
 
-        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Can't delete tour. Tour doesn't exist. Provide correct Tour Id.");
+        return tourService.getTourByTourPackageCodeAndTitle(
+                (tourPatchDto.getTourPackageCode() == null) ? tour.get().getTourPackage().getCode() : tourPatchDto.getTourPackageCode(),
+                (tourPatchDto.getTitle() == null) ? tour.get().getTitle() : tourPatchDto.getTitle());
     }
 }

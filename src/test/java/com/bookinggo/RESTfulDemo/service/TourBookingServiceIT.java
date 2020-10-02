@@ -1,6 +1,7 @@
 package com.bookinggo.RESTfulDemo.service;
 
 import com.bookinggo.RESTfulDemo.entity.TourBooking;
+import com.bookinggo.RESTfulDemo.exception.TourBookingServiceException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -9,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 
-import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 @SpringBootTest
 public class TourBookingServiceIT extends AbstractRESTfulDemoIT {
@@ -42,7 +43,7 @@ public class TourBookingServiceIT extends AbstractRESTfulDemoIT {
 
     @Sql
     @Test
-    public void shouldCreateABooking_whenCreateBooking_givenValidBooking() throws SQLException {
+    public void shouldCreateABooking_whenCreateBooking_givenValidBooking() throws TourBookingServiceException {
         List<TourBooking> bookingsBefore = tourBookingService.getAllBookings();
         assertThat(bookingsBefore.size()).isEqualTo(0);
 
@@ -123,14 +124,12 @@ public class TourBookingServiceIT extends AbstractRESTfulDemoIT {
 
         assertThat(filteredBookingsBefore.size()).isNotEqualTo(1);
 
-        tourBookingService.updateBooking(TOUR_ID, CUSTOMER_ID, PICKUP_DATE_TIME, PICKUP_LOCATION, PARTICIPANTS);
+        try {
+            tourBookingService.updateBooking(TOUR_ID, CUSTOMER_ID, PICKUP_DATE_TIME, PICKUP_LOCATION, PARTICIPANTS);
+        } catch (TourBookingServiceException e) {
+        }
 
-        List<TourBooking> filteredBookingsAfter = tourBookingService.getBookingsByTourId(TOUR_ID)
-                .stream()
-                .filter(booking -> booking.getPickupLocation().equals(PICKUP_LOCATION))
-                .collect(Collectors.toList());
-
-        assertThat(filteredBookingsAfter.size()).isEqualTo(0);
+        assertThatExceptionOfType(TourBookingServiceException.class).isThrownBy(() -> tourBookingService.updateBooking(TOUR_ID, CUSTOMER_ID, PICKUP_DATE_TIME, PICKUP_LOCATION, PARTICIPANTS));
     }
 
     @Sql
@@ -165,8 +164,12 @@ public class TourBookingServiceIT extends AbstractRESTfulDemoIT {
         List<TourBooking> deletedBookings = tourBookingService.deleteAllBookingsWithTourId(TOUR_ID);
         assertThat(deletedBookings.size()).isEqualTo(1);
 
-        List<TourBooking> bookingsAfter = tourBookingService.getBookingsByTourId(TOUR_ID);
-        assertThat(bookingsAfter.size()).isEqualTo(0);
+        try {
+            tourBookingService.getBookingsByTourId(TOUR_ID);
+        } catch (TourBookingServiceException e) {
+        }
+
+        assertThatExceptionOfType(TourBookingServiceException.class).isThrownBy(() -> tourBookingService.getBookingsByTourId(TOUR_ID));
     }
 
     @Sql
@@ -183,12 +186,12 @@ public class TourBookingServiceIT extends AbstractRESTfulDemoIT {
 
         assertThat(deletedBookings.get().size()).isEqualTo(1);
 
-        List<TourBooking> filteredBookingsAfter = tourBookingService.getBookingsByTourId(TOUR_ID)
-                .stream()
-                .filter(booking -> booking.getCustomer().getId().equals(CUSTOMER_ID))
-                .collect(Collectors.toList());
+        try {
+            tourBookingService.getBookingsByTourId(TOUR_ID);
+        } catch (TourBookingServiceException e) {
+        }
 
-        assertThat(filteredBookingsAfter.size()).isEqualTo(0);
+        assertThatExceptionOfType(TourBookingServiceException.class).isThrownBy(() -> tourBookingService.getBookingsByTourId(TOUR_ID));
     }
 
     @Sql

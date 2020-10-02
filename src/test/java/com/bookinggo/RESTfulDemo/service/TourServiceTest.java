@@ -2,6 +2,7 @@ package com.bookinggo.RESTfulDemo.service;
 
 import com.bookinggo.RESTfulDemo.entity.Tour;
 import com.bookinggo.RESTfulDemo.entity.TourPackage;
+import com.bookinggo.RESTfulDemo.exception.TourServiceException;
 import com.bookinggo.RESTfulDemo.repository.TourPackageRepository;
 import com.bookinggo.RESTfulDemo.repository.TourRepository;
 import org.junit.jupiter.api.Test;
@@ -16,6 +17,7 @@ import java.util.Optional;
 
 import static java.util.List.of;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest
@@ -66,22 +68,28 @@ public class TourServiceTest {
 
     @Test
     public void shouldCallFindById_whenUpdateTour_givenTourDoesntExist() {
-        Optional<Tour> updatedTour = tourService.updateTour(TOUR_ID, NON_EXISTING_TOUR_PACKAGE_CODE, TOUR_TITLE, TOUR_DURATION, TOUR_PRICE);
+        try {
+            tourService.updateTour(TOUR_ID, NON_EXISTING_TOUR_PACKAGE_CODE, TOUR_TITLE, TOUR_DURATION, TOUR_PRICE);
+        } catch (TourServiceException e) {
+        }
 
         verify(tourRepositoryMock).findById(TOUR_ID);
         verifyNoInteractions(tourPackageRepositoryMock);
-        assertThat(updatedTour).isEmpty();
+        assertThatExceptionOfType(TourServiceException.class).isThrownBy(() -> tourService.updateTour(TOUR_ID, NON_EXISTING_TOUR_PACKAGE_CODE, TOUR_TITLE, TOUR_DURATION, TOUR_PRICE));
     }
 
     @Test
     public void shouldCallFindByIdAndGetTourPackageByCode_whenUpdateTour_givenTourPackageDoesntExist() {
         when(tourRepositoryMock.findById(TOUR_ID)).thenReturn(Optional.of(buildSimpleTour()));
 
-        Optional<Tour> updatedTour = tourService.updateTour(TOUR_ID, NON_EXISTING_TOUR_PACKAGE_CODE, TOUR_TITLE, TOUR_DURATION, TOUR_PRICE);
+        try {
+            tourService.updateTour(TOUR_ID, NON_EXISTING_TOUR_PACKAGE_CODE, TOUR_TITLE, TOUR_DURATION, TOUR_PRICE);
+        } catch (TourServiceException e) {
+        }
 
         verify(tourRepositoryMock).findById(TOUR_ID);
         verify(tourPackageRepositoryMock).getTourPackageByCode(NON_EXISTING_TOUR_PACKAGE_CODE);
-        assertThat(updatedTour).isEmpty();
+        assertThatExceptionOfType(TourServiceException.class).isThrownBy(() -> tourService.updateTour(TOUR_ID, NON_EXISTING_TOUR_PACKAGE_CODE, TOUR_TITLE, TOUR_DURATION, TOUR_PRICE));
     }
 
     @Test
@@ -191,10 +199,13 @@ public class TourServiceTest {
 
     @Test
     public void shouldCallFindById_whenGetTourById_givenNoTourWithIdExists() {
-        Optional<Tour> tour = tourService.getTourById(TOUR_ID);
+        try {
+            tourService.getTourById(TOUR_ID);
+        } catch (TourServiceException e) {
+        }
 
         verify(tourRepositoryMock).findById(TOUR_ID);
-        assertThat(tour).isEmpty();
+        assertThatExceptionOfType(TourServiceException.class).isThrownBy(() -> tourService.getTourById(TOUR_ID));
     }
 
     @Test
@@ -208,10 +219,14 @@ public class TourServiceTest {
 
     @Test
     public void shouldCallFindAll_whenGetToursByLocation_givenNoTourWithLocationExists() {
-        List<Tour> tours = tourService.getToursByLocation(TOUR_LOCATION);
+        try {
+            tourService.getToursByLocation(TOUR_LOCATION);
+        } catch (TourServiceException e) {
+        }
+
 
         verify(tourRepositoryMock).findAll();
-        assertThat(tours.size()).isEqualTo(0);
+        assertThatExceptionOfType(TourServiceException.class).isThrownBy(() -> tourService.getToursByLocation(TOUR_LOCATION));
     }
 
     @Test
@@ -262,11 +277,14 @@ public class TourServiceTest {
 
     @Test
     public void shouldNotCallDeleteById_whenDeleteTourById_givenTourDoesntExist() {
-        Optional<Tour> tour = tourService.deleteTourById(TOUR_ID);
+        try {
+            tourService.deleteTourById(TOUR_ID);
+        } catch (TourServiceException e) {
+        }
 
         verify(tourRepositoryMock).findById(TOUR_ID);
         verify(tourRepositoryMock, times(0)).deleteById(TOUR_ID);
-        assertThat(tour).isEmpty();
+        assertThatExceptionOfType(TourServiceException.class).isThrownBy(() -> tourService.deleteTourById(TOUR_ID));
     }
 
     @Test

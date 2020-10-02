@@ -2,6 +2,7 @@ package com.bookinggo.RESTfulDemo.service;
 
 import com.bookinggo.RESTfulDemo.entity.Tour;
 import com.bookinggo.RESTfulDemo.entity.TourPackage;
+import com.bookinggo.RESTfulDemo.exception.TourServiceException;
 import com.bookinggo.RESTfulDemo.repository.TourPackageRepository;
 import com.bookinggo.RESTfulDemo.repository.TourRepository;
 import lombok.AllArgsConstructor;
@@ -54,9 +55,8 @@ public class TourServiceImpl implements TourService {
                 if (tourPackage.isPresent()) {
                     tour.get().setTourPackage(tourPackage.get());
                 } else {
-                    return Optional.empty();
+                    throw new TourServiceException("Can't update tour. The Tour Package doesn't exist. Provide correct Tour Package Code.", null);
                 }
-
             }
 
             if (title != null) {
@@ -74,7 +74,7 @@ public class TourServiceImpl implements TourService {
             return Optional.of(tourRepository.saveAndFlush(tour.get()));
         }
 
-        return Optional.empty();
+        throw new TourServiceException("Can't update tour. Tour doesn't exist. Provide correct Tour Id.", null);
     }
 
     @Override
@@ -88,7 +88,11 @@ public class TourServiceImpl implements TourService {
         log.info("getTourById - id: {}", tourId);
         final Optional<Tour> tour = tourRepository.findById(tourId);
 
-        return tour;
+        if (tour.isPresent()) {
+            return tour;
+        }
+
+        throw new TourServiceException("Can't get tour by id. Tour doesn't exist. Provide correct Tour Id.", null);
     }
 
     @Override
@@ -99,7 +103,11 @@ public class TourServiceImpl implements TourService {
                 .filter(tour -> tour.getTourPackage().getLocation().equalsIgnoreCase(location))
                 .collect(Collectors.toList());
 
-        return toursByLocation;
+        if (toursByLocation.size() > 0) {
+            return toursByLocation;
+        }
+
+        throw new TourServiceException("Can't get tours by location. Tour Location doesn't exist. Provide correct Tour Location.", null);
     }
 
     @Override
@@ -127,6 +135,6 @@ public class TourServiceImpl implements TourService {
             return tour;
         }
 
-        return Optional.empty();
+        throw new TourServiceException("Can't delete tour. Tour doesn't exist. Provide correct Tour Id.", null);
     }
 }
