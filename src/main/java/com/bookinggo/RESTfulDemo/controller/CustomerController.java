@@ -32,7 +32,6 @@ public class CustomerController {
         log.info("POST /customers: {}", customerDto.toString());
         try {
             final Customer createdCustomer = customerService.createCustomer(customerDto.getTitle(), customerDto.getName());
-
             return ResponseEntity
                     .created(URI.create("/customers"))
                     .body(createdCustomer);
@@ -53,7 +52,6 @@ public class CustomerController {
             } else {
                 try {
                     final Optional<Customer> response = customerService.updateCustomer(customerId, customerPatchDto.getTitle(), customerPatchDto.getName());
-
                     return ResponseEntity
                             .ok()
                             .body(response.get());
@@ -77,7 +75,6 @@ public class CustomerController {
         log.info("GET /customers/{}", customerId);
         try {
             final Optional<Customer> customer = customerService.getCustomerById(customerId);
-
             return ResponseEntity
                     .ok()
                     .body(customer.get());
@@ -91,7 +88,6 @@ public class CustomerController {
         log.info("GET /customers/{}/bookings", customerId);
         try {
             final List<TourBooking> bookings = customerService.getBookingsByCustomerId(customerId);
-
             return ResponseEntity
                     .ok()
                     .body(bookings);

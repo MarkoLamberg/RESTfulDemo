@@ -74,7 +74,6 @@ public class TourBookingController {
 
         try {
             final List<TourBooking> tourBookings = tourBookingService.getBookingsByTourId(tourId);
-
             return ResponseEntity
                     .ok()
                     .body(tourBookings
@@ -126,7 +125,6 @@ public class TourBookingController {
         log.info("DELETE /tours/{}/bookings", tourId);
         try {
             final Optional<Tour> tour = tourService.getTourById(tourId);
-
             final List<TourBooking> bookings = tourBookingService.deleteAllBookingsWithTourId(tourId);
 
             return ResponseEntity
@@ -148,7 +146,6 @@ public class TourBookingController {
 
         try {
             final Optional<List<TourBooking>> bookings = tourBookingService.deleteAllBookingsWithTourIdAndCustomerId(tourId, customerId);
-
             return ResponseEntity
                     .ok()
                     .body(listOfExpandedDtos(bookings.get()));
@@ -162,7 +159,6 @@ public class TourBookingController {
         log.info("DELETE /tours/bookings/{}", customerId);
         try {
             final Optional<List<TourBooking>> bookings = tourBookingService.deleteAllBookingsWithCustomerId(customerId);
-
             return ResponseEntity
                     .ok()
                     .body(listOfExpandedDtos(bookings.get()));
@@ -176,7 +172,6 @@ public class TourBookingController {
         log.info("DELETE /tours/bookings");
         try {
             final List<TourBooking> bookings = tourBookingService.deleteAllBookings();
-
             return listOfExpandedDtos(bookings);
         } catch (TourBookingServiceException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());

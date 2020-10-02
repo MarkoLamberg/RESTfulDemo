@@ -40,7 +40,6 @@ public class TourController {
         }
 
         final Optional<Tour> tour = tourService.createTour(tourDto.getTourPackageCode(), tourDto.getTitle(), tourDto.getDuration(), tourDto.getPrice());
-
         return ResponseEntity
                 .created(URI.create("/tours"))
                 .body(tour.get());
@@ -51,14 +50,12 @@ public class TourController {
         log.info("PUT /tours/{}: {}", tourId, tourPatchDto.toString());
         try {
             final Optional<Tour> tour = tourService.getTourById(tourId);
-
             final Optional<Tour> tourWithNewTitleOrTourPackage = getTourWithNewTitleOrTourPackage(tourPatchDto, tour);
 
             if (tourWithNewTitleOrTourPackage.isPresent()) {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Can't update tour. Can't change the tour name to match with other existing tour.");
             } else {
                 final Optional<Tour> response = tourService.updateTour(tourId, tourPatchDto.getTourPackageCode(), tourPatchDto.getTitle(), tourPatchDto.getDuration(), tourPatchDto.getPrice());
-
                 return ResponseEntity
                         .ok()
                         .body(response.get());
@@ -79,7 +76,6 @@ public class TourController {
         log.info("GET /tours/{}", tourId);
         try {
             final Optional<Tour> tour = tourService.getTourById(tourId);
-
             return ResponseEntity
                     .ok()
                     .body(tour.get());
@@ -93,7 +89,6 @@ public class TourController {
         log.info("GET /tours/byLocation/{}", location);
         try {
             final List<Tour> tours = tourService.getToursByLocation(location);
-
             return ResponseEntity
                     .ok()
                     .body(tours);
@@ -115,7 +110,6 @@ public class TourController {
 
         try {
             final Optional<Tour> deletedTour = tourService.deleteTourById(tourId);
-
             return ResponseEntity
                     .ok()
                     .body(deletedTour.get());
