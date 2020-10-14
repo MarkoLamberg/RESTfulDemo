@@ -1,7 +1,7 @@
-package com.bookinggo.RESTfulDemo.repository;
+package com.bookinggo.RestfulDemo.repository;
 
-import com.bookinggo.RESTfulDemo.RestfulDemoApplication;
-import com.bookinggo.RESTfulDemo.config.MySQLConfig;
+import com.bookinggo.RestfulDemo.RestfulDemoApplication;
+import com.bookinggo.RestfulDemo.config.MySQLConfig;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;

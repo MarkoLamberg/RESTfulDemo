@@ -1,7 +1,7 @@
-package com.bookinggo.RESTfulDemo.service;
+package com.bookinggo.RestfulDemo.service;
 
-import com.bookinggo.RESTfulDemo.entity.TourBooking;
-import com.bookinggo.RESTfulDemo.exception.TourBookingServiceException;
+import com.bookinggo.RestfulDemo.entity.TourBooking;
+import com.bookinggo.RestfulDemo.exception.TourBookingServiceException;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -13,7 +13,6 @@ import org.springframework.test.context.jdbc.Sql;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -22,7 +21,7 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 @Slf4j
 @SpringBootTest
-public class TourBookingServiceIT extends AbstractRESTfulDemoIT {
+public class TourBookingServiceIT extends AbstractRestfulDemoIT {
 
     private static final int CUSTOMER_ID = 4;
 
@@ -32,9 +31,9 @@ public class TourBookingServiceIT extends AbstractRESTfulDemoIT {
 
     private static final int ORIGINAL_PARTICIPANTS = 2;
 
-    private static final LocalDateTime PICKUP_DATE_TIME = LocalDateTime.of(2020, 03, 20, 12, 00);
+    private static final LocalDateTime PICKUP_DATE_TIME = LocalDateTime.of(2020, 3, 20, 12, 0);
 
-    private static final LocalDateTime ORIGINAL_PICKUP_DATE_TIME = LocalDateTime.of(2019, 11, 18, 06, 00);
+    private static final LocalDateTime ORIGINAL_PICKUP_DATE_TIME = LocalDateTime.of(2019, 11, 18, 6, 0);
 
     private static final String PICKUP_LOCATION = "Hotel Ibis";
 
@@ -66,8 +65,6 @@ public class TourBookingServiceIT extends AbstractRESTfulDemoIT {
     public void shouldReturnBooking_whenGetTourBookings_givenBookingWithTourIdExists() {
         List<TourBooking> bookings = tourBookingService.getBookingsByTourId(TOUR_ID);
         assertThat(bookings.size()).isEqualTo(1);
-
-        bookings.get(0).getTour().getId();
         assertThat(bookings.get(0).getTour().getId().intValue()).isEqualTo(TOUR_ID);
     }
 
@@ -186,9 +183,9 @@ public class TourBookingServiceIT extends AbstractRESTfulDemoIT {
 
         assertThat(filteredBookingsBefore.size()).isEqualTo(1);
 
-        Optional<List<TourBooking>> deletedBookings = tourBookingService.deleteAllBookingsWithTourIdAndCustomerId(TOUR_ID, CUSTOMER_ID);
+        List<TourBooking> deletedBookings = tourBookingService.deleteAllBookingsWithTourIdAndCustomerId(TOUR_ID, CUSTOMER_ID);
 
-        assertThat(deletedBookings.get().size()).isEqualTo(1);
+        assertThat(deletedBookings.size()).isEqualTo(1);
 
         try {
             tourBookingService.getBookingsByTourId(TOUR_ID);
@@ -209,8 +206,8 @@ public class TourBookingServiceIT extends AbstractRESTfulDemoIT {
 
         assertThat(filteredBookingsBefore.size()).isEqualTo(2);
 
-        Optional<List<TourBooking>> deletedBookings = tourBookingService.deleteAllBookingsWithCustomerId(CUSTOMER_ID);
-        assertThat(deletedBookings.get().size()).isEqualTo(2);
+        List<TourBooking> deletedBookings = tourBookingService.deleteAllBookingsWithCustomerId(CUSTOMER_ID);
+        assertThat(deletedBookings.size()).isEqualTo(2);
 
         List<TourBooking> filteredBookingsAfter = tourBookingService.getAllBookings()
                 .stream()

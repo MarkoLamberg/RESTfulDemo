@@ -1,11 +1,11 @@
-package com.bookinggo.RESTfulDemo.controller;
+package com.bookinggo.RestfulDemo.controller;
 
-import com.bookinggo.RESTfulDemo.RestfulDemoApplication;
-import com.bookinggo.RESTfulDemo.dto.BookingDto;
-import com.bookinggo.RESTfulDemo.dto.BookingPatchDto;
-import com.bookinggo.RESTfulDemo.dto.ExpandedBookingDto;
-import com.bookinggo.RESTfulDemo.entity.TourBooking;
-import com.bookinggo.RESTfulDemo.service.AbstractRESTfulDemoIT;
+import com.bookinggo.RestfulDemo.RestfulDemoApplication;
+import com.bookinggo.RestfulDemo.dto.BookingDto;
+import com.bookinggo.RestfulDemo.dto.BookingPatchDto;
+import com.bookinggo.RestfulDemo.dto.ExpandedBookingDto;
+import com.bookinggo.RestfulDemo.entity.TourBooking;
+import com.bookinggo.RestfulDemo.service.AbstractRestfulDemoIT;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -21,7 +21,7 @@ import static org.springframework.http.HttpStatus.*;
 
 @SpringBootTest(classes = RestfulDemoApplication.class,
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class TourBookingControllerIT extends AbstractRESTfulDemoIT {
+public class TourBookingControllerIT extends AbstractRestfulDemoIT {
 
     private static final int CUSTOMER_ID = 4;
 

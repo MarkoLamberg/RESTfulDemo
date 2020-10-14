@@ -1,7 +1,7 @@
-package com.bookinggo.RESTfulDemo.repository;
+package com.bookinggo.RestfulDemo.repository;
 
-import com.bookinggo.RESTfulDemo.entity.Tour;
-import com.bookinggo.RESTfulDemo.entity.TourPackage;
+import com.bookinggo.RestfulDemo.entity.Tour;
+import com.bookinggo.RestfulDemo.entity.TourPackage;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

@@ -1,11 +1,11 @@
-package com.bookinggo.RESTfulDemo.controller;
+package com.bookinggo.RestfulDemo.controller;
 
-import com.bookinggo.RESTfulDemo.dto.CustomerDto;
-import com.bookinggo.RESTfulDemo.dto.CustomerPatchDto;
-import com.bookinggo.RESTfulDemo.entity.Customer;
-import com.bookinggo.RESTfulDemo.entity.TourBooking;
-import com.bookinggo.RESTfulDemo.exception.CustomerServiceException;
-import com.bookinggo.RESTfulDemo.service.CustomerService;
+import com.bookinggo.RestfulDemo.dto.CustomerDto;
+import com.bookinggo.RestfulDemo.dto.CustomerPatchDto;
+import com.bookinggo.RestfulDemo.entity.Customer;
+import com.bookinggo.RestfulDemo.entity.TourBooking;
+import com.bookinggo.RestfulDemo.exception.CustomerServiceException;
+import com.bookinggo.RestfulDemo.service.CustomerService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -44,17 +44,17 @@ public class CustomerController {
     public ResponseEntity<?> updateCustomer(@PathVariable(value = "customerId") int customerId, @Valid @RequestBody CustomerPatchDto customerPatchDto) {
         log.info("PUT /customers/{}, {}", customerId, customerPatchDto.toString());
         try {
-            final Customer customer = customerService.getCustomerById(customerId).get();
+            final Customer customer = customerService.getCustomerById(customerId);
             final Optional<Customer> customerWithNewName = getCustomerWithNewName(customerPatchDto, customer);
 
             if (customerWithNewName.isPresent()) {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Can't change the customer name to match with other existing customer.");
             } else {
                 try {
-                    final Optional<Customer> response = customerService.updateCustomer(customerId, customerPatchDto.getTitle(), customerPatchDto.getName());
+                    final Customer response = customerService.updateCustomer(customerId, customerPatchDto.getTitle(), customerPatchDto.getName());
                     return ResponseEntity
                             .ok()
-                            .body(response.get());
+                            .body(response);
                 } catch (CustomerServiceException e) {
                     throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
                 }
@@ -74,10 +74,10 @@ public class CustomerController {
     public ResponseEntity<?> getCustomersById(@PathVariable(value = "customerId") int customerId) {
         log.info("GET /customers/{}", customerId);
         try {
-            final Optional<Customer> customer = customerService.getCustomerById(customerId);
+            final Customer customer = customerService.getCustomerById(customerId);
             return ResponseEntity
                     .ok()
-                    .body(customer.get());
+                    .body(customer);
         } catch (CustomerServiceException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
@@ -100,10 +100,10 @@ public class CustomerController {
     public ResponseEntity<?> deleteCustomer(@PathVariable(value = "customerId") int customerId) {
         log.info("DELETE /customers/{}", customerId);
         try {
-            final Optional<Customer> deletedCustomer = customerService.deleteCustomerById(customerId);
+            final Customer deletedCustomer = customerService.deleteCustomerById(customerId);
             return ResponseEntity
                     .ok()
-                    .body(deletedCustomer.get());
+                    .body(deletedCustomer);
         } catch (CustomerServiceException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
@@ -114,7 +114,7 @@ public class CustomerController {
             return Optional.empty();
         } else {
             try {
-                return customerService.getCustomerByName(customerPatchDto.getName());
+                return Optional.of(customerService.getCustomerByName(customerPatchDto.getName()));
             } catch (CustomerServiceException e) {
                 return Optional.empty();
             }

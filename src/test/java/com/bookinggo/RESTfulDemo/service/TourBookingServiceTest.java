@@ -1,12 +1,12 @@
-package com.bookinggo.RESTfulDemo.service;
+package com.bookinggo.RestfulDemo.service;
 
-import com.bookinggo.RESTfulDemo.entity.Customer;
-import com.bookinggo.RESTfulDemo.entity.Tour;
-import com.bookinggo.RESTfulDemo.entity.TourBooking;
-import com.bookinggo.RESTfulDemo.exception.TourBookingServiceException;
-import com.bookinggo.RESTfulDemo.repository.CustomerRepository;
-import com.bookinggo.RESTfulDemo.repository.TourBookingRepository;
-import com.bookinggo.RESTfulDemo.repository.TourRepository;
+import com.bookinggo.RestfulDemo.entity.Customer;
+import com.bookinggo.RestfulDemo.entity.Tour;
+import com.bookinggo.RestfulDemo.entity.TourBooking;
+import com.bookinggo.RestfulDemo.exception.TourBookingServiceException;
+import com.bookinggo.RestfulDemo.repository.CustomerRepository;
+import com.bookinggo.RestfulDemo.repository.TourBookingRepository;
+import com.bookinggo.RestfulDemo.repository.TourRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -89,12 +89,12 @@ public class TourBookingServiceTest {
         when(customerRepositoryMock.findById(CUSTOMER_ID)).thenReturn(Optional.of(buildCustomer()));
         when(tourBookingRepositoryMock.save(any())).thenReturn(buildTourBooking());
 
-        Optional<TourBooking> booking = tourBookingService.createBooking(TOUR_ID, CUSTOMER_ID, PICKUP_DATE_TIME, PICKUP_LOCATION, PARTICIPANTS);
+        TourBooking booking = tourBookingService.createBooking(TOUR_ID, CUSTOMER_ID, PICKUP_DATE_TIME, PICKUP_LOCATION, PARTICIPANTS);
 
         verify(tourRepositoryMock).findById(TOUR_ID);
         verify(customerRepositoryMock).findById(CUSTOMER_ID);
         verify(tourBookingRepositoryMock).save(any());
-        assertThat(booking).isPresent();
+        assertThat(booking).isNotNull();
     }
 
     @Test
@@ -159,7 +159,7 @@ public class TourBookingServiceTest {
         when(tourBookingRepositoryMock.findByTourIdAndCustomerId(TOUR_ID, CUSTOMER_ID)).thenReturn(of(tourBooking));
         when(tourBookingRepositoryMock.saveAndFlush(any())).thenReturn(buildTourBooking(customer));
 
-        Optional<TourBooking> updatedBooking = tourBookingService.updateBooking(TOUR_ID, CUSTOMER_ID, PICKUP_DATE_TIME, PICKUP_LOCATION, PARTICIPANTS);
+        TourBooking updatedBooking = tourBookingService.updateBooking(TOUR_ID, CUSTOMER_ID, PICKUP_DATE_TIME, PICKUP_LOCATION, PARTICIPANTS);
 
         verify(customerRepositoryMock).findById(CUSTOMER_ID);
         verify(tourBookingRepositoryMock).findByTourIdAndCustomerId(TOUR_ID, CUSTOMER_ID);
@@ -167,7 +167,7 @@ public class TourBookingServiceTest {
         verify(tourBooking).setPickupLocation(PICKUP_LOCATION);
         verify(tourBooking).setParticipants(PARTICIPANTS);
         verify(tourBookingRepositoryMock).saveAndFlush(tourBooking);
-        assertThat(updatedBooking).isPresent();
+        assertThat(updatedBooking).isNotNull();
     }
 
     @Test
@@ -179,7 +179,7 @@ public class TourBookingServiceTest {
         when(tourBookingRepositoryMock.findByTourIdAndCustomerId(TOUR_ID, CUSTOMER_ID)).thenReturn(of(tourBooking));
         when(tourBookingRepositoryMock.saveAndFlush(any())).thenReturn(buildTourBooking(customer));
 
-        Optional<TourBooking> updatedBooking = tourBookingService.updateBooking(TOUR_ID, CUSTOMER_ID, PICKUP_DATE_TIME, PICKUP_LOCATION, null);
+        TourBooking updatedBooking = tourBookingService.updateBooking(TOUR_ID, CUSTOMER_ID, PICKUP_DATE_TIME, PICKUP_LOCATION, null);
 
         verify(customerRepositoryMock).findById(CUSTOMER_ID);
         verify(tourBookingRepositoryMock).findByTourIdAndCustomerId(TOUR_ID, CUSTOMER_ID);
@@ -187,7 +187,7 @@ public class TourBookingServiceTest {
         verify(tourBooking).setPickupLocation(PICKUP_LOCATION);
         verify(tourBooking, times(0)).setParticipants(PARTICIPANTS);
         verify(tourBookingRepositoryMock).saveAndFlush(tourBooking);
-        assertThat(updatedBooking).isPresent();
+        assertThat(updatedBooking).isNotNull();
     }
 
     @Test
@@ -199,7 +199,7 @@ public class TourBookingServiceTest {
         when(tourBookingRepositoryMock.findByTourIdAndCustomerId(TOUR_ID, CUSTOMER_ID)).thenReturn(of(tourBooking));
         when(tourBookingRepositoryMock.saveAndFlush(any())).thenReturn(buildTourBooking(customer));
 
-        Optional<TourBooking> updatedBooking = tourBookingService.updateBooking(TOUR_ID, CUSTOMER_ID, PICKUP_DATE_TIME, null, null);
+        TourBooking updatedBooking = tourBookingService.updateBooking(TOUR_ID, CUSTOMER_ID, PICKUP_DATE_TIME, null, null);
 
         verify(customerRepositoryMock).findById(CUSTOMER_ID);
         verify(tourBookingRepositoryMock).findByTourIdAndCustomerId(TOUR_ID, CUSTOMER_ID);
@@ -207,7 +207,7 @@ public class TourBookingServiceTest {
         verify(tourBooking, times(0)).setPickupLocation(PICKUP_LOCATION);
         verify(tourBooking, times(0)).setParticipants(PARTICIPANTS);
         verify(tourBookingRepositoryMock).saveAndFlush(tourBooking);
-        assertThat(updatedBooking).isPresent();
+        assertThat(updatedBooking).isNotNull();
     }
 
     @Test
@@ -219,13 +219,13 @@ public class TourBookingServiceTest {
         when(tourBookingRepositoryMock.findByTourIdAndCustomerId(TOUR_ID, CUSTOMER_ID)).thenReturn(of(tourBooking));
         when(tourBookingRepositoryMock.saveAndFlush(any())).thenReturn(buildTourBooking(customer));
 
-        Optional<TourBooking> updatedBooking = tourBookingService.updateBooking(TOUR_ID, CUSTOMER_ID, null, null, null);
+        TourBooking updatedBooking = tourBookingService.updateBooking(TOUR_ID, CUSTOMER_ID, null, null, null);
 
         verify(customerRepositoryMock).findById(CUSTOMER_ID);
         verify(tourBookingRepositoryMock).findByTourIdAndCustomerId(TOUR_ID, CUSTOMER_ID);
         verifyNoMoreInteractions(tourBooking);
         verify(tourBookingRepositoryMock).saveAndFlush(tourBooking);
-        assertThat(updatedBooking).isPresent();
+        assertThat(updatedBooking).isNotNull();
     }
 
     @Test
@@ -267,11 +267,11 @@ public class TourBookingServiceTest {
         when(customerRepositoryMock.findById(CUSTOMER_ID)).thenReturn(Optional.of(customer));
         when(tourBookingRepositoryMock.findByTourIdAndCustomerId(TOUR_ID, CUSTOMER_ID)).thenReturn(of(buildTourBooking(customer)));
 
-        Optional<List<TourBooking>> bookings = tourBookingService.deleteAllBookingsWithTourIdAndCustomerId(TOUR_ID, CUSTOMER_ID);
+        List<TourBooking> bookings = tourBookingService.deleteAllBookingsWithTourIdAndCustomerId(TOUR_ID, CUSTOMER_ID);
 
         verify(tourBookingRepositoryMock).findByTourIdAndCustomerId(TOUR_ID, CUSTOMER_ID);
         verify(tourBookingRepositoryMock).delete(any());
-        assertThat(bookings.get().size()).isEqualTo(1);
+        assertThat(bookings.size()).isEqualTo(1);
     }
 
     @Test
@@ -292,11 +292,11 @@ public class TourBookingServiceTest {
         Customer customer = buildCustomer();
         when(customerRepositoryMock.findById(CUSTOMER_ID)).thenReturn(Optional.of(customer));
         when(tourBookingRepositoryMock.findByCustomerId(CUSTOMER_ID)).thenReturn(of(buildTourBooking(customer)));
-        Optional<List<TourBooking>> bookings = tourBookingService.deleteAllBookingsWithCustomerId(CUSTOMER_ID);
+        List<TourBooking> bookings = tourBookingService.deleteAllBookingsWithCustomerId(CUSTOMER_ID);
 
         verify(tourBookingRepositoryMock).findByCustomerId(CUSTOMER_ID);
         verify(tourBookingRepositoryMock).delete(any());
-        assertThat(bookings.get().size()).isEqualTo(1);
+        assertThat(bookings.size()).isEqualTo(1);
     }
 
     @Test

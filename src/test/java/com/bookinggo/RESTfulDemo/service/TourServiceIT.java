@@ -1,7 +1,7 @@
-package com.bookinggo.RESTfulDemo.service;
+package com.bookinggo.RestfulDemo.service;
 
-import com.bookinggo.RESTfulDemo.entity.Tour;
-import com.bookinggo.RESTfulDemo.exception.TourServiceException;
+import com.bookinggo.RestfulDemo.entity.Tour;
+import com.bookinggo.RestfulDemo.exception.TourServiceException;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -12,7 +12,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -20,7 +19,7 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 @Slf4j
 @SpringBootTest
-public class TourServiceIT extends AbstractRESTfulDemoIT {
+public class TourServiceIT extends AbstractRestfulDemoIT {
 
     private static final int TOUR_ID = 1;
 
@@ -64,17 +63,17 @@ public class TourServiceIT extends AbstractRESTfulDemoIT {
     @Sql
     @Test
     public void shouldUpdateTour_whenUpdateTour_givenValidTour() {
-        Optional<Tour> tourBefore = tourService.getTourById(TOUR_ID);
-        assertThat(tourBefore.get().getTitle()).isNotEqualTo(TOUR_TITLE);
-        assertThat(tourBefore.get().getDuration()).isNotEqualTo(TOUR_DURATION);
-        assertThat(tourBefore.get().getPrice()).isNotEqualTo(TOUR_PRICE);
+        Tour tourBefore = tourService.getTourById(TOUR_ID);
+        assertThat(tourBefore.getTitle()).isNotEqualTo(TOUR_TITLE);
+        assertThat(tourBefore.getDuration()).isNotEqualTo(TOUR_DURATION);
+        assertThat(tourBefore.getPrice()).isNotEqualTo(TOUR_PRICE);
 
         tourService.updateTour(TOUR_ID, null, TOUR_TITLE, TOUR_DURATION, TOUR_PRICE);
 
-        Optional<Tour> tourAfter = tourService.getTourById(TOUR_ID);
-        assertThat(tourAfter.get().getTitle()).isEqualTo(TOUR_TITLE);
-        assertThat(tourAfter.get().getDuration()).isEqualTo(TOUR_DURATION);
-        assertThat(tourAfter.get().getPrice()).isEqualTo(TOUR_PRICE);
+        Tour tourAfter = tourService.getTourById(TOUR_ID);
+        assertThat(tourAfter.getTitle()).isEqualTo(TOUR_TITLE);
+        assertThat(tourAfter.getDuration()).isEqualTo(TOUR_DURATION);
+        assertThat(tourAfter.getPrice()).isEqualTo(TOUR_PRICE);
     }
 
     @Sql
@@ -83,10 +82,10 @@ public class TourServiceIT extends AbstractRESTfulDemoIT {
     public void parameterized_shouldUpdateTour_whenUpdateTour_givenValidTour(String title, String duration, Integer price, Tour updatedTour) {
         tourService.updateTour(TOUR_ID, null, title, duration, price);
 
-        Optional<Tour> tourAfter = tourService.getTourById(TOUR_ID);
-        assertThat(tourAfter.get().getTitle()).isEqualTo(updatedTour.getTitle());
-        assertThat(tourAfter.get().getDuration()).isEqualTo(updatedTour.getDuration());
-        assertThat(tourAfter.get().getPrice()).isEqualTo(updatedTour.getPrice());
+        Tour tourAfter = tourService.getTourById(TOUR_ID);
+        assertThat(tourAfter.getTitle()).isEqualTo(updatedTour.getTitle());
+        assertThat(tourAfter.getDuration()).isEqualTo(updatedTour.getDuration());
+        assertThat(tourAfter.getPrice()).isEqualTo(updatedTour.getPrice());
     }
 
     @Sql
@@ -99,8 +98,8 @@ public class TourServiceIT extends AbstractRESTfulDemoIT {
     @Sql
     @Test
     public void shouldReturnATour_whenGetTourById_givenTourWithIdExists() {
-        Optional<Tour> tour = tourService.getTourById(TOUR_ID);
-        assertThat(tour).isPresent();
+        Tour tour = tourService.getTourById(TOUR_ID);
+        assertThat(tour).isNotNull();
     }
 
     @Sql
@@ -113,15 +112,15 @@ public class TourServiceIT extends AbstractRESTfulDemoIT {
     @Sql
     @Test
     public void shouldReturnTour_whenGetTourByPackageCodeAndTitle_givenTourWithThatPackageCodeAndTitleExists() {
-        Optional<Tour> tour = tourService.getTourByTourPackageCodeAndTitle(TOUR_PACKAGE_CODE, TOUR_TITLE);
-        assertThat(tour).isPresent();
+        Tour tour = tourService.getTourByTourPackageCodeAndTitle(TOUR_PACKAGE_CODE, TOUR_TITLE);
+        assertThat(tour).isNotNull();
     }
 
     @Sql
     @Test
     public void shouldDeleteTour_whenDeleteTourById_givenTourWithTourIdExists() {
-        Optional<Tour> tourBefore = tourService.getTourById(TOUR_ID);
-        assertThat(tourBefore).isPresent();
+        Tour tourBefore = tourService.getTourById(TOUR_ID);
+        assertThat(tourBefore).isNotNull();
 
         tourService.deleteTourById(TOUR_ID);
 

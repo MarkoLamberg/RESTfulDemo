@@ -1,8 +1,8 @@
-package com.bookinggo.RESTfulDemo.config;
+package com.bookinggo.RestfulDemo.config;
 
-import com.bookinggo.RESTfulDemo.dto.BookingDto;
-import com.bookinggo.RESTfulDemo.dto.ExpandedBookingDto;
-import com.bookinggo.RESTfulDemo.entity.TourBooking;
+import com.bookinggo.RestfulDemo.dto.BookingDto;
+import com.bookinggo.RestfulDemo.dto.ExpandedBookingDto;
+import com.bookinggo.RestfulDemo.entity.TourBooking;
 import org.modelmapper.Conditions;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;

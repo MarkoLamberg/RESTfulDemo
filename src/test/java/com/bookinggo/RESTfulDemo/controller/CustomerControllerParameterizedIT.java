@@ -1,8 +1,8 @@
-package com.bookinggo.RESTfulDemo.controller;
+package com.bookinggo.RestfulDemo.controller;
 
-import com.bookinggo.RESTfulDemo.RestfulDemoApplication;
-import com.bookinggo.RESTfulDemo.entity.Customer;
-import com.bookinggo.RESTfulDemo.service.AbstractRESTfulDemoIT;
+import com.bookinggo.RestfulDemo.RestfulDemoApplication;
+import com.bookinggo.RestfulDemo.entity.Customer;
+import com.bookinggo.RestfulDemo.service.AbstractRestfulDemoIT;
 import org.junit.Before;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -24,7 +24,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest(classes = RestfulDemoApplication.class,
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("integTest")
-public class CustomerControllerParameterizedIT extends AbstractRESTfulDemoIT {
+public class CustomerControllerParameterizedIT extends AbstractRestfulDemoIT {
 
     private static final String LOCAL_HOST = "http://localhost:";
 

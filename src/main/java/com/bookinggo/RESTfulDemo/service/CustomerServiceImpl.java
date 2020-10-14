@@ -1,9 +1,9 @@
-package com.bookinggo.RESTfulDemo.service;
+package com.bookinggo.RestfulDemo.service;
 
-import com.bookinggo.RESTfulDemo.entity.Customer;
-import com.bookinggo.RESTfulDemo.entity.TourBooking;
-import com.bookinggo.RESTfulDemo.exception.CustomerServiceException;
-import com.bookinggo.RESTfulDemo.repository.CustomerRepository;
+import com.bookinggo.RestfulDemo.entity.Customer;
+import com.bookinggo.RestfulDemo.entity.TourBooking;
+import com.bookinggo.RestfulDemo.exception.CustomerServiceException;
+import com.bookinggo.RestfulDemo.repository.CustomerRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -37,7 +37,7 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public Optional<Customer> updateCustomer(int customerId, String title, String name) {
+    public Customer updateCustomer(int customerId, String title, String name) {
         log.info("updateCustomer - customerId: {}, title: {}, name {}", customerId, title, name);
         final Optional<Customer> customer = customerRepository.findById(customerId);
 
@@ -50,7 +50,7 @@ public class CustomerServiceImpl implements CustomerService {
                 customer.get().setName(name);
             }
 
-            return Optional.of(customerRepository.saveAndFlush(customer.get()));
+            return customerRepository.saveAndFlush(customer.get());
         }
 
         throw new CustomerServiceException("Can't update customer. Customer doesn't exist. Provide correct Customer Id.", null);
@@ -63,24 +63,24 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public Optional<Customer> getCustomerById(int customerId) {
+    public Customer getCustomerById(int customerId) {
         log.info("getCustomerById - customerId: {}", customerId);
         Optional<Customer> customer = customerRepository.findById(customerId);
 
         if (customer.isPresent()) {
-            return customer;
+            return customer.get();
         }
 
         throw new CustomerServiceException("Can't get customer by id. Customer doesn't exist. Provide correct Customer Id.", null);
     }
 
     @Override
-    public Optional<Customer> getCustomerByName(String customerName) {
+    public Customer getCustomerByName(String customerName) {
         log.info("getCustomerByName - customerName: {}", customerName);
         Optional<Customer> customer = customerRepository.findCustomerByName(customerName);
 
         if (customer.isPresent()) {
-            return customer;
+            return customer.get();
         }
 
         throw new CustomerServiceException("Can't get customer bookings by name. Customer doesn't exist. Provide correct Customer Id.", null);
@@ -100,13 +100,13 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public Optional<Customer> deleteCustomerById(int customerId) {
+    public Customer deleteCustomerById(int customerId) {
         log.info("deleteCustomerById - customerId: {}", customerId);
         final Optional<Customer> customer = customerRepository.findById(customerId);
 
         if (customer.isPresent()) {
             customerRepository.deleteById(customerId);
-            return customer;
+            return customer.get();
         }
 
         throw new CustomerServiceException("Can't delete customer. Customer doesn't exist. Provide correct Customer Id.", null);

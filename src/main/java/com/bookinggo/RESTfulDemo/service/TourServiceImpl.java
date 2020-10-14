@@ -1,10 +1,10 @@
-package com.bookinggo.RESTfulDemo.service;
+package com.bookinggo.RestfulDemo.service;
 
-import com.bookinggo.RESTfulDemo.entity.Tour;
-import com.bookinggo.RESTfulDemo.entity.TourPackage;
-import com.bookinggo.RESTfulDemo.exception.TourServiceException;
-import com.bookinggo.RESTfulDemo.repository.TourPackageRepository;
-import com.bookinggo.RESTfulDemo.repository.TourRepository;
+import com.bookinggo.RestfulDemo.entity.Tour;
+import com.bookinggo.RestfulDemo.entity.TourPackage;
+import com.bookinggo.RestfulDemo.exception.TourServiceException;
+import com.bookinggo.RestfulDemo.repository.TourPackageRepository;
+import com.bookinggo.RestfulDemo.repository.TourRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -25,7 +25,7 @@ public class TourServiceImpl implements TourService {
     private final TourPackageRepository tourPackageRepository;
 
     @Override
-    public Optional<Tour> createTour(String tourPackageCode, String title, String duration, int price) {
+    public Tour createTour(String tourPackageCode, String title, String duration, int price) {
         log.info("createTour - tourPackageCode: {}, title: {}, duration: {}, price: {}", tourPackageCode, title, duration, price);
         final Optional<TourPackage> tourPackage = tourPackageRepository.getTourPackageByCode(tourPackageCode);
 
@@ -37,14 +37,14 @@ public class TourServiceImpl implements TourService {
                     .price(price)
                     .build();
 
-            return Optional.of(tourRepository.save(tour));
+            return tourRepository.save(tour);
         }
 
-        return Optional.empty();
+        throw new TourServiceException("Can't create tour. The Tour Package doesn't exist. Provide correct Tour Package Code.", null);
     }
 
     @Override
-    public Optional<Tour> updateTour(int tourId, String tourPackageCode, String title, String duration, Integer price) {
+    public Tour updateTour(int tourId, String tourPackageCode, String title, String duration, Integer price) {
         log.info("updateTour - tourId: {}, tourPackageCode: {}, title: {}, duration: {}, price: {}", tourId, tourPackageCode, title, duration, price);
         final Optional<Tour> tour = tourRepository.findById(tourId);
 
@@ -71,7 +71,7 @@ public class TourServiceImpl implements TourService {
                 tour.get().setPrice(price);
             }
 
-            return Optional.of(tourRepository.saveAndFlush(tour.get()));
+            return tourRepository.saveAndFlush(tour.get());
         }
 
         throw new TourServiceException("Can't update tour. Tour doesn't exist. Provide correct Tour Id.", null);
@@ -84,12 +84,12 @@ public class TourServiceImpl implements TourService {
     }
 
     @Override
-    public Optional<Tour> getTourById(int tourId) {
+    public Tour getTourById(int tourId) {
         log.info("getTourById - id: {}", tourId);
         final Optional<Tour> tour = tourRepository.findById(tourId);
 
         if (tour.isPresent()) {
-            return tour;
+            return tour.get();
         }
 
         throw new TourServiceException("Can't get tour by id. Tour doesn't exist. Provide correct Tour Id.", null);
@@ -111,26 +111,30 @@ public class TourServiceImpl implements TourService {
     }
 
     @Override
-    public Optional<Tour> getTourByTourPackageCodeAndTitle(String tourPackageCode, String title) {
+    public Tour getTourByTourPackageCodeAndTitle(String tourPackageCode, String title) {
         log.info("getTourByTourPackageCodeAndTitle - tourPackageCode: {}, title: {}", tourPackageCode, title);
         final Optional<TourPackage> tourPackage = tourPackageRepository.getTourPackageByCode(tourPackageCode);
 
         if (tourPackage.isPresent()) {
-            return tourRepository.findTourByTourPackageAndTitle(tourPackage.get(), title);
+            Optional<Tour> tour = tourRepository.findTourByTourPackageAndTitle(tourPackage.get(), title);
+
+            if (tour.isPresent()) {
+                return tour.get();
+            }
         }
 
-        return Optional.empty();
+        throw new TourServiceException("Can't get tour by given Tour Package and Title. Tour doesn't exist.", null);
     }
 
     @Override
-    public Optional<Tour> deleteTourById(int tourId) {
+    public Tour deleteTourById(int tourId) {
         log.info("deleteTourById - tourId: {}", tourId);
         final Optional<Tour> tour = tourRepository.findById(tourId);
 
         if (tour.isPresent()) {
             tourRepository.deleteById(tourId);
 
-            return tour;
+            return tour.get();
         }
 
         throw new TourServiceException("Can't delete tour. Tour doesn't exist. Provide correct Tour Id.", null);

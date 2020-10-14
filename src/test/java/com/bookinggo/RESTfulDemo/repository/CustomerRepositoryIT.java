@@ -1,6 +1,6 @@
-package com.bookinggo.RESTfulDemo.repository;
+package com.bookinggo.RestfulDemo.repository;
 
-import com.bookinggo.RESTfulDemo.entity.Customer;
+import com.bookinggo.RestfulDemo.entity.Customer;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.jdbc.Sql;

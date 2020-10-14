@@ -1,10 +1,10 @@
-package com.bookinggo.RESTfulDemo.controller;
+package com.bookinggo.RestfulDemo.controller;
 
-import com.bookinggo.RESTfulDemo.RestfulDemoApplication;
-import com.bookinggo.RESTfulDemo.dto.TourDto;
-import com.bookinggo.RESTfulDemo.dto.TourPatchDto;
-import com.bookinggo.RESTfulDemo.entity.Tour;
-import com.bookinggo.RESTfulDemo.service.AbstractRESTfulDemoIT;
+import com.bookinggo.RestfulDemo.RestfulDemoApplication;
+import com.bookinggo.RestfulDemo.dto.TourDto;
+import com.bookinggo.RestfulDemo.dto.TourPatchDto;
+import com.bookinggo.RestfulDemo.entity.Tour;
+import com.bookinggo.RestfulDemo.service.AbstractRestfulDemoIT;
 import org.junit.Before;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +24,7 @@ import static org.springframework.http.HttpStatus.*;
 @SpringBootTest(classes = RestfulDemoApplication.class,
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("integTest")
-public class TourControllerIT extends AbstractRESTfulDemoIT {
+public class TourControllerIT extends AbstractRestfulDemoIT {
 
     private static final int TOUR_ID = 1;
 

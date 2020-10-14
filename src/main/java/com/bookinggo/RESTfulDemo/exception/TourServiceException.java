@@ -1,4 +1,4 @@
-package com.bookinggo.RESTfulDemo.exception;
+package com.bookinggo.RestfulDemo.exception;
 
 public class TourServiceException extends RuntimeException {
 

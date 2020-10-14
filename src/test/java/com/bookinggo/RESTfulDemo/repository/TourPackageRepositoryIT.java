@@ -1,6 +1,6 @@
-package com.bookinggo.RESTfulDemo.repository;
+package com.bookinggo.RestfulDemo.repository;
 
-import com.bookinggo.RESTfulDemo.entity.TourPackage;
+import com.bookinggo.RestfulDemo.entity.TourPackage;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 

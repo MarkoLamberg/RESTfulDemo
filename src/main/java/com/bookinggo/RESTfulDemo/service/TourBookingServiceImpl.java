@@ -1,12 +1,12 @@
-package com.bookinggo.RESTfulDemo.service;
+package com.bookinggo.RestfulDemo.service;
 
-import com.bookinggo.RESTfulDemo.entity.Customer;
-import com.bookinggo.RESTfulDemo.entity.Tour;
-import com.bookinggo.RESTfulDemo.entity.TourBooking;
-import com.bookinggo.RESTfulDemo.exception.TourBookingServiceException;
-import com.bookinggo.RESTfulDemo.exception.TourServiceException;
-import com.bookinggo.RESTfulDemo.repository.CustomerRepository;
-import com.bookinggo.RESTfulDemo.repository.TourBookingRepository;
+import com.bookinggo.RestfulDemo.entity.Customer;
+import com.bookinggo.RestfulDemo.entity.Tour;
+import com.bookinggo.RestfulDemo.entity.TourBooking;
+import com.bookinggo.RestfulDemo.exception.TourBookingServiceException;
+import com.bookinggo.RestfulDemo.exception.TourServiceException;
+import com.bookinggo.RestfulDemo.repository.CustomerRepository;
+import com.bookinggo.RestfulDemo.repository.TourBookingRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -29,9 +29,9 @@ public class TourBookingServiceImpl implements TourBookingService {
     private final CustomerRepository customerRepository;
 
     @Override
-    public Optional<TourBooking> createBooking(int tourId, Integer customerId, LocalDateTime pickupDateTime, String pickupLocation, Integer participants) throws TourBookingServiceException {
+    public TourBooking createBooking(int tourId, Integer customerId, LocalDateTime pickupDateTime, String pickupLocation, Integer participants) throws TourBookingServiceException {
         log.info("createBooking - tourId: {}, customerId: {}, date: {}, location {}, participants {}", tourId, customerId, pickupDateTime, pickupLocation, participants);
-        Optional<Tour> tour;
+        Tour tour;
 
         try {
             tour = tourService.getTourById(tourId);
@@ -43,21 +43,21 @@ public class TourBookingServiceImpl implements TourBookingService {
 
         if (customer.isPresent()) {
             final TourBooking tourBooking = TourBooking.builder()
-                    .tour(tour.get())
+                    .tour(tour)
                     .customer(customer.get())
                     .pickupDateTime(pickupDateTime)
                     .pickupLocation(pickupLocation)
                     .participants(participants)
                     .build();
 
-            return Optional.of(tourBookingRepository.save(tourBooking));
+            return tourBookingRepository.save(tourBooking);
         }
 
         throw new TourBookingServiceException("Can't create a booking for this Customer Id. Customer Id doesn't exist.", null);
     }
 
     @Override
-    public Optional<TourBooking> recover(TourBookingServiceException e) {
+    public TourBooking recover(TourBookingServiceException e) {
         log.info("Called createBooking - recover called instead: {}", e.getMessage());
         throw new TourBookingServiceException(e.getMessage(), null);
     }
@@ -82,7 +82,7 @@ public class TourBookingServiceImpl implements TourBookingService {
     }
 
     @Override
-    public Optional<TourBooking> updateBooking(int tourId, Integer customerId, LocalDateTime pickupDateTime, String pickupLocation, Integer participants) {
+    public TourBooking updateBooking(int tourId, Integer customerId, LocalDateTime pickupDateTime, String pickupLocation, Integer participants) {
         log.info("updateBooking - tourId: {}, customerId: {}, date: {}, location {}, participants {}", tourId, customerId, pickupDateTime, pickupLocation, participants);
 
         if (customerRepository.findById(customerId).isPresent()) {
@@ -101,7 +101,7 @@ public class TourBookingServiceImpl implements TourBookingService {
                     bookings.get(0).setParticipants(participants);
                 }
 
-                return Optional.of(tourBookingRepository.saveAndFlush(bookings.get(0)));
+                return tourBookingRepository.saveAndFlush(bookings.get(0));
             }
 
             throw new TourBookingServiceException("Can't update booking. More than one bookings with this Customer Id.", null);
@@ -121,7 +121,7 @@ public class TourBookingServiceImpl implements TourBookingService {
     }
 
     @Override
-    public Optional<List<TourBooking>> deleteAllBookingsWithTourIdAndCustomerId(int tourId, Integer customerId) {
+    public List<TourBooking> deleteAllBookingsWithTourIdAndCustomerId(int tourId, Integer customerId) {
         log.info("deleteAllBookingsWithTourIdAndCustomerId - tourId: {}, customerId: {}", tourId, customerId);
         final List<TourBooking> bookings = tourBookingRepository.findByTourIdAndCustomerId(tourId, customerId);
 
@@ -134,12 +134,12 @@ public class TourBookingServiceImpl implements TourBookingService {
             tourBookingRepository.flush();
         });
 
-        return Optional.of(bookings);
+        return bookings;
     }
 
     @Override
     @Transactional
-    public Optional<List<TourBooking>> deleteAllBookingsWithCustomerId(Integer customerId) {
+    public List<TourBooking> deleteAllBookingsWithCustomerId(Integer customerId) {
         log.info("deleteAllBookingsWithCustomerId - tourId: {}", customerId);
         final List<TourBooking> bookings = tourBookingRepository.findByCustomerId(customerId);
 
@@ -152,7 +152,7 @@ public class TourBookingServiceImpl implements TourBookingService {
             tourBookingRepository.flush();
         }
 
-        return Optional.of(bookings);
+        return bookings;
     }
 
     @Override

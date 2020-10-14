@@ -1,0 +1,14 @@
+{
+  "properties": [
+    {
+      "name": "retry.backoff.delay",
+      "type": "java.lang.String",
+      "description": "Description for retry.backoff.delay."
+    },
+    {
+      "name": "retry.attempts",
+      "type": "java.lang.String",
+      "description": "Description for retry.attempts."
+    }
+  ]
+}

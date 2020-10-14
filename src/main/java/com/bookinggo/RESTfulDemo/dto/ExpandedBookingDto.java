@@ -1,4 +1,4 @@
-package com.bookinggo.RESTfulDemo.dto;
+package com.bookinggo.RestfulDemo.dto;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;

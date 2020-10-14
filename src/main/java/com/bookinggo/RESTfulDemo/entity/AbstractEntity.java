@@ -1,4 +1,4 @@
-package com.bookinggo.RESTfulDemo.entity;
+package com.bookinggo.RestfulDemo.entity;
 
 import lombok.*;
 import lombok.experimental.SuperBuilder;

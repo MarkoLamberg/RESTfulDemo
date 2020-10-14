@@ -1,4 +1,4 @@
-package com.bookinggo.RESTfulDemo;
+package com.bookinggo.RestfulDemo;
 
 import org.junit.jupiter.api.Test;
 

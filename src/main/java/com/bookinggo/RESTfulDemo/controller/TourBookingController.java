@@ -1,13 +1,13 @@
-package com.bookinggo.RESTfulDemo.controller;
+package com.bookinggo.RestfulDemo.controller;
 
-import com.bookinggo.RESTfulDemo.dto.BookingDto;
-import com.bookinggo.RESTfulDemo.dto.BookingPatchDto;
-import com.bookinggo.RESTfulDemo.dto.ExpandedBookingDto;
-import com.bookinggo.RESTfulDemo.entity.TourBooking;
-import com.bookinggo.RESTfulDemo.exception.TourBookingServiceException;
-import com.bookinggo.RESTfulDemo.exception.TourServiceException;
-import com.bookinggo.RESTfulDemo.service.TourBookingService;
-import com.bookinggo.RESTfulDemo.service.TourService;
+import com.bookinggo.RestfulDemo.dto.BookingDto;
+import com.bookinggo.RestfulDemo.dto.BookingPatchDto;
+import com.bookinggo.RestfulDemo.dto.ExpandedBookingDto;
+import com.bookinggo.RestfulDemo.entity.TourBooking;
+import com.bookinggo.RestfulDemo.exception.TourBookingServiceException;
+import com.bookinggo.RestfulDemo.exception.TourServiceException;
+import com.bookinggo.RestfulDemo.service.TourBookingService;
+import com.bookinggo.RestfulDemo.service.TourService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -21,7 +21,6 @@ import java.net.URI;
 import java.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME;
@@ -51,12 +50,12 @@ public class TourBookingController {
         final LocalDateTime pickupDateTime = LocalDateTime.parse(bookingDto.getPickupDateTime(), ISO_LOCAL_DATE_TIME);
 
         try {
-            final Optional<TourBooking> createdBooking = tourBookingService.createBooking(tourId, bookingDto.getCustomerId(), pickupDateTime,
+            final TourBooking createdBooking = tourBookingService.createBooking(tourId, bookingDto.getCustomerId(), pickupDateTime,
                     bookingDto.getPickupLocation(), bookingDto.getParticipants());
 
             return ResponseEntity
                     .created(URI.create("/tours/" + tourId + "/bookings"))
-                    .body(toDto(createdBooking.get()));
+                    .body(toDto(createdBooking));
         } catch (TourBookingServiceException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
@@ -107,12 +106,12 @@ public class TourBookingController {
         }
 
         try {
-            final Optional<TourBooking> response = tourBookingService.updateBooking(tourId, bookingPatchDto.getCustomerId(),
+            final TourBooking response = tourBookingService.updateBooking(tourId, bookingPatchDto.getCustomerId(),
                     pickupDateTime, bookingPatchDto.getPickupLocation(), bookingPatchDto.getParticipants());
 
             return ResponseEntity
                     .ok()
-                    .body(toDto(response.get()));
+                    .body(toDto(response));
 
         } catch (TourBookingServiceException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
@@ -144,10 +143,10 @@ public class TourBookingController {
         }
 
         try {
-            final Optional<List<TourBooking>> bookings = tourBookingService.deleteAllBookingsWithTourIdAndCustomerId(tourId, customerId);
+            final List<TourBooking> bookings = tourBookingService.deleteAllBookingsWithTourIdAndCustomerId(tourId, customerId);
             return ResponseEntity
                     .ok()
-                    .body(listOfExpandedDtos(bookings.get()));
+                    .body(listOfExpandedDtos(bookings));
         } catch (TourBookingServiceException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
@@ -157,10 +156,10 @@ public class TourBookingController {
     public ResponseEntity<?> deleteAllBookingsForCustomer(@PathVariable(value = "customerId") int customerId) {
         log.info("DELETE /tours/bookings/{}", customerId);
         try {
-            final Optional<List<TourBooking>> bookings = tourBookingService.deleteAllBookingsWithCustomerId(customerId);
+            final List<TourBooking> bookings = tourBookingService.deleteAllBookingsWithCustomerId(customerId);
             return ResponseEntity
                     .ok()
-                    .body(listOfExpandedDtos(bookings.get()));
+                    .body(listOfExpandedDtos(bookings));
         } catch (TourBookingServiceException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }

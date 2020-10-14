@@ -1,4 +1,4 @@
-package com.bookinggo.RESTfulDemo.dto;
+package com.bookinggo.RestfulDemo.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

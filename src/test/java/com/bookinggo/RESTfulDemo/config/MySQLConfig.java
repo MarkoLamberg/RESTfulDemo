@@ -1,4 +1,4 @@
-package com.bookinggo.RESTfulDemo.config;
+package com.bookinggo.RestfulDemo.config;
 
 import com.wix.mysql.EmbeddedMysql;
 import com.wix.mysql.config.MysqldConfig;

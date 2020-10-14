@@ -1,24 +1,23 @@
-package com.bookinggo.RESTfulDemo.service;
+package com.bookinggo.RestfulDemo.service;
 
-import com.bookinggo.RESTfulDemo.entity.Customer;
-import com.bookinggo.RESTfulDemo.entity.TourBooking;
+import com.bookinggo.RestfulDemo.entity.Customer;
+import com.bookinggo.RestfulDemo.entity.TourBooking;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface CustomerService {
 
     Customer createCustomer(String title, String name);
 
-    Optional<Customer> updateCustomer(int customerId, String title, String name);
+    Customer updateCustomer(int customerId, String title, String name);
 
     List<Customer> getAllCustomers();
 
-    Optional<Customer> getCustomerById(int customerId);
+    Customer getCustomerById(int customerId);
 
-    Optional<Customer> getCustomerByName(String customerName);
+    Customer getCustomerByName(String customerName);
 
     List<TourBooking> getBookingsByCustomerId(int customerId);
 
-    Optional<Customer> deleteCustomerById(int customerId);
+    Customer deleteCustomerById(int customerId);
 }
