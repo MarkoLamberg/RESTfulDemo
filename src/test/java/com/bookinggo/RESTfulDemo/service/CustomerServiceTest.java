@@ -4,6 +4,7 @@ import com.bookinggo.RESTfulDemo.entity.Customer;
 import com.bookinggo.RESTfulDemo.entity.TourBooking;
 import com.bookinggo.RESTfulDemo.exception.CustomerServiceException;
 import com.bookinggo.RESTfulDemo.repository.CustomerRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -19,6 +20,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.mockito.Mockito.*;
 
+@Slf4j
 @SpringBootTest
 @ExtendWith(MockitoExtension.class)
 public class CustomerServiceTest {
@@ -40,6 +42,7 @@ public class CustomerServiceTest {
         try {
             customerService.updateCustomer(CUSTOMER_ID, CUSTOMER_TITLE, CUSTOMER_NAME);
         } catch (CustomerServiceException e) {
+            log.info("Expected exception");
         }
 
         verify(customerRepositoryMock).findById(CUSTOMER_ID);
@@ -113,6 +116,7 @@ public class CustomerServiceTest {
         try {
             customerService.getCustomerById(CUSTOMER_ID);
         } catch (CustomerServiceException e) {
+            log.info("Expected exception");
         }
 
         verify(customerRepositoryMock).findById(CUSTOMER_ID);
@@ -134,6 +138,7 @@ public class CustomerServiceTest {
         try {
             customerService.getCustomerByName(CUSTOMER_NAME);
         } catch (CustomerServiceException e) {
+            log.info("Expected exception");
         }
 
         verify(customerRepositoryMock).findCustomerByName(CUSTOMER_NAME);
@@ -158,6 +163,7 @@ public class CustomerServiceTest {
         try {
             customerService.getBookingsByCustomerId(CUSTOMER_ID);
         } catch (CustomerServiceException e) {
+            log.info("Expected exception");
         }
 
         verify(customerRepositoryMock).findById(CUSTOMER_ID);
@@ -187,6 +193,7 @@ public class CustomerServiceTest {
         try {
             customerService.deleteCustomerById(CUSTOMER_ID);
         } catch (CustomerServiceException e) {
+            log.info("Expected exception");
         }
 
         verify(customerRepositoryMock).findById(CUSTOMER_ID);

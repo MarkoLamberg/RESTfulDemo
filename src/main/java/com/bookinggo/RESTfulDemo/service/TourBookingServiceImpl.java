@@ -57,7 +57,7 @@ public class TourBookingServiceImpl implements TourBookingService {
     }
 
     @Override
-    public Optional<TourBooking> recover(TourBookingServiceException e, int tourId, Integer customerId, LocalDateTime pickupDateTime, String pickupLocation, Integer participants) {
+    public Optional<TourBooking> recover(TourBookingServiceException e) {
         log.info("Called createBooking - recover called instead: {}", e.getMessage());
         throw new TourBookingServiceException(e.getMessage(), null);
     }
@@ -115,7 +115,7 @@ public class TourBookingServiceImpl implements TourBookingService {
         log.info("deleteAllBookingsWithTourId - tourId: {}", tourId);
         final List<TourBooking> bookings = tourBookingRepository.findByTourId(tourId);
 
-        bookings.forEach(booking -> tourBookingRepository.delete(booking));
+        bookings.forEach(tourBookingRepository::delete);
 
         return bookings;
     }

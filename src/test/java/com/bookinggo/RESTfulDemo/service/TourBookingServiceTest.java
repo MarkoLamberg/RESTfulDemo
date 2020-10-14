@@ -7,6 +7,7 @@ import com.bookinggo.RESTfulDemo.exception.TourBookingServiceException;
 import com.bookinggo.RESTfulDemo.repository.CustomerRepository;
 import com.bookinggo.RESTfulDemo.repository.TourBookingRepository;
 import com.bookinggo.RESTfulDemo.repository.TourRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -22,9 +23,9 @@ import java.util.Optional;
 import static java.util.List.of;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
+@Slf4j
 @SpringBootTest
 @ExtendWith(MockitoExtension.class)
 public class TourBookingServiceTest {
@@ -59,6 +60,7 @@ public class TourBookingServiceTest {
         try {
             tourBookingService.createBooking(TOUR_ID, CUSTOMER_ID, PICKUP_DATE_TIME, PICKUP_LOCATION, PARTICIPANTS);
         } catch (TourBookingServiceException e) {
+            log.info("Expected exception");
         }
 
         verify(tourRepositoryMock, times(retryAttempts)).findById(TOUR_ID);
@@ -73,6 +75,7 @@ public class TourBookingServiceTest {
         try {
             tourBookingService.createBooking(TOUR_ID, CUSTOMER_ID, PICKUP_DATE_TIME, PICKUP_LOCATION, PARTICIPANTS);
         } catch (TourBookingServiceException e) {
+            log.info("Expected exception");
         }
 
         verify(tourRepositoryMock, times(retryAttempts)).findById(TOUR_ID);
@@ -99,6 +102,7 @@ public class TourBookingServiceTest {
         try {
             tourBookingService.getBookingsByTourId(TOUR_ID);
         } catch (TourBookingServiceException e) {
+            log.info("Expected exception");
         }
 
         verify(tourBookingRepositoryMock).findByTourId(TOUR_ID);
@@ -138,6 +142,7 @@ public class TourBookingServiceTest {
         try {
             tourBookingService.updateBooking(TOUR_ID, CUSTOMER_ID, PICKUP_DATE_TIME, PICKUP_LOCATION, PARTICIPANTS);
         } catch (TourBookingServiceException e) {
+            log.info("Expected exception");
         }
 
         verify(customerRepositoryMock).findById(CUSTOMER_ID);
@@ -248,6 +253,7 @@ public class TourBookingServiceTest {
         try {
             tourBookingService.deleteAllBookingsWithTourIdAndCustomerId(TOUR_ID, CUSTOMER_ID);
         } catch (TourBookingServiceException e) {
+            log.info("Expected exception");
         }
 
         verify(tourBookingRepositoryMock, times(0)).findByTourId(TOUR_ID);
@@ -273,6 +279,7 @@ public class TourBookingServiceTest {
         try {
             tourBookingService.deleteAllBookingsWithCustomerId(CUSTOMER_ID);
         } catch (TourBookingServiceException e) {
+            log.info("Expected exception");
         }
 
         verify(tourBookingRepositoryMock).findByCustomerId(CUSTOMER_ID);
@@ -297,6 +304,7 @@ public class TourBookingServiceTest {
         try {
             tourBookingService.deleteAllBookings();
         } catch (TourBookingServiceException e) {
+            log.info("Expected exception");
         }
 
         verify(tourBookingRepositoryMock).findAll();

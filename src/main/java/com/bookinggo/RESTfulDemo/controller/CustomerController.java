@@ -44,7 +44,7 @@ public class CustomerController {
     public ResponseEntity<?> updateCustomer(@PathVariable(value = "customerId") int customerId, @Valid @RequestBody CustomerPatchDto customerPatchDto) {
         log.info("PUT /customers/{}, {}", customerId, customerPatchDto.toString());
         try {
-            final Optional<Customer> customer = customerService.getCustomerById(customerId);
+            final Customer customer = customerService.getCustomerById(customerId).get();
             final Optional<Customer> customerWithNewName = getCustomerWithNewName(customerPatchDto, customer);
 
             if (customerWithNewName.isPresent()) {
@@ -109,8 +109,8 @@ public class CustomerController {
         }
     }
 
-    private Optional<Customer> getCustomerWithNewName(@RequestBody @Valid CustomerPatchDto customerPatchDto, Optional<Customer> customer) {
-        if ((customerPatchDto.getName() == null) || customer.get().getName().equals(customerPatchDto.getName())) {
+    private Optional<Customer> getCustomerWithNewName(@RequestBody @Valid CustomerPatchDto customerPatchDto, Customer customer) {
+        if ((customerPatchDto.getName() == null) || customer.getName().equals(customerPatchDto.getName())) {
             return Optional.empty();
         } else {
             try {

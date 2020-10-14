@@ -16,23 +16,23 @@ public interface TourBookingService {
             value = {TourBookingServiceException.class},
             maxAttemptsExpression = "${retry.attempts:3}",
             backoff = @Backoff(delayExpression = "${retry.backoff.delay:500}"))
-    public Optional<TourBooking> createBooking(int tourId, Integer customerId, LocalDateTime pickupDateTime, String pickupLocation, Integer participants) throws TourBookingServiceException;
+    Optional<TourBooking> createBooking(int tourId, Integer customerId, LocalDateTime pickupDateTime, String pickupLocation, Integer participants) throws TourBookingServiceException;
 
     @Recover
-    public Optional<TourBooking> recover(TourBookingServiceException e, int tourId, Integer customerId, LocalDateTime pickupDateTime, String pickupLocation, Integer participants);
+    Optional<TourBooking> recover(TourBookingServiceException e);
 
-    public List<TourBooking> getBookingsByTourId(int tourId);
+    List<TourBooking> getBookingsByTourId(int tourId);
 
-    public List<TourBooking> getAllBookings();
+    List<TourBooking> getAllBookings();
 
-    public Optional<TourBooking> updateBooking(int tourId, Integer customerId, LocalDateTime pickupDateTime, String pickupLocation, Integer participants);
+    Optional<TourBooking> updateBooking(int tourId, Integer customerId, LocalDateTime pickupDateTime, String pickupLocation, Integer participants);
 
-    public List<TourBooking> deleteAllBookingsWithTourId(int tourId);
+    List<TourBooking> deleteAllBookingsWithTourId(int tourId);
 
-    public Optional<List<TourBooking>> deleteAllBookingsWithTourIdAndCustomerId(int tourId, Integer customerId);
+    Optional<List<TourBooking>> deleteAllBookingsWithTourIdAndCustomerId(int tourId, Integer customerId);
 
-    public Optional<List<TourBooking>> deleteAllBookingsWithCustomerId(Integer customerId);
+    Optional<List<TourBooking>> deleteAllBookingsWithCustomerId(Integer customerId);
 
-    public List<TourBooking> deleteAllBookings();
+    List<TourBooking> deleteAllBookings();
 
 }

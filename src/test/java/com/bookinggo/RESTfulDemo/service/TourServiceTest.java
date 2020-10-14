@@ -5,6 +5,7 @@ import com.bookinggo.RESTfulDemo.entity.TourPackage;
 import com.bookinggo.RESTfulDemo.exception.TourServiceException;
 import com.bookinggo.RESTfulDemo.repository.TourPackageRepository;
 import com.bookinggo.RESTfulDemo.repository.TourRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -20,6 +21,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.mockito.Mockito.*;
 
+@Slf4j
 @SpringBootTest
 @ExtendWith(MockitoExtension.class)
 public class TourServiceTest {
@@ -71,6 +73,7 @@ public class TourServiceTest {
         try {
             tourService.updateTour(TOUR_ID, NON_EXISTING_TOUR_PACKAGE_CODE, TOUR_TITLE, TOUR_DURATION, TOUR_PRICE);
         } catch (TourServiceException e) {
+            log.info("Expected exception");
         }
 
         verify(tourRepositoryMock).findById(TOUR_ID);
@@ -85,6 +88,7 @@ public class TourServiceTest {
         try {
             tourService.updateTour(TOUR_ID, NON_EXISTING_TOUR_PACKAGE_CODE, TOUR_TITLE, TOUR_DURATION, TOUR_PRICE);
         } catch (TourServiceException e) {
+            log.info("Expected exception");
         }
 
         verify(tourRepositoryMock).findById(TOUR_ID);
@@ -202,6 +206,7 @@ public class TourServiceTest {
         try {
             tourService.getTourById(TOUR_ID);
         } catch (TourServiceException e) {
+            log.info("Expected exception");
         }
 
         verify(tourRepositoryMock).findById(TOUR_ID);
@@ -222,6 +227,7 @@ public class TourServiceTest {
         try {
             tourService.getToursByLocation(TOUR_LOCATION);
         } catch (TourServiceException e) {
+            log.info("Expected exception");
         }
 
 
@@ -280,6 +286,7 @@ public class TourServiceTest {
         try {
             tourService.deleteTourById(TOUR_ID);
         } catch (TourServiceException e) {
+            log.info("Expected exception");
         }
 
         verify(tourRepositoryMock).findById(TOUR_ID);

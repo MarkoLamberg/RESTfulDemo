@@ -49,7 +49,7 @@ public class TourController {
     public ResponseEntity<?> updateTour(@PathVariable(value = "tourId") int tourId, @Valid @RequestBody TourPatchDto tourPatchDto) {
         log.info("PUT /tours/{}: {}", tourId, tourPatchDto.toString());
         try {
-            final Optional<Tour> tour = tourService.getTourById(tourId);
+            final Tour tour = tourService.getTourById(tourId).get();
             final Optional<Tour> tourWithNewTitleOrTourPackage = getTourWithNewTitleOrTourPackage(tourPatchDto, tour);
 
             if (tourWithNewTitleOrTourPackage.isPresent()) {
@@ -106,6 +106,7 @@ public class TourController {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Can't delete tour that has bookings.");
             }
         } catch (TourBookingServiceException e) {
+            log.info("deleteTour - caught TourBookingServiceException - No booking for this tour.");
         }
 
         try {
@@ -118,14 +119,14 @@ public class TourController {
         }
     }
 
-    private Optional<Tour> getTourWithNewTitleOrTourPackage(@RequestBody @Valid TourPatchDto tourPatchDto, Optional<Tour> tour) {
-        if (((tourPatchDto.getTitle() == null) || tour.get().getTitle().equals(tourPatchDto.getTitle())) &&
-                ((tourPatchDto.getTourPackageCode() == null) || tour.get().getTourPackage().getCode().equals(tourPatchDto.getTourPackageCode()))) {
+    private Optional<Tour> getTourWithNewTitleOrTourPackage(@RequestBody @Valid TourPatchDto tourPatchDto, Tour tour) {
+        if (((tourPatchDto.getTitle() == null) || tour.getTitle().equals(tourPatchDto.getTitle())) &&
+                ((tourPatchDto.getTourPackageCode() == null) || tour.getTourPackage().getCode().equals(tourPatchDto.getTourPackageCode()))) {
             return Optional.empty();
         }
 
         return tourService.getTourByTourPackageCodeAndTitle(
-                (tourPatchDto.getTourPackageCode() == null) ? tour.get().getTourPackage().getCode() : tourPatchDto.getTourPackageCode(),
-                (tourPatchDto.getTitle() == null) ? tour.get().getTitle() : tourPatchDto.getTitle());
+                (tourPatchDto.getTourPackageCode() == null) ? tour.getTourPackage().getCode() : tourPatchDto.getTourPackageCode(),
+                (tourPatchDto.getTitle() == null) ? tour.getTitle() : tourPatchDto.getTitle());
     }
 }

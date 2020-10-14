@@ -3,7 +3,6 @@ package com.bookinggo.RESTfulDemo.controller;
 import com.bookinggo.RESTfulDemo.dto.BookingDto;
 import com.bookinggo.RESTfulDemo.dto.BookingPatchDto;
 import com.bookinggo.RESTfulDemo.dto.ExpandedBookingDto;
-import com.bookinggo.RESTfulDemo.entity.Tour;
 import com.bookinggo.RESTfulDemo.entity.TourBooking;
 import com.bookinggo.RESTfulDemo.exception.TourBookingServiceException;
 import com.bookinggo.RESTfulDemo.exception.TourServiceException;
@@ -78,7 +77,7 @@ public class TourBookingController {
                     .ok()
                     .body(tourBookings
                             .stream()
-                            .map(tourBooking -> toDto(tourBooking))
+                            .map(this::toDto)
                             .collect(Collectors.toList()));
         } catch (TourBookingServiceException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
@@ -90,7 +89,7 @@ public class TourBookingController {
         log.info("GET /tours/bookings");
         final List<TourBooking> tourBookings = tourBookingService.getAllBookings();
 
-        return tourBookings.stream().map(tourBooking -> toExpandedDto(tourBooking)).collect(Collectors.toList());
+        return tourBookings.stream().map(this::toExpandedDto).collect(Collectors.toList());
     }
 
     @PutMapping("/{tourId}/bookings")
@@ -124,7 +123,7 @@ public class TourBookingController {
     public ResponseEntity<?> deleteAllBookingsForTour(@PathVariable(value = "tourId") int tourId) {
         log.info("DELETE /tours/{}/bookings", tourId);
         try {
-            final Optional<Tour> tour = tourService.getTourById(tourId);
+            tourService.getTourById(tourId);
             final List<TourBooking> bookings = tourBookingService.deleteAllBookingsWithTourId(tourId);
 
             return ResponseEntity

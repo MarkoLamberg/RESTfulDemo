@@ -8,17 +8,17 @@ import java.util.Optional;
 
 public interface CustomerService {
 
-    public Customer createCustomer(String title, String name);
+    Customer createCustomer(String title, String name);
 
-    public Optional<Customer> updateCustomer(int customerId, String title, String name);
+    Optional<Customer> updateCustomer(int customerId, String title, String name);
 
-    public List<Customer> getAllCustomers();
+    List<Customer> getAllCustomers();
 
-    public Optional<Customer> getCustomerById(int customerId);
+    Optional<Customer> getCustomerById(int customerId);
 
-    public Optional<Customer> getCustomerByName(String customerName);
+    Optional<Customer> getCustomerByName(String customerName);
 
-    public List<TourBooking> getBookingsByCustomerId(int customerId);
+    List<TourBooking> getBookingsByCustomerId(int customerId);
 
-    public Optional<Customer> deleteCustomerById(int customerId);
+    Optional<Customer> deleteCustomerById(int customerId);
 }

@@ -116,9 +116,7 @@ public class TourServiceImpl implements TourService {
         final Optional<TourPackage> tourPackage = tourPackageRepository.getTourPackageByCode(tourPackageCode);
 
         if (tourPackage.isPresent()) {
-            Optional<Tour> tour = tourRepository.findTourByTourPackageAndTitle(tourPackage.get(), title);
-
-            return tour;
+            return tourRepository.findTourByTourPackageAndTitle(tourPackage.get(), title);
         }
 
         return Optional.empty();
