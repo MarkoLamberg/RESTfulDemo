@@ -17,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.jdbc.Sql;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.springframework.http.HttpStatus.*;
 
 @SpringBootTest(classes = RestfulDemoApplication.class,
@@ -110,9 +111,10 @@ public class TourBookingControllerIT extends AbstractRestfulDemoIT {
                         new HttpEntity<>(buildBookingPatchDto(PICKUP_DATE_TIME, PICKUP_LOCATION)),
                         BookingDto.class);
 
-        assertThat(response.getStatusCodeValue()).isEqualTo(OK.value());
-        assertThat(response.getBody().getPickupLocation()).isEqualTo(PICKUP_LOCATION);
-        assertThat(response.getBody().getParticipants().intValue()).isEqualTo(PARTICIPANTS);
+        assertAll(
+                () -> assertThat(response.getStatusCodeValue()).isEqualTo(OK.value()),
+                () -> assertThat(response.getBody().getPickupLocation()).isEqualTo(PICKUP_LOCATION),
+                () -> assertThat(response.getBody().getParticipants().intValue()).isEqualTo(PARTICIPANTS));
     }
 
     @Sql
@@ -123,9 +125,10 @@ public class TourBookingControllerIT extends AbstractRestfulDemoIT {
                         HttpMethod.PUT,
                         new HttpEntity<>(buildBookingPatchDto(null, null)), BookingDto.class);
 
-        assertThat(response.getStatusCodeValue()).isEqualTo(OK.value());
-        assertThat(response.getBody().getPickupLocation()).isNotEqualTo(PICKUP_LOCATION);
-        assertThat(response.getBody().getParticipants().intValue()).isEqualTo(PARTICIPANTS);
+        assertAll(
+                () -> assertThat(response.getStatusCodeValue()).isEqualTo(OK.value()),
+                () -> assertThat(response.getBody().getPickupLocation()).isNotEqualTo(PICKUP_LOCATION),
+                () -> assertThat(response.getBody().getParticipants().intValue()).isEqualTo(PARTICIPANTS));
     }
 
     @Sql
@@ -228,6 +231,7 @@ public class TourBookingControllerIT extends AbstractRestfulDemoIT {
     public void shouldReturn400_whenDeleteAllBookingsForCustomer_givenNoCustomerExists() {
         ResponseEntity<?> response = restTemplate.exchange(LOCAL_HOST + port + "/tours/bookings/" + NON_EXISTING_CUSTOMER_ID,
                 HttpMethod.DELETE, null, String.class);
+
         assertThat(response.getStatusCodeValue()).isEqualTo(BAD_REQUEST.value());
     }
 
@@ -244,8 +248,9 @@ public class TourBookingControllerIT extends AbstractRestfulDemoIT {
                 .getForEntity(LOCAL_HOST + port + "/tours/bookings", ExpandedBookingDto[].class)
                 .getBody();
 
-        assertThat(tourBookingsAfter.length).isNotEqualTo(tourBookingsBefore.length);
-        assertThat(tourBookingsAfter.length).isEqualTo(0);
+        assertAll(
+                () -> assertThat(tourBookingsAfter.length).isNotEqualTo(tourBookingsBefore.length),
+                () -> assertThat(tourBookingsAfter.length).isEqualTo(0));
     }
 
     private BookingDto buildBookingDto() {

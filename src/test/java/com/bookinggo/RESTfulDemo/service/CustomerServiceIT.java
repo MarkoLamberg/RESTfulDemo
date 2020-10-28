@@ -16,7 +16,8 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @Slf4j
 @SpringBootTest
@@ -46,23 +47,28 @@ public class CustomerServiceIT extends AbstractRestfulDemoIT {
         List<Customer> customersAfter = customerService.getAllCustomers();
         Customer customer = customersAfter.get(5);
 
-        assertThat(customersAfter.size()).isEqualTo(6);
-        assertThat(customer.getTitle()).isEqualTo(CUSTOMER_TITLE);
-        assertThat(customer.getName()).isEqualTo(CUSTOMER_NAME);
+        assertAll(
+                () -> assertThat(customersAfter.size()).isEqualTo(6),
+                () -> assertThat(customer.getTitle()).isEqualTo(CUSTOMER_TITLE),
+                () -> assertThat(customer.getName()).isEqualTo(CUSTOMER_NAME));
     }
 
     @Sql
     @Test
     public void shouldUpdateCustomer_whenUpdateCustomer_givenValidCustomer() {
         Customer customerBefore = customerService.getCustomerById(CUSTOMER_ID);
-        assertThat(customerBefore.getTitle()).isNotEqualTo(CUSTOMER_TITLE);
-        assertThat(customerBefore.getName()).isNotEqualTo(CUSTOMER_NAME);
+
+        assertAll(
+                () -> assertThat(customerBefore.getTitle()).isNotEqualTo(CUSTOMER_TITLE),
+                () -> assertThat(customerBefore.getName()).isNotEqualTo(CUSTOMER_NAME));
 
         customerService.updateCustomer(CUSTOMER_ID, CUSTOMER_TITLE, CUSTOMER_NAME);
 
         Customer customerAfter = customerService.getCustomerById(CUSTOMER_ID);
-        assertThat(customerAfter.getTitle()).isEqualTo(CUSTOMER_TITLE);
-        assertThat(customerAfter.getName()).isEqualTo(CUSTOMER_NAME);
+
+        assertAll(
+                () -> assertThat(customerAfter.getTitle()).isEqualTo(CUSTOMER_TITLE),
+                () -> assertThat(customerAfter.getName()).isEqualTo(CUSTOMER_NAME));
     }
 
     @Sql
@@ -70,17 +76,17 @@ public class CustomerServiceIT extends AbstractRestfulDemoIT {
     @MethodSource("titleAndNameAndCustomerProvider")
     public void parameterized_shouldUpdateCustomer_whenUpdateCustomer_givenValidCustomer(String customerTitle, String customerName, Customer updatedCustomer) {
         customerService.updateCustomer(CUSTOMER_ID, customerTitle, customerName);
-
         Customer customerAfter = customerService.getCustomerById(CUSTOMER_ID);
-        assertThat(customerAfter.getTitle()).isEqualTo(updatedCustomer.getTitle());
-        assertThat(customerAfter.getName()).isEqualTo(updatedCustomer.getName());
+
+        assertAll(
+                () -> assertThat(customerAfter.getTitle()).isEqualTo(updatedCustomer.getTitle()),
+                () -> assertThat(customerAfter.getName()).isEqualTo(updatedCustomer.getName()));
     }
 
     @Sql
     @Test
     public void shouldReturnEightCustomers_whenGetAllCustomers_givenCustomersExist() {
         List<Customer> customers = customerService.getAllCustomers();
-
         assertThat(customers.size()).isEqualTo(8);
     }
 
@@ -88,7 +94,6 @@ public class CustomerServiceIT extends AbstractRestfulDemoIT {
     @Test
     public void shouldReturnACustomer_whenGetCustomerById_givenCustomerWithIdExists() {
         Customer customer = customerService.getCustomerById(CUSTOMER_ID);
-
         assertThat(customer).isNotNull();
     }
 
@@ -96,16 +101,15 @@ public class CustomerServiceIT extends AbstractRestfulDemoIT {
     @Test
     public void shouldReturnACustomer_whenGetCustomerByName_givenCustomerWithNameExists() {
         Customer customer = customerService.getCustomerByName(CUSTOMER_NAME);
-
-        assertThat(customer).isNotNull();
-        assertThat(customer.getName()).isEqualTo(CUSTOMER_NAME);
+        assertAll(
+                () -> assertThat(customer).isNotNull(),
+                () -> assertThat(customer.getName()).isEqualTo(CUSTOMER_NAME));
     }
 
     @Sql
     @Test
     public void shouldReturnTwoBookings_whenGetBookingsByCustomerId_givenCustomerWithIdExistsAndBookingsExist() {
         List<TourBooking> tourBookings = customerService.getBookingsByCustomerId(CUSTOMER_ID);
-
         assertThat(tourBookings.size()).isEqualTo(2);
     }
 
@@ -117,13 +121,8 @@ public class CustomerServiceIT extends AbstractRestfulDemoIT {
 
         customerService.deleteCustomerById(CUSTOMER_ID);
 
-        try {
-            customerService.getCustomerById(CUSTOMER_ID);
-        } catch (CustomerServiceException e) {
-            log.info("Expected exception");
-        }
-
-        assertThatExceptionOfType(CustomerServiceException.class).isThrownBy(() -> customerService.getCustomerById(CUSTOMER_ID));
+        assertThrows(CustomerServiceException.class,
+                () -> customerService.getCustomerById(CUSTOMER_ID));
     }
 
     private static Stream<Arguments> titleAndNameAndCustomerProvider() {

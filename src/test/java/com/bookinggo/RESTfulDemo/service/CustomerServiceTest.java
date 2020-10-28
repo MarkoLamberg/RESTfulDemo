@@ -15,9 +15,9 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import java.util.List;
 import java.util.Optional;
 
-import static java.util.List.of;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 @Slf4j
@@ -39,14 +39,10 @@ public class CustomerServiceTest {
 
     @Test
     public void shouldNotUpdateCustomer_whenUpdateCustomer_givenCustomerWithCustomerIdNonExisting() {
-        try {
-            customerService.updateCustomer(CUSTOMER_ID, CUSTOMER_TITLE, CUSTOMER_NAME);
-        } catch (CustomerServiceException e) {
-            log.info("Expected exception");
-        }
-
-        verify(customerRepositoryMock).findById(CUSTOMER_ID);
-        assertThatExceptionOfType(CustomerServiceException.class).isThrownBy(() -> customerService.updateCustomer(CUSTOMER_ID, CUSTOMER_TITLE, CUSTOMER_NAME));
+        assertAll(
+                () -> assertThrows(CustomerServiceException.class,
+                        () -> customerService.updateCustomer(CUSTOMER_ID, CUSTOMER_TITLE, CUSTOMER_NAME)),
+                () -> verify(customerRepositoryMock).findById(CUSTOMER_ID));
     }
 
     @Test
@@ -57,11 +53,12 @@ public class CustomerServiceTest {
 
         Customer newCustomer = customerService.updateCustomer(CUSTOMER_ID, CUSTOMER_TITLE, CUSTOMER_NAME);
 
-        verify(customerRepositoryMock).findById(CUSTOMER_ID);
-        verify(customer).setTitle(CUSTOMER_TITLE);
-        verify(customer).setName(CUSTOMER_NAME);
-        verify(customerRepositoryMock).saveAndFlush(any());
-        assertThat(newCustomer).isNotNull();
+        assertAll(
+                () -> verify(customerRepositoryMock).findById(CUSTOMER_ID),
+                () -> verify(customer).setTitle(CUSTOMER_TITLE),
+                () -> verify(customer).setName(CUSTOMER_NAME),
+                () -> verify(customerRepositoryMock).saveAndFlush(any()),
+                () -> assertThat(newCustomer).isNotNull());
     }
 
     @Test
@@ -72,11 +69,12 @@ public class CustomerServiceTest {
 
         Customer newCustomer = customerService.updateCustomer(CUSTOMER_ID, CUSTOMER_TITLE, null);
 
-        verify(customerRepositoryMock).findById(CUSTOMER_ID);
-        verify(customer).setTitle(CUSTOMER_TITLE);
-        verify(customer, times(0)).setName(CUSTOMER_NAME);
-        verify(customerRepositoryMock).saveAndFlush(any());
-        assertThat(newCustomer).isNotNull();
+        assertAll(
+                () -> verify(customerRepositoryMock).findById(CUSTOMER_ID),
+                () -> verify(customer).setTitle(CUSTOMER_TITLE),
+                () -> verify(customer, times(0)).setName(CUSTOMER_NAME),
+                () -> verify(customerRepositoryMock).saveAndFlush(any()),
+                () -> assertThat(newCustomer).isNotNull());
     }
 
     @Test
@@ -87,62 +85,56 @@ public class CustomerServiceTest {
 
         Customer newCustomer = customerService.updateCustomer(CUSTOMER_ID, null, null);
 
-        verify(customerRepositoryMock).findById(CUSTOMER_ID);
-        verifyNoMoreInteractions(customer);
-        verify(customerRepositoryMock).saveAndFlush(any());
-        assertThat(newCustomer).isNotNull();
+        assertAll(
+                () -> verify(customerRepositoryMock).findById(CUSTOMER_ID),
+                () -> verifyNoMoreInteractions(customer),
+                () -> verify(customerRepositoryMock).saveAndFlush(any()),
+                () -> assertThat(newCustomer).isNotNull());
     }
 
     @Test
     public void shouldCallFindAll_whenGetAllCustomers_givenNoCustomersExist() {
         List<Customer> customers = customerService.getAllCustomers();
 
-        verify(customerRepositoryMock).findAll();
-        assertThat(customers.size()).isEqualTo(0);
+        assertAll(
+                () -> verify(customerRepositoryMock).findAll(),
+                () -> assertThat(customers.size()).isEqualTo(0));
     }
 
     @Test
     public void shouldCallFindAll_whenGetAllCustomers_givenCustomerExists() {
-        when(customerRepositoryMock.findAll()).thenReturn(of(buildCustomer()));
-
+        when(customerRepositoryMock.findAll()).thenReturn(List.of(buildCustomer()));
         List<Customer> customers = customerService.getAllCustomers();
 
-        verify(customerRepositoryMock).findAll();
-        assertThat(customers.size()).isEqualTo(1);
+        assertAll(
+                () -> verify(customerRepositoryMock).findAll(),
+                () -> assertThat(customers.size()).isEqualTo(1));
     }
 
     @Test
     public void shouldCallFindById_whenGetCustomerById_givenNoCustomersWithIdExists() {
-        try {
-            customerService.getCustomerById(CUSTOMER_ID);
-        } catch (CustomerServiceException e) {
-            log.info("Expected exception");
-        }
-
-        verify(customerRepositoryMock).findById(CUSTOMER_ID);
-        assertThatExceptionOfType(CustomerServiceException.class).isThrownBy(() -> customerService.getCustomerById(CUSTOMER_ID));
+        assertAll(
+                () -> assertThrows(CustomerServiceException.class,
+                        () -> customerService.getCustomerById(CUSTOMER_ID)),
+                () -> verify(customerRepositoryMock).findById(CUSTOMER_ID));
     }
 
     @Test
     public void shouldCallFindById_whenGetCustomerById_givenCustomerWithIdExists() {
         when(customerRepositoryMock.findById(CUSTOMER_ID)).thenReturn(Optional.of(buildCustomer()));
-
         Customer customer = customerService.getCustomerById(CUSTOMER_ID);
 
-        verify(customerRepositoryMock).findById(CUSTOMER_ID);
-        assertThat(customer).isNotNull();
+        assertAll(
+                () -> verify(customerRepositoryMock).findById(CUSTOMER_ID),
+                () -> assertThat(customer).isNotNull());
     }
 
     @Test
     public void shouldCallFindCustomerByName_whenGetCustomerByName_givenNoCustomersWithIdExists() {
-        try {
-            customerService.getCustomerByName(CUSTOMER_NAME);
-        } catch (CustomerServiceException e) {
-            log.info("Expected exception");
-        }
-
-        verify(customerRepositoryMock).findCustomerByName(CUSTOMER_NAME);
-        assertThatExceptionOfType(CustomerServiceException.class).isThrownBy(() -> customerService.getCustomerByName(CUSTOMER_NAME));
+        assertAll(
+                () -> assertThrows(CustomerServiceException.class,
+                        () -> customerService.getCustomerByName(CUSTOMER_NAME)),
+                () -> verify(customerRepositoryMock).findCustomerByName(CUSTOMER_NAME));
     }
 
     @Test
@@ -154,20 +146,17 @@ public class CustomerServiceTest {
 
         Customer customer = customerService.getCustomerByName(CUSTOMER_NAME);
 
-        verify(customerRepositoryMock).findCustomerByName(CUSTOMER_NAME);
-        assertThat(customer).isNotNull();
+        assertAll(
+                () -> verify(customerRepositoryMock).findCustomerByName(CUSTOMER_NAME),
+                () -> assertThat(customer).isNotNull());
     }
 
     @Test
     public void shouldCallFindById_whenGetBookingsByCustomerId_givenNoCustomersWithIdExists() {
-        try {
-            customerService.getBookingsByCustomerId(CUSTOMER_ID);
-        } catch (CustomerServiceException e) {
-            log.info("Expected exception");
-        }
-
-        verify(customerRepositoryMock).findById(CUSTOMER_ID);
-        assertThatExceptionOfType(CustomerServiceException.class).isThrownBy(() -> customerService.getBookingsByCustomerId(CUSTOMER_ID));
+        assertAll(
+                () -> assertThrows(CustomerServiceException.class,
+                        () -> customerService.getBookingsByCustomerId(CUSTOMER_ID)),
+                () -> verify(customerRepositoryMock).findById(CUSTOMER_ID));
     }
 
     @Test
@@ -175,41 +164,38 @@ public class CustomerServiceTest {
         Customer customer = spy(Customer
                 .builder()
                 .id(CUSTOMER_ID)
-                .bookings(of(TourBooking
+                .bookings(List.of(TourBooking
                         .builder()
                         .build()))
                 .build());
-        when(customerRepositoryMock.findById(CUSTOMER_ID)).thenReturn(Optional.of(customer));
 
+        when(customerRepositoryMock.findById(CUSTOMER_ID)).thenReturn(Optional.of(customer));
         List<TourBooking> bookings = customerService.getBookingsByCustomerId(CUSTOMER_ID);
 
-        verify(customerRepositoryMock).findById(CUSTOMER_ID);
-        verify(customer).getBookings();
-        assertThat(bookings.size()).isEqualTo(1);
+        assertAll(
+                () -> verify(customerRepositoryMock).findById(CUSTOMER_ID),
+                () -> verify(customer).getBookings(),
+                () -> assertThat(bookings.size()).isEqualTo(1));
     }
 
     @Test
     public void shouldNotDeleteAnyCustomer_whenDeleteCustomerById_givenNoCustomer() {
-        try {
-            customerService.deleteCustomerById(CUSTOMER_ID);
-        } catch (CustomerServiceException e) {
-            log.info("Expected exception");
-        }
-
-        verify(customerRepositoryMock).findById(CUSTOMER_ID);
-        verifyNoMoreInteractions(customerRepositoryMock);
-        assertThatExceptionOfType(CustomerServiceException.class).isThrownBy(() -> customerService.deleteCustomerById(CUSTOMER_ID));
+        assertAll(
+                () -> assertThrows(CustomerServiceException.class,
+                        () -> customerService.deleteCustomerById(CUSTOMER_ID)),
+                () -> verify(customerRepositoryMock).findById(CUSTOMER_ID),
+                () -> verifyNoMoreInteractions(customerRepositoryMock));
     }
 
     @Test
     public void shouldDeleteACustomer_whenDeleteCustomerById_givenCustomerExists() {
         when(customerRepositoryMock.findById(CUSTOMER_ID)).thenReturn(Optional.of(buildCustomer()));
-
         Customer customer = customerService.deleteCustomerById(CUSTOMER_ID);
 
-        verify(customerRepositoryMock).findById(CUSTOMER_ID);
-        verify(customerRepositoryMock).deleteById(CUSTOMER_ID);
-        assertThat(customer).isNotNull();
+        assertAll(
+                () -> verify(customerRepositoryMock).findById(CUSTOMER_ID),
+                () -> verify(customerRepositoryMock).deleteById(CUSTOMER_ID),
+                () -> assertThat(customer).isNotNull());
     }
 
     private Customer buildCustomer() {

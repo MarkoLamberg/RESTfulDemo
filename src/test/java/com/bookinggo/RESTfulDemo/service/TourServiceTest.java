@@ -18,7 +18,8 @@ import java.util.Optional;
 
 import static java.util.List.of;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 @Slf4j
@@ -51,170 +52,167 @@ public class TourServiceTest {
 
     @Test
     public void shouldCallGetTourPackageByCode_whenCreateTour_givenTourPackageDoesntExist() {
-        try {
-            tourService.createTour(NON_EXISTING_TOUR_PACKAGE_CODE, TOUR_TITLE, TOUR_DURATION, TOUR_PRICE);
-        } catch (TourServiceException e) {
-            log.info("Expected exception");
-        }
-
-        verify(tourPackageRepositoryMock).getTourPackageByCode(NON_EXISTING_TOUR_PACKAGE_CODE);
-        assertThatExceptionOfType(TourServiceException.class).isThrownBy(() -> tourService.createTour(NON_EXISTING_TOUR_PACKAGE_CODE, TOUR_TITLE, TOUR_DURATION, TOUR_PRICE));
+        assertAll(
+                () -> assertThrows(TourServiceException.class,
+                        () -> tourService.createTour(NON_EXISTING_TOUR_PACKAGE_CODE, TOUR_TITLE, TOUR_DURATION, TOUR_PRICE)),
+                () -> verify(tourPackageRepositoryMock).getTourPackageByCode(NON_EXISTING_TOUR_PACKAGE_CODE));
     }
 
     @Test
     public void shouldCallGetTourPackageByCode_whenCreateTour_givenTourPackageExists() {
         when(tourPackageRepositoryMock.getTourPackageByCode(NON_EXISTING_TOUR_PACKAGE_CODE)).thenReturn(Optional.of(buildTourPackage(NON_EXISTING_TOUR_PACKAGE_CODE)));
         when(tourRepositoryMock.save(any())).thenReturn(buildTour());
+
         Tour tour = tourService.createTour(NON_EXISTING_TOUR_PACKAGE_CODE, TOUR_TITLE, TOUR_DURATION, TOUR_PRICE);
 
-        verify(tourPackageRepositoryMock).getTourPackageByCode(NON_EXISTING_TOUR_PACKAGE_CODE);
-        verify(tourRepositoryMock).save(any());
-        assertThat(tour).isNotNull();
+        assertAll(
+                () -> verify(tourPackageRepositoryMock).getTourPackageByCode(NON_EXISTING_TOUR_PACKAGE_CODE),
+                () -> verify(tourRepositoryMock).save(any()),
+                () -> assertThat(tour).isNotNull());
     }
 
     @Test
     public void shouldCallFindById_whenUpdateTour_givenTourDoesntExist() {
-        try {
-            tourService.updateTour(TOUR_ID, NON_EXISTING_TOUR_PACKAGE_CODE, TOUR_TITLE, TOUR_DURATION, TOUR_PRICE);
-        } catch (TourServiceException e) {
-            log.info("Expected exception");
-        }
-
-        verify(tourRepositoryMock).findById(TOUR_ID);
-        verifyNoInteractions(tourPackageRepositoryMock);
-        assertThatExceptionOfType(TourServiceException.class).isThrownBy(() -> tourService.updateTour(TOUR_ID, NON_EXISTING_TOUR_PACKAGE_CODE, TOUR_TITLE, TOUR_DURATION, TOUR_PRICE));
+        assertAll(
+                () -> assertThrows(TourServiceException.class,
+                        () -> tourService.updateTour(TOUR_ID, NON_EXISTING_TOUR_PACKAGE_CODE, TOUR_TITLE, TOUR_DURATION, TOUR_PRICE)),
+                () -> verify(tourRepositoryMock).findById(TOUR_ID),
+                () -> verifyNoInteractions(tourPackageRepositoryMock));
     }
 
     @Test
     public void shouldCallFindByIdAndGetTourPackageByCode_whenUpdateTour_givenTourPackageDoesntExist() {
         when(tourRepositoryMock.findById(TOUR_ID)).thenReturn(Optional.of(buildSimpleTour()));
 
-        try {
-            tourService.updateTour(TOUR_ID, NON_EXISTING_TOUR_PACKAGE_CODE, TOUR_TITLE, TOUR_DURATION, TOUR_PRICE);
-        } catch (TourServiceException e) {
-            log.info("Expected exception");
-        }
-
-        verify(tourRepositoryMock).findById(TOUR_ID);
-        verify(tourPackageRepositoryMock).getTourPackageByCode(NON_EXISTING_TOUR_PACKAGE_CODE);
-        assertThatExceptionOfType(TourServiceException.class).isThrownBy(() -> tourService.updateTour(TOUR_ID, NON_EXISTING_TOUR_PACKAGE_CODE, TOUR_TITLE, TOUR_DURATION, TOUR_PRICE));
+        assertAll(
+                () -> assertThrows(TourServiceException.class,
+                        () -> tourService.updateTour(TOUR_ID, NON_EXISTING_TOUR_PACKAGE_CODE, TOUR_TITLE, TOUR_DURATION, TOUR_PRICE)),
+                () -> verify(tourRepositoryMock).findById(TOUR_ID),
+                () -> verify(tourPackageRepositoryMock).getTourPackageByCode(NON_EXISTING_TOUR_PACKAGE_CODE));
     }
 
     @Test
     public void shouldCallFindByIdAndGetTourPackageByCode_whenUpdateTourWithFourFields_givenTourPackageExists() {
         Tour tour = spy(buildSimpleTour());
+
         when(tourRepositoryMock.findById(TOUR_ID)).thenReturn(Optional.of(tour));
         when(tourPackageRepositoryMock.getTourPackageByCode(NON_EXISTING_TOUR_PACKAGE_CODE)).thenReturn(Optional.of(buildTourPackage(NON_EXISTING_TOUR_PACKAGE_CODE)));
         when(tourRepositoryMock.saveAndFlush(tour)).thenReturn(buildTour());
 
         Tour updatedTour = tourService.updateTour(TOUR_ID, NON_EXISTING_TOUR_PACKAGE_CODE, TOUR_TITLE, TOUR_DURATION, TOUR_PRICE);
 
-        verify(tourRepositoryMock).findById(TOUR_ID);
-        verify(tourPackageRepositoryMock).getTourPackageByCode(NON_EXISTING_TOUR_PACKAGE_CODE);
-        verify(tour).setTourPackage(any());
-        verify(tour).setTitle(TOUR_TITLE);
-        verify(tour).setDuration(TOUR_DURATION);
-        verify(tour).setPrice(TOUR_PRICE);
-        assertThat(updatedTour).isNotNull();
+        assertAll(
+                () -> verify(tourRepositoryMock).findById(TOUR_ID),
+                () -> verify(tourPackageRepositoryMock).getTourPackageByCode(NON_EXISTING_TOUR_PACKAGE_CODE),
+                () -> verify(tour).setTourPackage(any()),
+                () -> verify(tour).setTitle(TOUR_TITLE),
+                () -> verify(tour).setDuration(TOUR_DURATION),
+                () -> verify(tour).setPrice(TOUR_PRICE),
+                () -> assertThat(updatedTour).isNotNull());
     }
 
     @Test
     public void shouldCallFindByIdAndGetTourPackageByCode_whenUpdateTourWithThreeFields_givenTourPackageExists() {
         Tour tour = spy(buildSimpleTour());
+
         when(tourRepositoryMock.findById(TOUR_ID)).thenReturn(Optional.of(tour));
         when(tourPackageRepositoryMock.getTourPackageByCode(NON_EXISTING_TOUR_PACKAGE_CODE)).thenReturn(Optional.of(buildTourPackage(NON_EXISTING_TOUR_PACKAGE_CODE)));
         when(tourRepositoryMock.saveAndFlush(tour)).thenReturn(buildTour());
 
         Tour updatedTour = tourService.updateTour(TOUR_ID, NON_EXISTING_TOUR_PACKAGE_CODE, TOUR_TITLE, TOUR_DURATION, null);
 
-        verify(tourRepositoryMock).findById(TOUR_ID);
-        verify(tourPackageRepositoryMock).getTourPackageByCode(NON_EXISTING_TOUR_PACKAGE_CODE);
-        verify(tour).setTourPackage(any());
-        verify(tour).setTitle(TOUR_TITLE);
-        verify(tour).setDuration(TOUR_DURATION);
-        verify(tour, times(0)).setPrice(TOUR_PRICE);
-        assertThat(updatedTour).isNotNull();
+        assertAll(
+                () -> verify(tourRepositoryMock).findById(TOUR_ID),
+                () -> verify(tourPackageRepositoryMock).getTourPackageByCode(NON_EXISTING_TOUR_PACKAGE_CODE),
+                () -> verify(tour).setTourPackage(any()),
+                () -> verify(tour).setTitle(TOUR_TITLE),
+                () -> verify(tour).setDuration(TOUR_DURATION),
+                () -> verify(tour, times(0)).setPrice(TOUR_PRICE),
+                () -> assertThat(updatedTour).isNotNull());
     }
 
     @Test
     public void shouldCallFindByIdAndGetTourPackageByCode_whenUpdateTourWithTwoFields_givenTourPackageExists() {
         Tour tour = spy(buildSimpleTour());
+
         when(tourRepositoryMock.findById(TOUR_ID)).thenReturn(Optional.of(tour));
         when(tourPackageRepositoryMock.getTourPackageByCode(NON_EXISTING_TOUR_PACKAGE_CODE)).thenReturn(Optional.of(buildTourPackage(NON_EXISTING_TOUR_PACKAGE_CODE)));
         when(tourRepositoryMock.saveAndFlush(tour)).thenReturn(buildTour());
 
         Tour updatedTour = tourService.updateTour(TOUR_ID, NON_EXISTING_TOUR_PACKAGE_CODE, TOUR_TITLE, null, null);
 
-        verify(tourRepositoryMock).findById(TOUR_ID);
-        verify(tourPackageRepositoryMock).getTourPackageByCode(NON_EXISTING_TOUR_PACKAGE_CODE);
-        verify(tour).setTourPackage(any());
-        verify(tour).setTitle(TOUR_TITLE);
-        verify(tour, times(0)).setDuration(TOUR_DURATION);
-        verify(tour, times(0)).setPrice(TOUR_PRICE);
-        assertThat(updatedTour).isNotNull();
+        assertAll(
+                () -> verify(tourRepositoryMock).findById(TOUR_ID),
+                () -> verify(tourPackageRepositoryMock).getTourPackageByCode(NON_EXISTING_TOUR_PACKAGE_CODE),
+                () -> verify(tour).setTourPackage(any()),
+                () -> verify(tour).setTitle(TOUR_TITLE),
+                () -> verify(tour, times(0)).setDuration(TOUR_DURATION),
+                () -> verify(tour, times(0)).setPrice(TOUR_PRICE),
+                () -> assertThat(updatedTour).isNotNull());
     }
 
     @Test
     public void shouldCallFindByIdAndGetTourPackageByCode_whenUpdateTourWithOneField_givenTourPackageExists() {
         Tour tour = spy(buildSimpleTour());
+
         when(tourRepositoryMock.findById(TOUR_ID)).thenReturn(Optional.of(tour));
         when(tourPackageRepositoryMock.getTourPackageByCode(NON_EXISTING_TOUR_PACKAGE_CODE)).thenReturn(Optional.of(buildTourPackage(NON_EXISTING_TOUR_PACKAGE_CODE)));
         when(tourRepositoryMock.saveAndFlush(tour)).thenReturn(buildTour());
 
         Tour updatedTour = tourService.updateTour(TOUR_ID, NON_EXISTING_TOUR_PACKAGE_CODE, null, null, null);
 
-        verify(tourRepositoryMock).findById(TOUR_ID);
-        verify(tourPackageRepositoryMock).getTourPackageByCode(NON_EXISTING_TOUR_PACKAGE_CODE);
-        verify(tour).setTourPackage(any());
-        verify(tour, times(0)).setTitle(TOUR_TITLE);
-        verify(tour, times(0)).setDuration(TOUR_DURATION);
-        verify(tour, times(0)).setPrice(TOUR_PRICE);
-        assertThat(updatedTour).isNotNull();
+        assertAll(
+                () -> verify(tourRepositoryMock).findById(TOUR_ID),
+                () -> verify(tourPackageRepositoryMock).getTourPackageByCode(NON_EXISTING_TOUR_PACKAGE_CODE),
+                () -> verify(tour).setTourPackage(any()),
+                () -> verify(tour, times(0)).setTitle(TOUR_TITLE),
+                () -> verify(tour, times(0)).setDuration(TOUR_DURATION),
+                () -> verify(tour, times(0)).setPrice(TOUR_PRICE),
+                () -> assertThat(updatedTour).isNotNull());
     }
 
     @Test
     public void shouldCallFindByIdAndGetTourPackageByCode_whenUpdateTourWithZeroFields_givenTourPackageExists() {
         Tour tour = spy(buildSimpleTour());
+
         when(tourRepositoryMock.findById(TOUR_ID)).thenReturn(Optional.of(tour));
         when(tourPackageRepositoryMock.getTourPackageByCode(NON_EXISTING_TOUR_PACKAGE_CODE)).thenReturn(Optional.of(buildTourPackage(NON_EXISTING_TOUR_PACKAGE_CODE)));
         when(tourRepositoryMock.saveAndFlush(tour)).thenReturn(buildTour());
 
         Tour updatedTour = tourService.updateTour(TOUR_ID, null, null, null, null);
 
-        verify(tourRepositoryMock).findById(TOUR_ID);
-        verify(tourPackageRepositoryMock, times(0)).getTourPackageByCode(NON_EXISTING_TOUR_PACKAGE_CODE);
-        verifyNoMoreInteractions(tour);
-        assertThat(updatedTour).isNotNull();
+        assertAll(
+                () -> verify(tourRepositoryMock).findById(TOUR_ID),
+                () -> verify(tourPackageRepositoryMock, times(0)).getTourPackageByCode(NON_EXISTING_TOUR_PACKAGE_CODE),
+                () -> verifyNoMoreInteractions(tour),
+                () -> assertThat(updatedTour).isNotNull());
     }
 
     @Test
     public void shouldCallFindAll_whenGetAllTours_givenNoToursExist() {
         List<Tour> tours = tourService.getAllTours();
 
-        verify(tourRepositoryMock).findAll();
-        assertThat(tours.size()).isEqualTo(0);
+        assertAll(
+                () -> verify(tourRepositoryMock).findAll(),
+                () -> assertThat(tours.size()).isEqualTo(0));
     }
 
     @Test
     public void shouldCallFindAll_whenGetAllTours_givenTourExists() {
         when(tourRepositoryMock.findAll()).thenReturn(of(buildSimpleTour()));
-
         List<Tour> tours = tourService.getAllTours();
 
-        verify(tourRepositoryMock).findAll();
-        assertThat(tours.size()).isEqualTo(1);
+        assertAll(
+                () -> verify(tourRepositoryMock).findAll(),
+                () -> assertThat(tours.size()).isEqualTo(1));
     }
 
     @Test
     public void shouldCallFindById_whenGetTourById_givenNoTourWithIdExists() {
-        try {
-            tourService.getTourById(TOUR_ID);
-        } catch (TourServiceException e) {
-            log.info("Expected exception");
-        }
-
-        verify(tourRepositoryMock).findById(TOUR_ID);
-        assertThatExceptionOfType(TourServiceException.class).isThrownBy(() -> tourService.getTourById(TOUR_ID));
+        assertAll(
+                () -> assertThrows(TourServiceException.class,
+                        () -> tourService.getTourById(TOUR_ID)),
+                () -> verify(tourRepositoryMock).findById(TOUR_ID));
     }
 
     @Test
@@ -222,21 +220,17 @@ public class TourServiceTest {
         when(tourRepositoryMock.findById(TOUR_ID)).thenReturn(Optional.of(buildSimpleTour()));
         Tour tour = tourService.getTourById(TOUR_ID);
 
-        verify(tourRepositoryMock).findById(TOUR_ID);
-        assertThat(tour).isNotNull();
+        assertAll(
+                () -> verify(tourRepositoryMock).findById(TOUR_ID),
+                () -> assertThat(tour).isNotNull());
     }
 
     @Test
     public void shouldCallFindAll_whenGetToursByLocation_givenNoTourWithLocationExists() {
-        try {
-            tourService.getToursByLocation(TOUR_LOCATION);
-        } catch (TourServiceException e) {
-            log.info("Expected exception");
-        }
-
-
-        verify(tourRepositoryMock).findAll();
-        assertThatExceptionOfType(TourServiceException.class).isThrownBy(() -> tourService.getToursByLocation(TOUR_LOCATION));
+        assertAll(
+                () -> assertThrows(TourServiceException.class,
+                        () -> tourService.getToursByLocation(TOUR_LOCATION)),
+                () -> verify(tourRepositoryMock).findAll());
     }
 
     @Test
@@ -250,60 +244,53 @@ public class TourServiceTest {
                 .build()));
         List<Tour> tours = tourService.getToursByLocation(TOUR_LOCATION);
 
-        verify(tourRepositoryMock).findAll();
-        assertThat(tours.size()).isEqualTo(1);
+        assertAll(
+                () -> verify(tourRepositoryMock).findAll(),
+                () -> assertThat(tours.size()).isEqualTo(1));
     }
 
     @Test
     public void shouldCallGetTourPackageByCode_whenGetTourPackageCodeAndTitle_givenNoTourWithThatPackageCodeAndTitleExists() {
-        try {
-            tourService.getTourByTourPackageCodeAndTitle(TOUR_PACKAGE_CODE, TOUR_TITLE);
-        } catch (TourServiceException e) {
-            log.info("Expected exception");
-        }
-
-        verify(tourPackageRepositoryMock).getTourPackageByCode(TOUR_PACKAGE_CODE);
-        assertThatExceptionOfType(TourServiceException.class).isThrownBy(() -> tourService.getTourByTourPackageCodeAndTitle(TOUR_PACKAGE_CODE, TOUR_TITLE));
+        assertAll(
+                () -> assertThrows(TourServiceException.class,
+                        () -> tourService.getTourByTourPackageCodeAndTitle(TOUR_PACKAGE_CODE, TOUR_TITLE)),
+                () -> verify(tourPackageRepositoryMock).getTourPackageByCode(TOUR_PACKAGE_CODE));
     }
 
     @Test
     public void shouldCallGetTourPackageByCodeAndFindTourByTourPackageAndTitle_whenGetTourPackageCodeAndTitle_givenNoTourWithThatPackageCodeAndTitleExists() {
         TourPackage tourPackage = buildTourPackage(TOUR_PACKAGE_CODE);
         when(tourPackageRepositoryMock.getTourPackageByCode(TOUR_PACKAGE_CODE)).thenReturn(Optional.of(tourPackage));
-        try {
-            tourService.getTourByTourPackageCodeAndTitle(TOUR_PACKAGE_CODE, TOUR_TITLE);
-        } catch (TourServiceException e) {
-            log.info("Expected exception");
-        }
 
-        verify(tourPackageRepositoryMock).getTourPackageByCode(TOUR_PACKAGE_CODE);
-        verify(tourRepositoryMock).findTourByTourPackageAndTitle(tourPackage, TOUR_TITLE);
-        assertThatExceptionOfType(TourServiceException.class).isThrownBy(() -> tourService.getTourByTourPackageCodeAndTitle(TOUR_PACKAGE_CODE, TOUR_TITLE));
+        assertAll(
+                () -> assertThrows(TourServiceException.class,
+                        () -> tourService.getTourByTourPackageCodeAndTitle(TOUR_PACKAGE_CODE, TOUR_TITLE)),
+                () -> verify(tourPackageRepositoryMock).getTourPackageByCode(TOUR_PACKAGE_CODE),
+                () -> verify(tourRepositoryMock).findTourByTourPackageAndTitle(tourPackage, TOUR_TITLE));
     }
 
     @Test
     public void shouldCallGetTourPackageByCodeAndFindTourByTourPackageAndTitle_whenGetTourPackageCodeAndTitle_givenATourWithThatPackageCodeAndTitleExists() {
         TourPackage tourPackage = buildTourPackage(TOUR_PACKAGE_CODE);
+
         when(tourPackageRepositoryMock.getTourPackageByCode(TOUR_PACKAGE_CODE)).thenReturn(Optional.of(tourPackage));
         when(tourRepositoryMock.findTourByTourPackageAndTitle(tourPackage, TOUR_TITLE)).thenReturn(Optional.of(buildSimpleTour()));
+
         Tour tour = tourService.getTourByTourPackageCodeAndTitle(TOUR_PACKAGE_CODE, TOUR_TITLE);
 
-        verify(tourPackageRepositoryMock).getTourPackageByCode(TOUR_PACKAGE_CODE);
-        verify(tourRepositoryMock).findTourByTourPackageAndTitle(tourPackage, TOUR_TITLE);
-        assertThat(tour).isNotNull();
+        assertAll(
+                () -> verify(tourPackageRepositoryMock).getTourPackageByCode(TOUR_PACKAGE_CODE),
+                () -> verify(tourRepositoryMock).findTourByTourPackageAndTitle(tourPackage, TOUR_TITLE),
+                () -> assertThat(tour).isNotNull());
     }
 
     @Test
     public void shouldNotCallDeleteById_whenDeleteTourById_givenTourDoesntExist() {
-        try {
-            tourService.deleteTourById(TOUR_ID);
-        } catch (TourServiceException e) {
-            log.info("Expected exception");
-        }
-
-        verify(tourRepositoryMock).findById(TOUR_ID);
-        verify(tourRepositoryMock, times(0)).deleteById(TOUR_ID);
-        assertThatExceptionOfType(TourServiceException.class).isThrownBy(() -> tourService.deleteTourById(TOUR_ID));
+        assertAll(
+                () -> assertThrows(TourServiceException.class,
+                        () -> tourService.deleteTourById(TOUR_ID)),
+                () -> verify(tourRepositoryMock).findById(TOUR_ID),
+                () -> verify(tourRepositoryMock, times(0)).deleteById(TOUR_ID));
     }
 
     @Test
@@ -311,9 +298,10 @@ public class TourServiceTest {
         when(tourRepositoryMock.findById(TOUR_ID)).thenReturn(Optional.of(buildSimpleTour()));
         Tour tour = tourService.deleteTourById(TOUR_ID);
 
-        verify(tourRepositoryMock).findById(TOUR_ID);
-        verify(tourRepositoryMock).deleteById(TOUR_ID);
-        assertThat(tour).isNotNull();
+        assertAll(
+                () -> verify(tourRepositoryMock).findById(TOUR_ID),
+                () -> verify(tourRepositoryMock).deleteById(TOUR_ID),
+                () -> assertThat(tour).isNotNull());
     }
 
     private Tour buildSimpleTour() {

@@ -15,7 +15,8 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @Slf4j
 @SpringBootTest
@@ -53,27 +54,31 @@ public class TourServiceIT extends AbstractRestfulDemoIT {
         List<Tour> toursAfter = tourService.getAllTours();
         Tour tour = toursAfter.get(4);
 
-        assertThat(toursAfter.size()).isEqualTo(5);
-        assertThat(tour.getTourPackage().getCode()).isEqualTo(TOUR_PACKAGE_CODE);
-        assertThat(tour.getTitle()).isEqualTo(TOUR_TITLE);
-        assertThat(tour.getDuration()).isEqualTo(TOUR_DURATION);
-        assertThat(tour.getPrice()).isEqualTo(TOUR_PRICE);
+        assertAll(
+                () -> assertThat(toursAfter.size()).isEqualTo(5),
+                () -> assertThat(tour.getTourPackage().getCode()).isEqualTo(TOUR_PACKAGE_CODE),
+                () -> assertThat(tour.getTitle()).isEqualTo(TOUR_TITLE),
+                () -> assertThat(tour.getDuration()).isEqualTo(TOUR_DURATION),
+                () -> assertThat(tour.getPrice()).isEqualTo(TOUR_PRICE));
     }
 
     @Sql
     @Test
     public void shouldUpdateTour_whenUpdateTour_givenValidTour() {
         Tour tourBefore = tourService.getTourById(TOUR_ID);
-        assertThat(tourBefore.getTitle()).isNotEqualTo(TOUR_TITLE);
-        assertThat(tourBefore.getDuration()).isNotEqualTo(TOUR_DURATION);
-        assertThat(tourBefore.getPrice()).isNotEqualTo(TOUR_PRICE);
+
+        assertAll(
+                () -> assertThat(tourBefore.getTitle()).isNotEqualTo(TOUR_TITLE),
+                () -> assertThat(tourBefore.getDuration()).isNotEqualTo(TOUR_DURATION),
+                () -> assertThat(tourBefore.getPrice()).isNotEqualTo(TOUR_PRICE));
 
         tourService.updateTour(TOUR_ID, null, TOUR_TITLE, TOUR_DURATION, TOUR_PRICE);
-
         Tour tourAfter = tourService.getTourById(TOUR_ID);
-        assertThat(tourAfter.getTitle()).isEqualTo(TOUR_TITLE);
-        assertThat(tourAfter.getDuration()).isEqualTo(TOUR_DURATION);
-        assertThat(tourAfter.getPrice()).isEqualTo(TOUR_PRICE);
+
+        assertAll(
+                () -> assertThat(tourAfter.getTitle()).isEqualTo(TOUR_TITLE),
+                () -> assertThat(tourAfter.getDuration()).isEqualTo(TOUR_DURATION),
+                () -> assertThat(tourAfter.getPrice()).isEqualTo(TOUR_PRICE));
     }
 
     @Sql
@@ -81,11 +86,12 @@ public class TourServiceIT extends AbstractRestfulDemoIT {
     @MethodSource("titleAndDurationAndPriceAndTourProvider")
     public void parameterized_shouldUpdateTour_whenUpdateTour_givenValidTour(String title, String duration, Integer price, Tour updatedTour) {
         tourService.updateTour(TOUR_ID, null, title, duration, price);
-
         Tour tourAfter = tourService.getTourById(TOUR_ID);
-        assertThat(tourAfter.getTitle()).isEqualTo(updatedTour.getTitle());
-        assertThat(tourAfter.getDuration()).isEqualTo(updatedTour.getDuration());
-        assertThat(tourAfter.getPrice()).isEqualTo(updatedTour.getPrice());
+
+        assertAll(
+                () -> assertThat(tourAfter.getTitle()).isEqualTo(updatedTour.getTitle()),
+                () -> assertThat(tourAfter.getDuration()).isEqualTo(updatedTour.getDuration()),
+                () -> assertThat(tourAfter.getPrice()).isEqualTo(updatedTour.getPrice()));
     }
 
     @Sql
@@ -124,13 +130,8 @@ public class TourServiceIT extends AbstractRestfulDemoIT {
 
         tourService.deleteTourById(TOUR_ID);
 
-        try {
-            tourService.getTourById(TOUR_ID);
-        } catch (TourServiceException e) {
-            log.info("Expected exception");
-        }
-
-        assertThatExceptionOfType(TourServiceException.class).isThrownBy(() -> tourService.getTourById(TOUR_ID));
+        assertThrows(TourServiceException.class,
+                () -> tourService.getTourById(TOUR_ID));
     }
 
     private static Stream<Arguments> titleAndDurationAndPriceAndTourProvider() {
