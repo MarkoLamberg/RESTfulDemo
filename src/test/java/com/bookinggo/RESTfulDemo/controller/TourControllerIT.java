@@ -5,7 +5,6 @@ import com.bookinggo.RestfulDemo.dto.TourDto;
 import com.bookinggo.RestfulDemo.dto.TourPatchDto;
 import com.bookinggo.RestfulDemo.entity.Tour;
 import com.bookinggo.RestfulDemo.service.AbstractRestfulDemoIT;
-import org.junit.Before;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -14,16 +13,16 @@ import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.springframework.http.HttpStatus.*;
 
 @SpringBootTest(classes = RestfulDemoApplication.class,
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@ActiveProfiles("integTest")
+@ActiveProfiles("integratedTest")
 public class TourControllerIT extends AbstractRestfulDemoIT {
 
     private static final int TOUR_ID = 1;
@@ -51,11 +50,6 @@ public class TourControllerIT extends AbstractRestfulDemoIT {
 
     @Autowired
     private TestRestTemplate restTemplate;
-
-    @Before
-    public void setup() {
-        restTemplate.getRestTemplate().setRequestFactory(new HttpComponentsClientHttpRequestFactory());
-    }
 
     @Test
     public void shouldReturn201_whenCreateTour_givenValidTour() {
@@ -87,10 +81,11 @@ public class TourControllerIT extends AbstractRestfulDemoIT {
                         new HttpEntity<>(buildTourPatchDto(TOUR_TITLE)),
                         Tour.class);
 
-        assertThat(response.getStatusCodeValue()).isEqualTo(OK.value());
-        assertThat(response.getBody().getTitle()).isEqualTo(TOUR_TITLE);
-        assertThat(response.getBody().getDuration()).isEqualTo(TOUR_DURATION);
-        assertThat(response.getBody().getPrice()).isEqualTo(TOUR_PRICE);
+        assertAll(
+                () -> assertThat(response.getStatusCodeValue()).isEqualTo(OK.value()),
+                () -> assertThat(response.getBody().getTitle()).isEqualTo(TOUR_TITLE),
+                () -> assertThat(response.getBody().getDuration()).isEqualTo(TOUR_DURATION),
+                () -> assertThat(response.getBody().getPrice()).isEqualTo(TOUR_PRICE));
     }
 
     @Sql
@@ -105,9 +100,10 @@ public class TourControllerIT extends AbstractRestfulDemoIT {
                                 .build()),
                         Tour.class);
 
-        assertThat(response.getStatusCodeValue()).isEqualTo(OK.value());
-        assertThat(response.getBody().getTitle()).isEqualTo(NON_EXISTING_TOUR_TITLE);
-        assertThat(response.getBody().getPrice()).isEqualTo(TOUR_PRICE);
+        assertAll(
+                () -> assertThat(response.getStatusCodeValue()).isEqualTo(OK.value()),
+                () -> assertThat(response.getBody().getTitle()).isEqualTo(NON_EXISTING_TOUR_TITLE),
+                () -> assertThat(response.getBody().getPrice()).isEqualTo(TOUR_PRICE));
     }
 
     @Sql
@@ -162,8 +158,9 @@ public class TourControllerIT extends AbstractRestfulDemoIT {
                                 .build()),
                         Tour.class);
 
-        assertThat(response.getStatusCodeValue()).isEqualTo(OK.value());
-        assertThat(response.getBody().getPrice()).isEqualTo(TOUR_PRICE);
+        assertAll(
+                () -> assertThat(response.getStatusCodeValue()).isEqualTo(OK.value()),
+                () -> assertThat(response.getBody().getPrice()).isEqualTo(TOUR_PRICE));
     }
 
     @Sql

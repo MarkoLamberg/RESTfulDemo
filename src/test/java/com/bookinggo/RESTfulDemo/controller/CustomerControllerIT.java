@@ -6,23 +6,24 @@ import com.bookinggo.RestfulDemo.dto.CustomerPatchDto;
 import com.bookinggo.RestfulDemo.entity.Customer;
 import com.bookinggo.RestfulDemo.entity.TourBooking;
 import com.bookinggo.RestfulDemo.service.AbstractRestfulDemoIT;
-import org.junit.Before;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.http.*;
-import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.springframework.http.HttpStatus.*;
 
 @SpringBootTest(classes = RestfulDemoApplication.class,
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@ActiveProfiles("integTest")
+@ActiveProfiles("integratedTest")
 public class CustomerControllerIT extends AbstractRestfulDemoIT {
 
     private static final int CUSTOMER_ID = 1;
@@ -40,11 +41,6 @@ public class CustomerControllerIT extends AbstractRestfulDemoIT {
 
     @Autowired
     private TestRestTemplate restTemplate;
-
-    @Before
-    public void setup() {
-        restTemplate.getRestTemplate().setRequestFactory(new HttpComponentsClientHttpRequestFactory());
-    }
 
     @Test
     public void shouldReturn201_whenCustomerCreated_givenValidCustomer() {
@@ -79,9 +75,10 @@ public class CustomerControllerIT extends AbstractRestfulDemoIT {
                                 .build()),
                         Customer.class);
 
-        assertThat(response.getStatusCodeValue()).isEqualTo(OK.value());
-        assertThat(response.getBody().getTitle()).isEqualTo(CUSTOMER_TITLE);
-        assertThat(response.getBody().getName()).isEqualTo(CUSTOMER_NAME);
+        assertAll(
+                () -> assertThat(response.getStatusCodeValue()).isEqualTo(OK.value()),
+                () -> assertThat(response.getBody().getTitle()).isEqualTo(CUSTOMER_TITLE),
+                () -> assertThat(response.getBody().getName()).isEqualTo(CUSTOMER_NAME));
     }
 
     @Sql
@@ -95,9 +92,10 @@ public class CustomerControllerIT extends AbstractRestfulDemoIT {
                                 .build()),
                         Customer.class);
 
-        assertThat(response.getStatusCodeValue()).isEqualTo(OK.value());
-        assertThat(response.getBody().getTitle()).isEqualTo(CUSTOMER_TITLE);
-        assertThat(response.getBody().getName()).isEqualTo(CUSTOMER_NAME);
+        assertAll(
+                () -> assertThat(response.getStatusCodeValue()).isEqualTo(OK.value()),
+                () -> assertThat(response.getBody().getTitle()).isEqualTo(CUSTOMER_TITLE),
+                () -> assertThat(response.getBody().getName()).isEqualTo(CUSTOMER_NAME));
     }
 
     @Sql
@@ -141,8 +139,9 @@ public class CustomerControllerIT extends AbstractRestfulDemoIT {
                 .getForEntity(LOCAL_HOST + port + "/customers/" + CUSTOMER_ID, Customer.class)
                 .getBody();
 
-        assertThat(customer).isNotNull();
-        assertThat(customer.getId().intValue()).isEqualTo(CUSTOMER_ID);
+        assertAll(
+                () -> assertThat(customer).isNotNull(),
+                () -> assertThat(customer.getId().intValue()).isEqualTo(CUSTOMER_ID));
     }
 
     @Sql

@@ -10,10 +10,10 @@ import org.springframework.test.context.ContextConfiguration;
 import javax.transaction.Transactional;
 
 @Transactional
-@ActiveProfiles("integTest")
+@ActiveProfiles("integratedTest")
 @ContextConfiguration(classes = {RestfulDemoApplication.class, MySQLConfig.class})
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @DataJpaTest
-public abstract class AbstractRepositoryIT {
+abstract class AbstractRepositoryIT {
 
 }

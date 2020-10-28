@@ -29,7 +29,8 @@ dependencies {
 
 	testCompileOnly 'org.projectlombok:lombok:1.18.12'
 	testAnnotationProcessor 'org.projectlombok:lombok:1.18.12'
-	implementation 'junit:junit:4.12'
+	testImplementation 'org.junit.jupiter:junit-jupiter-api:5.3.1'
+	testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.3.1'
 
 	testImplementation 'com.wix:wix-embedded-mysql:4.6.+'
 	testImplementation 'org.flywaydb:flyway-core:6.0.+'
@@ -39,6 +40,14 @@ dependencies {
 
 test {
 	useJUnitPlatform()
+	testLogging {
+		events "passed", "skipped", "failed"
+		afterSuite { desc, result ->
+			if (!desc.parent) { // will match the outermost suite
+				println "***** TEST Results: ${result.resultType} (${result.testCount} tests, ${result.successfulTestCount} successes, ${result.failedTestCount} failures, ${result.skippedTestCount} skipped) *****"
+			}
+		}
+	}
 }
 
 flyway {

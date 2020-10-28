@@ -10,7 +10,7 @@ import org.springframework.test.jdbc.JdbcTestUtils;
 
 @AutoConfigureTestEntityManager
 @SpringBootTest
-@ActiveProfiles("integTest")
+@ActiveProfiles("integratedTest")
 public abstract class AbstractRestfulDemoIT {
 
     @Autowired
