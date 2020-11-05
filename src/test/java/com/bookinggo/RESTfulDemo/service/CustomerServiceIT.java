@@ -1,5 +1,6 @@
 package com.bookinggo.RestfulDemo.service;
 
+import com.bookinggo.RestfulDemo.ServiceTests;
 import com.bookinggo.RestfulDemo.entity.Customer;
 import com.bookinggo.RestfulDemo.entity.TourBooking;
 import com.bookinggo.RestfulDemo.exception.CustomerServiceException;
@@ -21,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @Slf4j
 @SpringBootTest
-public class CustomerServiceIT extends AbstractRestfulDemoIT {
+public class CustomerServiceIT extends AbstractRestfulDemoIT implements ServiceTests {
 
     private static final int CUSTOMER_ID = 1;
 

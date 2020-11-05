@@ -1,5 +1,6 @@
 package com.bookinggo.RestfulDemo.service;
 
+import com.bookinggo.RestfulDemo.ServiceTests;
 import com.bookinggo.RestfulDemo.entity.Customer;
 import com.bookinggo.RestfulDemo.entity.Tour;
 import com.bookinggo.RestfulDemo.entity.TourBooking;
@@ -28,7 +29,7 @@ import static org.mockito.Mockito.*;
 @Slf4j
 @SpringBootTest
 @ExtendWith(MockitoExtension.class)
-public class TourBookingServiceTest {
+public class TourBookingServiceTest implements ServiceTests {
 
     private static final int CUSTOMER_ID = 123;
 

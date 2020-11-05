@@ -1,5 +1,6 @@
 package com.bookinggo.RestfulDemo.repository;
 
+import com.bookinggo.RestfulDemo.RepositoryTests;
 import com.bookinggo.RestfulDemo.entity.TourBooking;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +10,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class TourBookingRepositoryIT extends AbstractRepositoryIT {
+public class TourBookingRepositoryIT extends AbstractRepositoryIT implements RepositoryTests {
 
     private static final int CUSTOMER_ID = 4;
     private static final int TOUR_ID = 1;

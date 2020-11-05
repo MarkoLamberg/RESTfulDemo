@@ -1,5 +1,6 @@
 package com.bookinggo.RestfulDemo.controller;
 
+import com.bookinggo.RestfulDemo.ControllerTests;
 import com.bookinggo.RestfulDemo.RestfulDemoApplication;
 import com.bookinggo.RestfulDemo.dto.CustomerDto;
 import com.bookinggo.RestfulDemo.dto.CustomerPatchDto;
@@ -24,7 +25,7 @@ import static org.springframework.http.HttpStatus.*;
 @SpringBootTest(classes = RestfulDemoApplication.class,
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("integratedTest")
-public class CustomerControllerIT extends AbstractRestfulDemoIT {
+public class CustomerControllerIT extends AbstractRestfulDemoIT implements ControllerTests {
 
     private static final int CUSTOMER_ID = 1;
 
