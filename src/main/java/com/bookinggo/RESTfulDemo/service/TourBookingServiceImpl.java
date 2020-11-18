@@ -1,8 +1,6 @@
 package com.bookinggo.RestfulDemo.service;
 
-import com.bookinggo.RestfulDemo.entity.Customer;
-import com.bookinggo.RestfulDemo.entity.Tour;
-import com.bookinggo.RestfulDemo.entity.TourBooking;
+import com.bookinggo.RestfulDemo.entity.*;
 import com.bookinggo.RestfulDemo.exception.TourBookingServiceException;
 import com.bookinggo.RestfulDemo.exception.TourServiceException;
 import com.bookinggo.RestfulDemo.repository.CustomerRepository;
@@ -23,9 +21,7 @@ import java.util.Optional;
 public class TourBookingServiceImpl implements TourBookingService {
 
     private final TourBookingRepository tourBookingRepository;
-
     private final TourService tourService;
-
     private final CustomerRepository customerRepository;
 
     @Override

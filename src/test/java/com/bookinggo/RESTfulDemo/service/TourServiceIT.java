@@ -24,21 +24,13 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public class TourServiceIT extends AbstractRestfulDemoIT implements ServiceTests {
 
     private static final int TOUR_ID = 1;
-
     private static final String TOUR_PACKAGE_CODE = "LS";
-
     private static final String TOUR_TITLE = "London Tower Bridge";
-
     private static final String ORIGINAL_TOUR_TITLE = "Arsenal Football Tour";
-
     private static final String TOUR_DURATION = "2.5 hours";
-
     private static final String ORIGINAL_TOUR_DURATION = "3 hours";
-
     private static final int TOUR_PRICE = 150;
-
     private static final int ORIGINAL_TOUR_PRICE = 50;
-
     private static final String TOUR_LOCATION = "paris";
 
     @Autowired

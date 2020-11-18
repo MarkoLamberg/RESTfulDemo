@@ -12,9 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 
@@ -28,13 +26,9 @@ import static org.springframework.http.HttpStatus.*;
 public class CustomerControllerIT extends AbstractRestfulDemoIT implements ControllerTests {
 
     private static final int CUSTOMER_ID = 1;
-
     private static final int NON_EXISTING_CUSTOMER_ID = 20;
-
     private static final String LOCAL_HOST = "http://localhost:";
-
     private static final String CUSTOMER_TITLE = "Mr";
-
     private static final String CUSTOMER_NAME = "Marko Lamberg";
 
     @LocalServerPort

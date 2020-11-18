@@ -25,13 +25,9 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public class CustomerServiceIT extends AbstractRestfulDemoIT implements ServiceTests {
 
     private static final int CUSTOMER_ID = 1;
-
     private static final String CUSTOMER_TITLE = "Mr";
-
     private static final String ORIGINAL_CUSTOMER_TITLE = "Mrs";
-
     private static final String CUSTOMER_NAME = "Marko Lamberg";
-
     private static final String ORIGINAL_CUSTOMER_NAME = "Customer One";
 
     @Autowired

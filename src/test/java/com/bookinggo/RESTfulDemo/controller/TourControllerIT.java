@@ -11,9 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 
@@ -27,23 +25,14 @@ import static org.springframework.http.HttpStatus.*;
 public class TourControllerIT extends AbstractRestfulDemoIT implements ControllerTests {
 
     private static final int TOUR_ID = 1;
-
     private static final int NON_EXISTING_TOUR_ID = 10;
-
     private static final String LOCAL_HOST = "http://localhost:";
-
     private static final String TOUR_LOCATION = "paris";
-
     private static final String NON_EXISTING_TOUR_LOCATION = "barcelona";
-
     private static final String TOUR_PACKAGE_CODE = "LS";
-
     private static final String TOUR_TITLE = "London Tower Bridge";
-
     private static final String NON_EXISTING_TOUR_TITLE = "London City Sightseeing Tour";
-
     private static final String TOUR_DURATION = "2 hours";
-
     private static final int TOUR_PRICE = 150;
 
     @LocalServerPort

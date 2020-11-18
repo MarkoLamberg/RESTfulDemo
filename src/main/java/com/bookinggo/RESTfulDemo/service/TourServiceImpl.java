@@ -21,7 +21,6 @@ import java.util.stream.Collectors;
 public class TourServiceImpl implements TourService {
 
     private final TourRepository tourRepository;
-
     private final TourPackageRepository tourPackageRepository;
 
     @Override

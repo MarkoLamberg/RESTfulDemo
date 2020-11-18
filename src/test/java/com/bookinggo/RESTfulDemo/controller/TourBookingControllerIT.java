@@ -2,9 +2,7 @@ package com.bookinggo.RestfulDemo.controller;
 
 import com.bookinggo.RestfulDemo.ControllerTests;
 import com.bookinggo.RestfulDemo.RestfulDemoApplication;
-import com.bookinggo.RestfulDemo.dto.BookingDto;
-import com.bookinggo.RestfulDemo.dto.BookingPatchDto;
-import com.bookinggo.RestfulDemo.dto.ExpandedBookingDto;
+import com.bookinggo.RestfulDemo.dto.*;
 import com.bookinggo.RestfulDemo.entity.TourBooking;
 import com.bookinggo.RestfulDemo.service.AbstractRestfulDemoIT;
 import org.junit.jupiter.api.Test;
@@ -12,9 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.test.context.jdbc.Sql;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -26,21 +22,13 @@ import static org.springframework.http.HttpStatus.*;
 public class TourBookingControllerIT extends AbstractRestfulDemoIT implements ControllerTests {
 
     private static final int CUSTOMER_ID = 4;
-
     private static final int NON_EXISTING_CUSTOMER_ID = 123;
-
     private static final int TOUR_ID = 1;
-
     private static final int NON_EXISTING_TOUR_ID = 10;
-
     private static final int PARTICIPANTS = 1;
-
     private static final String LOCAL_HOST = "http://localhost:";
-
     private static final String PICKUP_DATE_TIME = "2020-03-20T12:00:00";
-
     private static final String PICKUP_LOCATION = "Hotel Ibis";
-
     private static final String TOTAL_PRICE = "£250.00";
 
     @LocalServerPort

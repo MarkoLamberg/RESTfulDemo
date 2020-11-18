@@ -1,8 +1,6 @@
 package com.bookinggo.RestfulDemo.controller;
 
-import com.bookinggo.RestfulDemo.dto.BookingDto;
-import com.bookinggo.RestfulDemo.dto.BookingPatchDto;
-import com.bookinggo.RestfulDemo.dto.ExpandedBookingDto;
+import com.bookinggo.RestfulDemo.dto.*;
 import com.bookinggo.RestfulDemo.entity.TourBooking;
 import com.bookinggo.RestfulDemo.exception.TourBookingServiceException;
 import com.bookinggo.RestfulDemo.exception.TourServiceException;
@@ -32,9 +30,7 @@ import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 public class TourBookingController {
 
     private final TourBookingService tourBookingService;
-
     private final TourService tourService;
-
     private final ModelMapper modelMapper;
 
     @PostMapping("/{tourId}/bookings")

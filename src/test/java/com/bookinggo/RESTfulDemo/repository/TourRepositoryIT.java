@@ -13,7 +13,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class TourRepositoryIT extends AbstractRepositoryIT implements RepositoryTests {
 
     private static final String TOUR_PACKAGE_CODE = "LS";
-
     private static final String TOUR_TITLE = "London City Sightseeing Tour";
 
     @Autowired

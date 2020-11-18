@@ -26,19 +26,12 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public class TourBookingServiceIT extends AbstractRestfulDemoIT implements ServiceTests {
 
     private static final int CUSTOMER_ID = 4;
-
     private static final int TOUR_ID = 1;
-
     private static final int PARTICIPANTS = 1;
-
     private static final int ORIGINAL_PARTICIPANTS = 2;
-
     private static final LocalDateTime PICKUP_DATE_TIME = LocalDateTime.of(2020, 3, 20, 12, 0);
-
     private static final LocalDateTime ORIGINAL_PICKUP_DATE_TIME = LocalDateTime.of(2019, 11, 18, 6, 0);
-
     private static final String PICKUP_LOCATION = "Hotel Ibis";
-
     private static final String ORIGINAL_PICKUP_LOCATION = "Hotel Intercontinental";
 
     @Autowired

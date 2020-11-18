@@ -26,7 +26,6 @@ import java.util.Optional;
 public class TourController {
 
     private final TourService tourService;
-
     private final TourBookingService tourBookingService;
 
     @PostMapping

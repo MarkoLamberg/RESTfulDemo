@@ -1,16 +1,14 @@
 package com.bookinggo.RestfulDemo.service;
 
 import com.bookinggo.RestfulDemo.ServiceTests;
-import com.bookinggo.RestfulDemo.entity.Customer;
-import com.bookinggo.RestfulDemo.entity.Tour;
-import com.bookinggo.RestfulDemo.entity.TourBooking;
+import com.bookinggo.RestfulDemo.entity.*;
 import com.bookinggo.RestfulDemo.exception.TourBookingServiceException;
-import com.bookinggo.RestfulDemo.repository.CustomerRepository;
-import com.bookinggo.RestfulDemo.repository.TourBookingRepository;
-import com.bookinggo.RestfulDemo.repository.TourRepository;
+import com.bookinggo.RestfulDemo.repository.*;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -32,13 +30,9 @@ import static org.mockito.Mockito.*;
 public class TourBookingServiceTest implements ServiceTests {
 
     private static final int CUSTOMER_ID = 123;
-
     private static final int TOUR_ID = 234;
-
     private static final LocalDateTime PICKUP_DATE_TIME = LocalDateTime.now();
-
     private static final String PICKUP_LOCATION = "Hotel Ibis";
-
     private static final int PARTICIPANTS = 1;
 
     @MockBean
@@ -52,6 +46,9 @@ public class TourBookingServiceTest implements ServiceTests {
 
     @Autowired
     private TourBookingService tourBookingService;
+
+    @Captor
+    private ArgumentCaptor<TourBooking> tourBookingCaptor;
 
     @Value("${retry.attempts}")
     private int retryAttempts;
@@ -82,7 +79,7 @@ public class TourBookingServiceTest implements ServiceTests {
     public void shouldCreateABooking_whenCreateBooking_givenTourIdDoesExist() throws TourBookingServiceException {
         when(tourRepositoryMock.findById(TOUR_ID)).thenReturn(Optional.of(buildTour()));
         when(customerRepositoryMock.findById(CUSTOMER_ID)).thenReturn(Optional.of(buildCustomer()));
-        when(tourBookingRepositoryMock.save(any())).thenReturn(buildTourBooking());
+        when(tourBookingRepositoryMock.save(tourBookingCaptor.capture())).thenReturn(buildTourBooking());
 
         TourBooking booking = tourBookingService.createBooking(TOUR_ID, CUSTOMER_ID, PICKUP_DATE_TIME, PICKUP_LOCATION, PARTICIPANTS);
 
@@ -90,6 +87,9 @@ public class TourBookingServiceTest implements ServiceTests {
                 () -> verify(tourRepositoryMock).findById(TOUR_ID),
                 () -> verify(customerRepositoryMock).findById(CUSTOMER_ID),
                 () -> verify(tourBookingRepositoryMock).save(any()),
+                () -> assertThat(tourBookingCaptor.getValue().getPickupDateTime()).isEqualTo(PICKUP_DATE_TIME),
+                () -> assertThat(tourBookingCaptor.getValue().getPickupLocation()).isEqualTo(PICKUP_LOCATION),
+                () -> assertThat(tourBookingCaptor.getValue().getParticipants()).isEqualTo(PARTICIPANTS),
                 () -> assertThat(booking).isNotNull());
     }
 
@@ -148,7 +148,7 @@ public class TourBookingServiceTest implements ServiceTests {
 
         when(customerRepositoryMock.findById(CUSTOMER_ID)).thenReturn(Optional.of(customer));
         when(tourBookingRepositoryMock.findByTourIdAndCustomerId(TOUR_ID, CUSTOMER_ID)).thenReturn(List.of(tourBooking));
-        when(tourBookingRepositoryMock.saveAndFlush(any())).thenReturn(buildTourBooking(customer));
+        when(tourBookingRepositoryMock.saveAndFlush(tourBookingCaptor.capture())).thenReturn(buildTourBooking(customer));
 
         TourBooking updatedBooking = tourBookingService.updateBooking(TOUR_ID, CUSTOMER_ID, PICKUP_DATE_TIME, PICKUP_LOCATION, PARTICIPANTS);
 
@@ -159,6 +159,9 @@ public class TourBookingServiceTest implements ServiceTests {
                 () -> verify(tourBooking).setPickupLocation(PICKUP_LOCATION),
                 () -> verify(tourBooking).setParticipants(PARTICIPANTS),
                 () -> verify(tourBookingRepositoryMock).saveAndFlush(tourBooking),
+                () -> assertThat(tourBookingCaptor.getValue().getPickupDateTime()).isEqualTo(PICKUP_DATE_TIME),
+                () -> assertThat(tourBookingCaptor.getValue().getPickupLocation()).isEqualTo(PICKUP_LOCATION),
+                () -> assertThat(tourBookingCaptor.getValue().getParticipants()).isEqualTo(PARTICIPANTS),
                 () -> assertThat(updatedBooking).isNotNull());
     }
 
@@ -169,7 +172,7 @@ public class TourBookingServiceTest implements ServiceTests {
 
         when(customerRepositoryMock.findById(CUSTOMER_ID)).thenReturn(Optional.of(customer));
         when(tourBookingRepositoryMock.findByTourIdAndCustomerId(TOUR_ID, CUSTOMER_ID)).thenReturn(List.of(tourBooking));
-        when(tourBookingRepositoryMock.saveAndFlush(any())).thenReturn(buildTourBooking(customer));
+        when(tourBookingRepositoryMock.saveAndFlush(tourBookingCaptor.capture())).thenReturn(buildTourBooking(customer));
 
         TourBooking updatedBooking = tourBookingService.updateBooking(TOUR_ID, CUSTOMER_ID, PICKUP_DATE_TIME, PICKUP_LOCATION, null);
 
@@ -180,6 +183,8 @@ public class TourBookingServiceTest implements ServiceTests {
                 () -> verify(tourBooking).setPickupLocation(PICKUP_LOCATION),
                 () -> verify(tourBooking, times(0)).setParticipants(PARTICIPANTS),
                 () -> verify(tourBookingRepositoryMock).saveAndFlush(tourBooking),
+                () -> assertThat(tourBookingCaptor.getValue().getPickupDateTime()).isEqualTo(PICKUP_DATE_TIME),
+                () -> assertThat(tourBookingCaptor.getValue().getPickupLocation()).isEqualTo(PICKUP_LOCATION),
                 () -> assertThat(updatedBooking).isNotNull());
     }
 
@@ -190,7 +195,7 @@ public class TourBookingServiceTest implements ServiceTests {
 
         when(customerRepositoryMock.findById(CUSTOMER_ID)).thenReturn(Optional.of(customer));
         when(tourBookingRepositoryMock.findByTourIdAndCustomerId(TOUR_ID, CUSTOMER_ID)).thenReturn(List.of(tourBooking));
-        when(tourBookingRepositoryMock.saveAndFlush(any())).thenReturn(buildTourBooking(customer));
+        when(tourBookingRepositoryMock.saveAndFlush(tourBookingCaptor.capture())).thenReturn(buildTourBooking(customer));
 
         TourBooking updatedBooking = tourBookingService.updateBooking(TOUR_ID, CUSTOMER_ID, PICKUP_DATE_TIME, null, null);
 
@@ -201,6 +206,7 @@ public class TourBookingServiceTest implements ServiceTests {
                 () -> verify(tourBooking, times(0)).setPickupLocation(PICKUP_LOCATION),
                 () -> verify(tourBooking, times(0)).setParticipants(PARTICIPANTS),
                 () -> verify(tourBookingRepositoryMock).saveAndFlush(tourBooking),
+                () -> assertThat(tourBookingCaptor.getValue().getPickupDateTime()).isEqualTo(PICKUP_DATE_TIME),
                 () -> assertThat(updatedBooking).isNotNull());
     }
 
