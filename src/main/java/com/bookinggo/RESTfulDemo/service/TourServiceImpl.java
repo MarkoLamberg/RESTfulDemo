@@ -38,7 +38,6 @@ public class TourServiceImpl implements TourService {
 
             return tourRepository.save(tour);
         }
-
         throw new TourServiceException("Can't create tour. The Tour Package doesn't exist. Provide correct Tour Package Code.", null);
     }
 
@@ -58,21 +57,28 @@ public class TourServiceImpl implements TourService {
                 }
             }
 
+            boolean updated = false;
+
             if (title != null) {
                 tour.get().setTitle(title);
+                updated = true;
             }
 
             if (duration != null) {
                 tour.get().setDuration(duration);
+                updated = true;
             }
 
             if (price != null) {
                 tour.get().setPrice(price);
+                updated = true;
             }
 
-            return tourRepository.saveAndFlush(tour.get());
+            if(updated) {
+                return tourRepository.saveAndFlush(tour.get());
+            }
+            throw new TourServiceException("Can't update tour. Nothing to update.", null);
         }
-
         throw new TourServiceException("Can't update tour. Tour doesn't exist. Provide correct Tour Id.", null);
     }
 
@@ -90,7 +96,6 @@ public class TourServiceImpl implements TourService {
         if (tour.isPresent()) {
             return tour.get();
         }
-
         throw new TourServiceException("Can't get tour by id. Tour doesn't exist. Provide correct Tour Id.", null);
     }
 
@@ -105,7 +110,6 @@ public class TourServiceImpl implements TourService {
         if (toursByLocation.size() > 0) {
             return toursByLocation;
         }
-
         throw new TourServiceException("Can't get tours by location. Tour Location doesn't exist. Provide correct Tour Location.", null);
     }
 
@@ -121,7 +125,6 @@ public class TourServiceImpl implements TourService {
                 return tour.get();
             }
         }
-
         throw new TourServiceException("Can't get tour by given Tour Package and Title. Tour doesn't exist.", null);
     }
 
@@ -135,7 +138,6 @@ public class TourServiceImpl implements TourService {
 
             return tour.get();
         }
-
         throw new TourServiceException("Can't delete tour. Tour doesn't exist. Provide correct Tour Id.", null);
     }
 }

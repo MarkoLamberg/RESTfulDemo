@@ -53,7 +53,7 @@ public class CustomerServiceTest implements ServiceTests {
     public void shouldUpdateACustomer_whenUpdateCustomerWithTwoFields_givenCustomerWithCustomerIdExists() {
         Customer customer = spy(buildCustomer());
         when(customerRepositoryMock.findById(CUSTOMER_ID)).thenReturn(Optional.of(customer));
-        when(customerRepositoryMock.saveAndFlush(customerCaptor.capture())).thenReturn(customer);
+        when(customerRepositoryMock.saveAndFlush(customerCaptor.capture())).thenAnswer(invocation -> invocation.getArgument(0));
 
         Customer newCustomer = customerService.updateCustomer(CUSTOMER_ID, CUSTOMER_TITLE, CUSTOMER_NAME);
 
@@ -62,17 +62,17 @@ public class CustomerServiceTest implements ServiceTests {
                 () -> verify(customer).setTitle(CUSTOMER_TITLE),
                 () -> verify(customer).setName(CUSTOMER_NAME),
                 () -> verify(customerRepositoryMock).saveAndFlush(any()),
-                () -> assertThat(customerCaptor.getValue().getId()).isEqualTo(CUSTOMER_ID),
-                () -> assertThat(customerCaptor.getValue().getTitle()).isEqualTo(CUSTOMER_TITLE),
-                () -> assertThat(customerCaptor.getValue().getName()).isEqualTo(CUSTOMER_NAME),
-                () -> assertThat(newCustomer).isNotNull());
+                () -> assertThat(newCustomer).isNotNull(),
+                () -> assertThat(newCustomer.getId()).isEqualTo(CUSTOMER_ID),
+                () -> assertThat(newCustomer.getTitle()).isEqualTo(CUSTOMER_TITLE),
+                () -> assertThat(newCustomer.getName()).isEqualTo(CUSTOMER_NAME));
     }
 
     @Test
     public void shouldUpdateACustomer_whenUpdateCustomerWithOneField_givenCustomerWithCustomerIdExists() {
         Customer customer = spy(buildCustomer());
         when(customerRepositoryMock.findById(CUSTOMER_ID)).thenReturn(Optional.of(customer));
-        when(customerRepositoryMock.saveAndFlush(customerCaptor.capture())).thenReturn(customer);
+        when(customerRepositoryMock.saveAndFlush(customerCaptor.capture())).thenAnswer(invocation -> invocation.getArgument(0));
 
         Customer newCustomer = customerService.updateCustomer(CUSTOMER_ID, CUSTOMER_TITLE, null);
 
@@ -81,25 +81,17 @@ public class CustomerServiceTest implements ServiceTests {
                 () -> verify(customer).setTitle(CUSTOMER_TITLE),
                 () -> verify(customer, times(0)).setName(CUSTOMER_NAME),
                 () -> verify(customerRepositoryMock).saveAndFlush(any()),
-                () -> assertThat(customerCaptor.getValue().getId()).isEqualTo(CUSTOMER_ID),
-                () -> assertThat(customerCaptor.getValue().getTitle()).isEqualTo(CUSTOMER_TITLE),
-                () -> assertThat(newCustomer).isNotNull());
+                () -> assertThat(newCustomer).isNotNull(),
+                () -> assertThat(newCustomer.getId()).isEqualTo(CUSTOMER_ID),
+                () -> assertThat(newCustomer.getTitle()).isEqualTo(CUSTOMER_TITLE));
     }
 
     @Test
-    public void shouldUpdateACustomer_whenUpdateCustomerWithZeroFields_givenCustomerWithCustomerIdExists() {
-        Customer customer = spy(buildCustomer());
-        when(customerRepositoryMock.findById(CUSTOMER_ID)).thenReturn(Optional.of(customer));
-        when(customerRepositoryMock.saveAndFlush(customerCaptor.capture())).thenReturn(customer);
-
-        Customer newCustomer = customerService.updateCustomer(CUSTOMER_ID, null, null);
-
+    public void shouldNotUpdateACustomer_whenUpdateCustomerWithZeroFields_givenCustomerWithCustomerIdExists() {
         assertAll(
-                () -> verify(customerRepositoryMock).findById(CUSTOMER_ID),
-                () -> verifyNoMoreInteractions(customer),
-                () -> verify(customerRepositoryMock).saveAndFlush(any()),
-                () -> assertThat(customerCaptor.getValue().getId()).isEqualTo(CUSTOMER_ID),
-                () -> assertThat(newCustomer).isNotNull());
+                () -> assertThrows(CustomerServiceException.class,
+                        () -> customerService.updateCustomer(CUSTOMER_ID, null, null)),
+                () -> verify(customerRepositoryMock).findById(CUSTOMER_ID));
     }
 
     @Test

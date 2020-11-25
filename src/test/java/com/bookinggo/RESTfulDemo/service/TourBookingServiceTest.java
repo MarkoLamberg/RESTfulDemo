@@ -47,11 +47,11 @@ public class TourBookingServiceTest implements ServiceTests {
     @Autowired
     private TourBookingService tourBookingService;
 
-    @Captor
-    private ArgumentCaptor<TourBooking> tourBookingCaptor;
-
     @Value("${retry.attempts}")
     private int retryAttempts;
+
+    @Captor
+    private ArgumentCaptor<TourBooking> tourBookingCaptor;
 
     @Test
     public void shouldNotCreateBooking_whenCreateBooking_givenTourIdDoesNotExist() throws TourBookingServiceException {
@@ -211,22 +211,19 @@ public class TourBookingServiceTest implements ServiceTests {
     }
 
     @Test
-    public void shouldUpdateABooking_whenUpdateBookingWithZeroFields_givenBookingWithTourIdAndCustomerIdExists() {
+    public void shouldNotUpdateABooking_whenUpdateBookingWithZeroFields_givenBookingWithTourIdAndCustomerIdExists() {
         TourBooking tourBooking = spy(buildTourBooking());
         Customer customer = buildCustomer();
 
         when(customerRepositoryMock.findById(CUSTOMER_ID)).thenReturn(Optional.of(customer));
         when(tourBookingRepositoryMock.findByTourIdAndCustomerId(TOUR_ID, CUSTOMER_ID)).thenReturn(List.of(tourBooking));
-        when(tourBookingRepositoryMock.saveAndFlush(any())).thenReturn(buildTourBooking(customer));
-
-        TourBooking updatedBooking = tourBookingService.updateBooking(TOUR_ID, CUSTOMER_ID, null, null, null);
 
         assertAll(
+                () -> assertThrows(TourBookingServiceException.class,
+                        () -> tourBookingService.updateBooking(TOUR_ID, CUSTOMER_ID, null, null, null)),
                 () -> verify(customerRepositoryMock).findById(CUSTOMER_ID),
                 () -> verify(tourBookingRepositoryMock).findByTourIdAndCustomerId(TOUR_ID, CUSTOMER_ID),
-                () -> verifyNoMoreInteractions(tourBooking),
-                () -> verify(tourBookingRepositoryMock).saveAndFlush(tourBooking),
-                () -> assertThat(updatedBooking).isNotNull());
+                () -> verifyNoMoreInteractions(tourBooking));
     }
 
     @Test

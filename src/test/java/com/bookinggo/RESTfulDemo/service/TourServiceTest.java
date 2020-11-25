@@ -9,8 +9,7 @@ import com.bookinggo.RestfulDemo.repository.TourRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
+import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -97,6 +96,7 @@ public class TourServiceTest implements ServiceTests {
     @Test
     public void shouldCallFindByIdAndGetTourPackageByCode_whenUpdateTourWithFourFields_givenTourPackageExists() {
         Tour tour = spy(buildSimpleTour());
+        InOrder inOrder = inOrder(tourRepositoryMock, tourPackageRepositoryMock);
 
         when(tourRepositoryMock.findById(TOUR_ID)).thenReturn(Optional.of(tour));
         when(tourPackageRepositoryMock.getTourPackageByCode(NON_EXISTING_TOUR_PACKAGE_CODE)).thenReturn(Optional.of(buildTourPackage(NON_EXISTING_TOUR_PACKAGE_CODE)));
@@ -105,8 +105,8 @@ public class TourServiceTest implements ServiceTests {
         Tour updatedTour = tourService.updateTour(TOUR_ID, NON_EXISTING_TOUR_PACKAGE_CODE, TOUR_TITLE, TOUR_DURATION, TOUR_PRICE);
 
         assertAll(
-                () -> verify(tourRepositoryMock).findById(TOUR_ID),
-                () -> verify(tourPackageRepositoryMock).getTourPackageByCode(NON_EXISTING_TOUR_PACKAGE_CODE),
+                () -> inOrder.verify(tourRepositoryMock).findById(TOUR_ID),
+                () -> inOrder.verify(tourPackageRepositoryMock).getTourPackageByCode(NON_EXISTING_TOUR_PACKAGE_CODE),
                 () -> verify(tour).setTourPackage(any()),
                 () -> verify(tour).setTitle(TOUR_TITLE),
                 () -> verify(tour).setDuration(TOUR_DURATION),
@@ -120,6 +120,7 @@ public class TourServiceTest implements ServiceTests {
     @Test
     public void shouldCallFindByIdAndGetTourPackageByCode_whenUpdateTourWithThreeFields_givenTourPackageExists() {
         Tour tour = spy(buildSimpleTour());
+        InOrder inOrder = inOrder(tourRepositoryMock, tourPackageRepositoryMock);
 
         when(tourRepositoryMock.findById(TOUR_ID)).thenReturn(Optional.of(tour));
         when(tourPackageRepositoryMock.getTourPackageByCode(NON_EXISTING_TOUR_PACKAGE_CODE)).thenReturn(Optional.of(buildTourPackage(NON_EXISTING_TOUR_PACKAGE_CODE)));
@@ -128,8 +129,8 @@ public class TourServiceTest implements ServiceTests {
         Tour updatedTour = tourService.updateTour(TOUR_ID, NON_EXISTING_TOUR_PACKAGE_CODE, TOUR_TITLE, TOUR_DURATION, null);
 
         assertAll(
-                () -> verify(tourRepositoryMock).findById(TOUR_ID),
-                () -> verify(tourPackageRepositoryMock).getTourPackageByCode(NON_EXISTING_TOUR_PACKAGE_CODE),
+                () -> inOrder.verify(tourRepositoryMock).findById(TOUR_ID),
+                () -> inOrder.verify(tourPackageRepositoryMock).getTourPackageByCode(NON_EXISTING_TOUR_PACKAGE_CODE),
                 () -> verify(tour).setTourPackage(any()),
                 () -> verify(tour).setTitle(TOUR_TITLE),
                 () -> verify(tour).setDuration(TOUR_DURATION),
@@ -142,6 +143,7 @@ public class TourServiceTest implements ServiceTests {
     @Test
     public void shouldCallFindByIdAndGetTourPackageByCode_whenUpdateTourWithTwoFields_givenTourPackageExists() {
         Tour tour = spy(buildSimpleTour());
+        InOrder inOrder = inOrder(tourRepositoryMock, tourPackageRepositoryMock);
 
         when(tourRepositoryMock.findById(TOUR_ID)).thenReturn(Optional.of(tour));
         when(tourPackageRepositoryMock.getTourPackageByCode(NON_EXISTING_TOUR_PACKAGE_CODE)).thenReturn(Optional.of(buildTourPackage(NON_EXISTING_TOUR_PACKAGE_CODE)));
@@ -150,8 +152,8 @@ public class TourServiceTest implements ServiceTests {
         Tour updatedTour = tourService.updateTour(TOUR_ID, NON_EXISTING_TOUR_PACKAGE_CODE, TOUR_TITLE, null, null);
 
         assertAll(
-                () -> verify(tourRepositoryMock).findById(TOUR_ID),
-                () -> verify(tourPackageRepositoryMock).getTourPackageByCode(NON_EXISTING_TOUR_PACKAGE_CODE),
+                () -> inOrder.verify(tourRepositoryMock).findById(TOUR_ID),
+                () -> inOrder.verify(tourPackageRepositoryMock).getTourPackageByCode(NON_EXISTING_TOUR_PACKAGE_CODE),
                 () -> verify(tour).setTourPackage(any()),
                 () -> verify(tour).setTitle(TOUR_TITLE),
                 () -> verify(tour, times(0)).setDuration(TOUR_DURATION),
@@ -163,21 +165,21 @@ public class TourServiceTest implements ServiceTests {
     @Test
     public void shouldCallFindByIdAndGetTourPackageByCode_whenUpdateTourWithOneField_givenTourPackageExists() {
         Tour tour = spy(buildSimpleTour());
+        InOrder inOrder = inOrder(tourRepositoryMock, tourPackageRepositoryMock);
 
         when(tourRepositoryMock.findById(TOUR_ID)).thenReturn(Optional.of(tour));
         when(tourPackageRepositoryMock.getTourPackageByCode(NON_EXISTING_TOUR_PACKAGE_CODE)).thenReturn(Optional.of(buildTourPackage(NON_EXISTING_TOUR_PACKAGE_CODE)));
         when(tourRepositoryMock.saveAndFlush(tour)).thenReturn(buildTour());
 
-        Tour updatedTour = tourService.updateTour(TOUR_ID, NON_EXISTING_TOUR_PACKAGE_CODE, null, null, null);
-
         assertAll(
-                () -> verify(tourRepositoryMock).findById(TOUR_ID),
-                () -> verify(tourPackageRepositoryMock).getTourPackageByCode(NON_EXISTING_TOUR_PACKAGE_CODE),
+                () -> assertThrows(TourServiceException.class,
+                        () -> tourService.updateTour(TOUR_ID, NON_EXISTING_TOUR_PACKAGE_CODE, null, null, null)),
+                () -> inOrder.verify(tourRepositoryMock).findById(TOUR_ID),
+                () -> inOrder.verify(tourPackageRepositoryMock).getTourPackageByCode(NON_EXISTING_TOUR_PACKAGE_CODE),
                 () -> verify(tour).setTourPackage(any()),
                 () -> verify(tour, times(0)).setTitle(TOUR_TITLE),
                 () -> verify(tour, times(0)).setDuration(TOUR_DURATION),
-                () -> verify(tour, times(0)).setPrice(TOUR_PRICE),
-                () -> assertThat(updatedTour).isNotNull());
+                () -> verify(tour, times(0)).setPrice(TOUR_PRICE));
     }
 
     @Test
@@ -188,13 +190,12 @@ public class TourServiceTest implements ServiceTests {
         when(tourPackageRepositoryMock.getTourPackageByCode(NON_EXISTING_TOUR_PACKAGE_CODE)).thenReturn(Optional.of(buildTourPackage(NON_EXISTING_TOUR_PACKAGE_CODE)));
         when(tourRepositoryMock.saveAndFlush(tour)).thenReturn(buildTour());
 
-        Tour updatedTour = tourService.updateTour(TOUR_ID, null, null, null, null);
-
         assertAll(
+                () -> assertThrows(TourServiceException.class,
+                        () -> tourService.updateTour(TOUR_ID, null, null, null, null)),
                 () -> verify(tourRepositoryMock).findById(TOUR_ID),
                 () -> verify(tourPackageRepositoryMock, times(0)).getTourPackageByCode(NON_EXISTING_TOUR_PACKAGE_CODE),
-                () -> verifyNoMoreInteractions(tour),
-                () -> assertThat(updatedTour).isNotNull());
+                () -> verifyNoMoreInteractions(tour));
     }
 
     @Test

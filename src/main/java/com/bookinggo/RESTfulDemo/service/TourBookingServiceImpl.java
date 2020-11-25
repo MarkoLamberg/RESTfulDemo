@@ -48,7 +48,6 @@ public class TourBookingServiceImpl implements TourBookingService {
 
             return tourBookingRepository.save(tourBooking);
         }
-
         throw new TourBookingServiceException("Can't create a booking for this Customer Id. Customer Id doesn't exist.", null);
     }
 
@@ -67,7 +66,6 @@ public class TourBookingServiceImpl implements TourBookingService {
         if (tourBookings.size() > 0) {
             return tourBookings;
         }
-
         throw new TourBookingServiceException("No Tour Bookings for given Tour Id.", null);
     }
 
@@ -85,24 +83,30 @@ public class TourBookingServiceImpl implements TourBookingService {
             final List<TourBooking> bookings = tourBookingRepository.findByTourIdAndCustomerId(tourId, customerId);
 
             if (bookings.size() == 1) {
+                boolean updated = false;
+
                 if (pickupDateTime != null) {
                     bookings.get(0).setPickupDateTime(pickupDateTime);
+                    updated = true;
                 }
 
                 if (pickupLocation != null) {
                     bookings.get(0).setPickupLocation(pickupLocation);
+                    updated = true;
                 }
 
                 if (participants != null) {
                     bookings.get(0).setParticipants(participants);
+                    updated = true;
                 }
 
-                return tourBookingRepository.saveAndFlush(bookings.get(0));
+                if(updated) {
+                    return tourBookingRepository.saveAndFlush(bookings.get(0));
+                }
+                throw new TourBookingServiceException("Can't update booking. Nothing to update.", null);
             }
-
             throw new TourBookingServiceException("Can't update booking. More than one bookings with this Customer Id.", null);
         }
-
         throw new TourBookingServiceException("No Tour Bookings to update for given Customer Id.", null);
     }
 

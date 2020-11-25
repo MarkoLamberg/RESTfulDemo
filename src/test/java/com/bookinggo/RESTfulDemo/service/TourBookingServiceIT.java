@@ -221,8 +221,6 @@ public class TourBookingServiceIT extends AbstractRestfulDemoIT implements Servi
 
     private static Stream<Arguments> dateTimeAndLocationAndParticipantsAndBookingProvider() {
         return Stream.of(
-                Arguments.of(null, null, null,
-                        buildBooking(ORIGINAL_PICKUP_DATE_TIME, ORIGINAL_PICKUP_LOCATION, ORIGINAL_PARTICIPANTS)),
                 Arguments.of(PICKUP_DATE_TIME, null, null,
                         buildBooking(PICKUP_DATE_TIME, ORIGINAL_PICKUP_LOCATION, ORIGINAL_PARTICIPANTS)),
                 Arguments.of(null, PICKUP_LOCATION, null,

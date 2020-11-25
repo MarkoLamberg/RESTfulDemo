@@ -124,8 +124,6 @@ public class CustomerServiceIT extends AbstractRestfulDemoIT implements ServiceT
 
     private static Stream<Arguments> titleAndNameAndCustomerProvider() {
         return Stream.of(
-                Arguments.of(null, null,
-                        buildCustomer(ORIGINAL_CUSTOMER_TITLE, ORIGINAL_CUSTOMER_NAME)),
                 Arguments.of(CUSTOMER_TITLE, null,
                         buildCustomer(CUSTOMER_TITLE, ORIGINAL_CUSTOMER_NAME)),
                 Arguments.of(null, CUSTOMER_NAME,

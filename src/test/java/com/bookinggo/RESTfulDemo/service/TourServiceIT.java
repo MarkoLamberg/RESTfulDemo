@@ -129,8 +129,6 @@ public class TourServiceIT extends AbstractRestfulDemoIT implements ServiceTests
 
     private static Stream<Arguments> titleAndDurationAndPriceAndTourProvider() {
         return Stream.of(
-                Arguments.of(null, null, null,
-                        buildTour(ORIGINAL_TOUR_TITLE, ORIGINAL_TOUR_DURATION, ORIGINAL_TOUR_PRICE)),
                 Arguments.of(TOUR_TITLE, null, null,
                         buildTour(TOUR_TITLE, ORIGINAL_TOUR_DURATION, ORIGINAL_TOUR_PRICE)),
                 Arguments.of(null, TOUR_DURATION, null,

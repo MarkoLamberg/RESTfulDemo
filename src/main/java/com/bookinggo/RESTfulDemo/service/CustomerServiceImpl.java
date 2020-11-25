@@ -40,19 +40,24 @@ public class CustomerServiceImpl implements CustomerService {
     public Customer updateCustomer(int customerId, String title, String name) {
         log.info("updateCustomer - customerId: {}, title: {}, name {}", customerId, title, name);
         final Optional<Customer> customer = customerRepository.findById(customerId);
+        boolean updated = false;
 
         if (customer.isPresent()) {
             if (title != null) {
                 customer.get().setTitle(title);
+                updated = true;
             }
 
             if (name != null) {
                 customer.get().setName(name);
+                updated = true;
             }
 
-            return customerRepository.saveAndFlush(customer.get());
+            if(updated) {
+                return customerRepository.saveAndFlush(customer.get());
+            }
+            throw new CustomerServiceException("Can't update customer. Nothing to update.", null);
         }
-
         throw new CustomerServiceException("Can't update customer. Customer doesn't exist. Provide correct Customer Id.", null);
     }
 
@@ -70,7 +75,6 @@ public class CustomerServiceImpl implements CustomerService {
         if (customer.isPresent()) {
             return customer.get();
         }
-
         throw new CustomerServiceException("Can't get customer by id. Customer doesn't exist. Provide correct Customer Id.", null);
     }
 
@@ -82,7 +86,6 @@ public class CustomerServiceImpl implements CustomerService {
         if (customer.isPresent()) {
             return customer.get();
         }
-
         throw new CustomerServiceException("Can't get customer bookings by name. Customer doesn't exist. Provide correct Customer Id.", null);
 
     }
@@ -95,7 +98,6 @@ public class CustomerServiceImpl implements CustomerService {
         if (customer.isPresent()) {
             return customer.get().getBookings();
         }
-
         throw new CustomerServiceException("Can't get customer's bookings by id. Customer doesn't exist. Provide correct Customer Id.", null);
     }
 
@@ -108,7 +110,6 @@ public class CustomerServiceImpl implements CustomerService {
             customerRepository.deleteById(customerId);
             return customer.get();
         }
-
         throw new CustomerServiceException("Can't delete customer. Customer doesn't exist. Provide correct Customer Id.", null);
     }
 }
