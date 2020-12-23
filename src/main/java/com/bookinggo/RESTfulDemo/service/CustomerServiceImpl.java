@@ -4,9 +4,13 @@ import com.bookinggo.RestfulDemo.entity.Customer;
 import com.bookinggo.RestfulDemo.entity.TourBooking;
 import com.bookinggo.RestfulDemo.exception.CustomerServiceException;
 import com.bookinggo.RestfulDemo.repository.CustomerRepository;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import javax.transaction.Transactional;
 import java.util.List;
@@ -15,14 +19,37 @@ import java.util.Optional;
 @Service
 @Slf4j
 @Transactional
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class CustomerServiceImpl implements CustomerService {
 
     private final CustomerRepository customerRepository;
 
+    @Value("${user.authenticate}")
+    private boolean useAuthentication;
+
+    @Value("${user.authentication.url}")
+    private String authenticationUrl;
+
     @Override
     public Customer createCustomer(String title, String name) {
         log.info("createCustomer - title: {}, name: {}", title, name);
+
+        if (useAuthentication) {
+            RestTemplate restTemplate = new RestTemplate();
+
+            try {
+                ResponseEntity<String> response = restTemplate
+                        .postForEntity(authenticationUrl + "/authentication",
+                                "{\"password:password\"}",
+                                String.class);
+
+                if (response.getStatusCodeValue() != HttpStatus.ACCEPTED.value()) {
+                    throw new CustomerServiceException("Can't create customer. Bad authentication", null);
+                }
+            } catch (Exception e) {
+                throw new CustomerServiceException("Can't create customer. Authentication: '" + e.getMessage() + "'", e);
+            }
+        }
 
         if (customerRepository.findCustomerByName(name).isPresent()) {
             throw new CustomerServiceException("Can't create customer. Customer with given name already exists.", null);

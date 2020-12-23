@@ -1,5 +1,44 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<configuration>
-    <include resource="org/springframework/boot/logging/logback/base.xml"/>
-    <logger name="com.bookinggo.RESTfulDemo" level="INFO"/>
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true" scanPeriod="60 seconds">
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
+            <providers>
+                <timestamp/>
+                <pattern>
+                    <pattern>
+                        {
+                        "logger_name": "%logger",
+                        "thread_name": "%thread",
+                        "level": "%level",
+                        "message": "%message"
+                        }
+                    </pattern>
+                </pattern>
+                <stackTrace>
+                    <throwableConverter class="net.logstash.logback.stacktrace.ShortenedThrowableConverter">
+                        <shortenedClassNameLength>20</shortenedClassNameLength>
+                        <exclude>^sun\.reflect\..*\.invoke</exclude>
+                        <exclude>^net\.sf\.cglib\.proxy\.MethodProxy\.invoke</exclude>
+                        org.apache.catalina.
+                        <exclude>^org\.apache\.catalina</exclude>
+                    </throwableConverter>
+                </stackTrace>
+                <mdc/>
+                <context/>
+                <arguments/>
+            </providers>
+        </encoder>
+    </appender>
+    <appender name="ASYNC" class="net.logstash.logback.appender.LoggingEventAsyncDisruptorAppender">
+        <appender-ref ref="STDOUT"/>
+    </appender>
+
+    <logger name="com.bookinggo.RESTfulDemo" level="DEBUG" additivity="false">
+        <appender-ref ref="ASYNC"/>
+    </logger>
+
+    <root level="INFO">
+        <appender-ref ref="ASYNC"/>
+    </root>
+
 </configuration>
