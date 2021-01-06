@@ -7,6 +7,7 @@ import com.bookinggo.RestfulDemo.repository.CustomerRepository;
 import com.bookinggo.RestfulDemo.repository.TourBookingRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.retry.annotation.Recover;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -51,7 +52,7 @@ public class TourBookingServiceImpl implements TourBookingService {
         throw new TourBookingServiceException("Can't create a booking for this Customer Id. Customer Id doesn't exist.", null);
     }
 
-    @Override
+    @Recover
     public TourBooking recover(TourBookingServiceException e) {
         log.info("Called createBooking - recover called instead: {}", e.getMessage());
         throw new TourBookingServiceException(e.getMessage(), null);

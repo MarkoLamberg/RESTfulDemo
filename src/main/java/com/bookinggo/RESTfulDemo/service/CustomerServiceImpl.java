@@ -24,7 +24,7 @@ public class CustomerServiceImpl implements CustomerService {
 
     private final CustomerRepository customerRepository;
 
-    @Value("${user.authenticate}")
+    @Value("${user.authenticate:false}")
     private boolean useAuthentication;
 
     @Value("${user.authentication.url}")

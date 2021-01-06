@@ -3,7 +3,6 @@ package com.bookinggo.RestfulDemo.service;
 import com.bookinggo.RestfulDemo.entity.TourBooking;
 import com.bookinggo.RestfulDemo.exception.TourBookingServiceException;
 import org.springframework.retry.annotation.Backoff;
-import org.springframework.retry.annotation.Recover;
 import org.springframework.retry.annotation.Retryable;
 
 import java.time.LocalDateTime;
@@ -16,9 +15,6 @@ public interface TourBookingService {
             maxAttemptsExpression = "${retry.attempts:3}",
             backoff = @Backoff(delayExpression = "${retry.backoff.delay:500}"))
     TourBooking createBooking(int tourId, Integer customerId, LocalDateTime pickupDateTime, String pickupLocation, Integer participants) throws TourBookingServiceException;
-
-    @Recover
-    TourBooking recover(TourBookingServiceException e);
 
     List<TourBooking> getBookingsByTourId(int tourId);
 
