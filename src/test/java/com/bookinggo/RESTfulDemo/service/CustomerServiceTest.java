@@ -176,7 +176,6 @@ public class CustomerServiceTest implements ServiceTests {
 
         assertAll(
                 () -> verify(customerRepositoryMock).findById(CUSTOMER_ID),
-                () -> verify(customer).getBookings(),
                 () -> assertThat(bookings.size()).isEqualTo(1));
     }
 

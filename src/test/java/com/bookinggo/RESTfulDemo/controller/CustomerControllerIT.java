@@ -14,6 +14,8 @@ import org.springframework.http.*;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 
+import java.util.Objects;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.springframework.http.HttpStatus.*;
@@ -65,8 +67,8 @@ public class CustomerControllerIT extends AbstractRestfulDemoIT implements Contr
 
         assertAll(
                 () -> assertThat(response.getStatusCodeValue()).isEqualTo(OK.value()),
-                () -> assertThat(response.getBody().getTitle()).isEqualTo(CUSTOMER_TITLE),
-                () -> assertThat(response.getBody().getName()).isEqualTo(CUSTOMER_NAME));
+                () -> assertThat(Objects.requireNonNull(response.getBody()).getTitle()).isEqualTo(CUSTOMER_TITLE),
+                () -> assertThat(Objects.requireNonNull(response.getBody()).getName()).isEqualTo(CUSTOMER_NAME));
     }
 
     @Sql
@@ -82,8 +84,8 @@ public class CustomerControllerIT extends AbstractRestfulDemoIT implements Contr
 
         assertAll(
                 () -> assertThat(response.getStatusCodeValue()).isEqualTo(OK.value()),
-                () -> assertThat(response.getBody().getTitle()).isEqualTo(CUSTOMER_TITLE),
-                () -> assertThat(response.getBody().getName()).isEqualTo(CUSTOMER_NAME));
+                () -> assertThat(Objects.requireNonNull(response.getBody()).getTitle()).isEqualTo(CUSTOMER_TITLE),
+                () -> assertThat(Objects.requireNonNull(response.getBody()).getName()).isEqualTo(CUSTOMER_NAME));
     }
 
     @Sql
@@ -117,6 +119,7 @@ public class CustomerControllerIT extends AbstractRestfulDemoIT implements Contr
                 .getForEntity("/customers", Customer[].class)
                 .getBody();
 
+        assert customers != null;
         assertThat(customers.length).isEqualTo(4);
     }
 
@@ -129,7 +132,10 @@ public class CustomerControllerIT extends AbstractRestfulDemoIT implements Contr
 
         assertAll(
                 () -> assertThat(customer).isNotNull(),
-                () -> assertThat(customer.getId().intValue()).isEqualTo(CUSTOMER_ID));
+                () -> {
+                    assert customer != null;
+                    assertThat(customer.getId().intValue()).isEqualTo(CUSTOMER_ID);
+                });
     }
 
     @Sql
@@ -151,6 +157,7 @@ public class CustomerControllerIT extends AbstractRestfulDemoIT implements Contr
                 .getForEntity("/customers/" + CUSTOMER_ID + "/bookings", TourBooking[].class)
                 .getBody();
 
+        assert tourBookings != null;
         assertThat(tourBookings.length).isEqualTo(2);
     }
 
@@ -173,6 +180,7 @@ public class CustomerControllerIT extends AbstractRestfulDemoIT implements Contr
                 .getForEntity("/customers", Customer[].class)
                 .getBody();
 
+        assert customersBefore != null;
         assertThat(customersBefore.length).isEqualTo(4);
 
         restTemplate.delete("/customers/" + CUSTOMER_ID);
@@ -181,6 +189,7 @@ public class CustomerControllerIT extends AbstractRestfulDemoIT implements Contr
                 .getForEntity("/customers", Customer[].class)
                 .getBody();
 
+        assert customersAfter != null;
         assertThat(customersAfter.length).isEqualTo(3);
     }
 

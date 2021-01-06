@@ -11,6 +11,8 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.*;
 import org.springframework.test.context.jdbc.Sql;
 
+import java.util.Objects;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.springframework.http.HttpStatus.*;
@@ -60,6 +62,7 @@ public class TourBookingControllerIT extends AbstractRestfulDemoIT implements Co
                 .getForEntity("/tours/" + TOUR_ID + "/bookings", TourBooking[].class)
                 .getBody();
 
+        assert tourBookings != null;
         assertThat(tourBookings.length).isEqualTo(2);
     }
 
@@ -82,6 +85,7 @@ public class TourBookingControllerIT extends AbstractRestfulDemoIT implements Co
                 .getForEntity("/tours/bookings", ExpandedBookingDto[].class)
                 .getBody();
 
+        assert tourBookings != null;
         assertThat(tourBookings.length).isEqualTo(3);
     }
 
@@ -96,8 +100,8 @@ public class TourBookingControllerIT extends AbstractRestfulDemoIT implements Co
 
         assertAll(
                 () -> assertThat(response.getStatusCodeValue()).isEqualTo(OK.value()),
-                () -> assertThat(response.getBody().getPickupLocation()).isEqualTo(PICKUP_LOCATION),
-                () -> assertThat(response.getBody().getParticipants().intValue()).isEqualTo(PARTICIPANTS));
+                () -> assertThat(Objects.requireNonNull(response.getBody()).getPickupLocation()).isEqualTo(PICKUP_LOCATION),
+                () -> assertThat(Objects.requireNonNull(response.getBody()).getParticipants().intValue()).isEqualTo(PARTICIPANTS));
     }
 
     @Sql
@@ -110,8 +114,8 @@ public class TourBookingControllerIT extends AbstractRestfulDemoIT implements Co
 
         assertAll(
                 () -> assertThat(response.getStatusCodeValue()).isEqualTo(OK.value()),
-                () -> assertThat(response.getBody().getPickupLocation()).isNotEqualTo(PICKUP_LOCATION),
-                () -> assertThat(response.getBody().getParticipants().intValue()).isEqualTo(PARTICIPANTS));
+                () -> assertThat(Objects.requireNonNull(response.getBody()).getPickupLocation()).isNotEqualTo(PICKUP_LOCATION),
+                () -> assertThat(Objects.requireNonNull(response.getBody()).getParticipants().intValue()).isEqualTo(PARTICIPANTS));
     }
 
     @Sql
@@ -145,6 +149,7 @@ public class TourBookingControllerIT extends AbstractRestfulDemoIT implements Co
                 .getForEntity("/tours/" + TOUR_ID + "/bookings/", TourBooking[].class)
                 .getBody();
 
+        assert tourBookingsBefore != null;
         assertThat(tourBookingsBefore.length).isEqualTo(2);
 
         restTemplate.delete("/tours/" + TOUR_ID + "/bookings");
@@ -171,6 +176,7 @@ public class TourBookingControllerIT extends AbstractRestfulDemoIT implements Co
                 .getForEntity("/tours/" + TOUR_ID + "/bookings", TourBooking[].class)
                 .getBody();
 
+        assert tourBookingsBefore != null;
         assertThat(tourBookingsBefore.length).isEqualTo(2);
 
         restTemplate.delete("/tours/" + TOUR_ID + "/bookings/" + CUSTOMER_ID);
@@ -179,6 +185,7 @@ public class TourBookingControllerIT extends AbstractRestfulDemoIT implements Co
                 .getForEntity("/tours/" + TOUR_ID + "/bookings", TourBooking[].class)
                 .getBody();
 
+        assert tourBookingsAfter != null;
         assertThat(tourBookingsAfter.length).isEqualTo(1);
     }
 
@@ -198,6 +205,7 @@ public class TourBookingControllerIT extends AbstractRestfulDemoIT implements Co
                 .getForEntity("/tours/bookings", TourBooking[].class)
                 .getBody();
 
+        assert tourBookingsBefore != null;
         assertThat(tourBookingsBefore.length).isEqualTo(3);
 
         restTemplate.delete("/tours/bookings/" + CUSTOMER_ID);
@@ -206,6 +214,7 @@ public class TourBookingControllerIT extends AbstractRestfulDemoIT implements Co
                 .getForEntity("/tours/bookings", TourBooking[].class)
                 .getBody();
 
+        assert tourBookingsAfter != null;
         assertThat(tourBookingsAfter.length).isEqualTo(1);
     }
 
@@ -232,8 +241,15 @@ public class TourBookingControllerIT extends AbstractRestfulDemoIT implements Co
                 .getBody();
 
         assertAll(
-                () -> assertThat(tourBookingsAfter.length).isNotEqualTo(tourBookingsBefore.length),
-                () -> assertThat(tourBookingsAfter.length).isEqualTo(0));
+                () -> {
+                    assert tourBookingsAfter != null;
+                    assert tourBookingsBefore != null;
+                    assertThat(tourBookingsAfter.length).isNotEqualTo(tourBookingsBefore.length);
+                },
+                () -> {
+                    assert tourBookingsAfter != null;
+                    assertThat(tourBookingsAfter.length).isEqualTo(0);
+                });
     }
 
     private BookingDto buildBookingDto() {

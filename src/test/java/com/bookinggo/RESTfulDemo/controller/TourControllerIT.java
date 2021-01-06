@@ -13,6 +13,8 @@ import org.springframework.http.*;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 
+import java.util.Objects;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.springframework.http.HttpStatus.*;
@@ -66,8 +68,8 @@ public class TourControllerIT extends AbstractRestfulDemoIT implements Controlle
 
         assertAll(
                 () -> assertThat(response.getStatusCodeValue()).isEqualTo(OK.value()),
-                () -> assertThat(response.getBody().getTitle()).isEqualTo(TOUR_TITLE),
-                () -> assertThat(response.getBody().getDuration()).isEqualTo(TOUR_DURATION),
+                () -> assertThat(Objects.requireNonNull(response.getBody()).getTitle()).isEqualTo(TOUR_TITLE),
+                () -> assertThat(Objects.requireNonNull(response.getBody()).getDuration()).isEqualTo(TOUR_DURATION),
                 () -> assertThat(response.getBody().getPrice()).isEqualTo(TOUR_PRICE));
     }
 
@@ -85,8 +87,8 @@ public class TourControllerIT extends AbstractRestfulDemoIT implements Controlle
 
         assertAll(
                 () -> assertThat(response.getStatusCodeValue()).isEqualTo(OK.value()),
-                () -> assertThat(response.getBody().getTitle()).isEqualTo(NON_EXISTING_TOUR_TITLE),
-                () -> assertThat(response.getBody().getPrice()).isEqualTo(TOUR_PRICE));
+                () -> assertThat(Objects.requireNonNull(response.getBody()).getTitle()).isEqualTo(NON_EXISTING_TOUR_TITLE),
+                () -> assertThat(Objects.requireNonNull(response.getBody()).getPrice()).isEqualTo(TOUR_PRICE));
     }
 
     @Sql
@@ -143,7 +145,7 @@ public class TourControllerIT extends AbstractRestfulDemoIT implements Controlle
 
         assertAll(
                 () -> assertThat(response.getStatusCodeValue()).isEqualTo(OK.value()),
-                () -> assertThat(response.getBody().getPrice()).isEqualTo(TOUR_PRICE));
+                () -> assertThat(Objects.requireNonNull(response.getBody()).getPrice()).isEqualTo(TOUR_PRICE));
     }
 
     @Sql
@@ -153,6 +155,7 @@ public class TourControllerIT extends AbstractRestfulDemoIT implements Controlle
                 .getForEntity("/tours", Tour[].class)
                 .getBody();
 
+        assert tours != null;
         assertThat(tours.length).isEqualTo(4);
     }
 
@@ -163,6 +166,7 @@ public class TourControllerIT extends AbstractRestfulDemoIT implements Controlle
                 .getForEntity("/tours/" + TOUR_ID, Tour.class)
                 .getBody();
 
+        assert tour != null;
         assertThat(tour.getId().intValue()).isEqualTo(1);
     }
 
@@ -185,6 +189,7 @@ public class TourControllerIT extends AbstractRestfulDemoIT implements Controlle
                 .getForEntity("/tours/byLocation/" + TOUR_LOCATION, Tour[].class)
                 .getBody();
 
+        assert tours != null;
         assertThat(tours.length).isEqualTo(2);
     }
 
@@ -207,6 +212,7 @@ public class TourControllerIT extends AbstractRestfulDemoIT implements Controlle
                 .getForEntity("/tours", Tour[].class)
                 .getBody();
 
+        assert toursBefore != null;
         assertThat(toursBefore.length).isEqualTo(4);
 
         restTemplate.delete("/tours/" + TOUR_ID);
@@ -215,6 +221,7 @@ public class TourControllerIT extends AbstractRestfulDemoIT implements Controlle
                 .getForEntity("/tours", Tour[].class)
                 .getBody();
 
+        assert toursAfter != null;
         assertThat(toursAfter.length).isEqualTo(3);
     }
 
