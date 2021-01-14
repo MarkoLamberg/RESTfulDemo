@@ -1,0 +1,40 @@
+[
+  {
+    "httpRequest": {
+      "method" : "GET",
+      "path": "/authentication"
+    },
+    "httpResponse": {
+      "body": {
+        "type": "JSON",
+        "json": "{\"Password GET OK?\"}"
+      },
+      "statusCode": 200,
+      "delay": {
+        "timeUnit": "MILLISECONDS",
+        "value": 250
+      }
+    }
+  },
+  {
+    "httpRequest": {
+      "method" : "POST",
+      "path": "/authentication",
+      "body": {
+        "type": "JSON",
+        "json": "{\"password\":\"password\"}"
+      }
+    },
+    "httpResponse": {
+      "body": {
+        "type": "JSON",
+        "json":"{\"Password POST OK?\"}"
+      },
+      "statusCode": 202,
+      "delay": {
+        "timeUnit": "MILLISECONDS",
+        "value": 250
+      }
+    }
+  }
+]

@@ -40,14 +40,14 @@ public class CustomerServiceImpl implements CustomerService {
             try {
                 ResponseEntity<String> response = restTemplate
                         .postForEntity(authenticationUrl + "/authentication",
-                                "{\"password:password\"}",
+                                "{\"password\":\"password\"}",
                                 String.class);
 
                 if (response.getStatusCodeValue() != HttpStatus.ACCEPTED.value()) {
                     throw new CustomerServiceException("Can't create customer. Bad authentication", null);
                 }
             } catch (Exception e) {
-                throw new CustomerServiceException("Can't create customer. Authentication: '" + e.getMessage() + "'", e);
+                throw new CustomerServiceException("Can't create customer. Authentication exception: '" + e.getMessage() + "'", e);
             }
         }
 
