@@ -7,6 +7,7 @@ import com.bookinggo.RestfulDemo.exception.TourBookingServiceException;
 import com.bookinggo.RestfulDemo.exception.TourServiceException;
 import com.bookinggo.RestfulDemo.service.TourBookingService;
 import com.bookinggo.RestfulDemo.service.TourService;
+import io.swagger.annotations.*;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -21,6 +22,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/tours")
+@Api(tags = "Tour")
 @Slf4j
 @AllArgsConstructor
 public class TourController {
@@ -28,9 +30,14 @@ public class TourController {
     private final TourService tourService;
     private final TourBookingService tourBookingService;
 
+    @ApiOperation(value = "Create a new tour")
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Successfully creating a new tour", response = Tour.class),
+            @ApiResponse(code = 400, message = "Failed creating a new tour")
+    })
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<?> createTour(@Valid @RequestBody TourDto tourDto) {
+    public ResponseEntity<Tour> createTour(@Valid @RequestBody TourDto tourDto) {
         log.info("POST /tours: {}", tourDto.toString());
         try {
             tourService.getTourByTourPackageCodeAndTitle(tourDto.getTourPackageCode(), tourDto.getTitle());
@@ -49,8 +56,13 @@ public class TourController {
         }
     }
 
+    @ApiOperation(value = "Update tour by tour id")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully updating existing tour", response = Tour.class),
+            @ApiResponse(code = 400, message = "Failed updating existing tour")
+    })
     @PutMapping("/{tourId}")
-    public ResponseEntity<?> updateTour(@PathVariable(value = "tourId") int tourId, @Valid @RequestBody TourPatchDto tourPatchDto) {
+    public ResponseEntity<Tour> updateTour(@PathVariable(value = "tourId") int tourId, @Valid @RequestBody TourPatchDto tourPatchDto) {
         log.info("PUT /tours/{}: {}", tourId, tourPatchDto.toString());
         try {
             final Tour tour = tourService.getTourById(tourId);
@@ -69,14 +81,23 @@ public class TourController {
         }
     }
 
+    @ApiOperation(value = "Get all tours", response = Tour.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully getting all tours", response = Tour.class, responseContainer = "List"),
+    })
     @GetMapping
     public List<Tour> getAllTours() {
         log.info("GET /tours");
         return tourService.getAllTours();
     }
 
+    @ApiOperation(value = "Get tour by tour id")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully getting tour", response = Tour.class),
+            @ApiResponse(code = 400, message = "Failed getting tour")
+    })
     @GetMapping(path = "/{tourId}")
-    public ResponseEntity<?> getTourById(@PathVariable(value = "tourId") int tourId) {
+    public ResponseEntity<Tour> getTourById(@PathVariable(value = "tourId") int tourId) {
         log.info("GET /tours/{}", tourId);
         try {
             final Tour tour = tourService.getTourById(tourId);
@@ -88,8 +109,13 @@ public class TourController {
         }
     }
 
+    @ApiOperation(value = "Get all tours by tour location")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully getting tours by location", response = Tour.class, responseContainer = "List"),
+            @ApiResponse(code = 400, message = "Failed getting tours by location")
+    })
     @GetMapping(path = "/byLocation/{tourLocation}")
-    public ResponseEntity<?> getToursByLocation(@PathVariable(value = "tourLocation") String location) {
+    public ResponseEntity<List<Tour>> getToursByLocation(@PathVariable(value = "tourLocation") String location) {
         log.info("GET /tours/byLocation/{}", location);
         try {
             final List<Tour> tours = tourService.getToursByLocation(location);
@@ -101,8 +127,13 @@ public class TourController {
         }
     }
 
+    @ApiOperation(value = "Delete tour by tour id")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully deleting tour", response = Tour.class),
+            @ApiResponse(code = 400, message = "Failed deleting tour")
+    })
     @DeleteMapping("/{tourId}")
-    public ResponseEntity<?> deleteTour(@PathVariable(value = "tourId") int tourId) {
+    public ResponseEntity<Tour> deleteTour(@PathVariable(value = "tourId") int tourId) {
         log.info("DELETE /tours/{}", tourId);
 
         try {

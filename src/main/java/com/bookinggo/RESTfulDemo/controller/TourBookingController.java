@@ -6,6 +6,7 @@ import com.bookinggo.RestfulDemo.exception.TourBookingServiceException;
 import com.bookinggo.RestfulDemo.exception.TourServiceException;
 import com.bookinggo.RestfulDemo.service.TourBookingService;
 import com.bookinggo.RestfulDemo.service.TourService;
+import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -25,6 +26,7 @@ import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 
 @RestController
 @RequestMapping("/tours")
+@Api(tags = "Tour Booking")
 @Slf4j
 @RequiredArgsConstructor
 public class TourBookingController {
@@ -33,9 +35,14 @@ public class TourBookingController {
     private final TourService tourService;
     private final ModelMapper modelMapper;
 
+    @ApiOperation(value = "Create a new tour booking")
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Successfully creating a new booking", response = TourBooking.class),
+            @ApiResponse(code = 400, message = "Failed creating a new booking")
+    })
     @PostMapping("/{tourId}/bookings")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<?> createTourBooking(@PathVariable(value = "tourId") int tourId, @Valid @RequestBody BookingDto bookingDto) throws TourBookingServiceException {
+    public ResponseEntity<BookingDto> createTourBooking(@PathVariable(value = "tourId") int tourId, @Valid @RequestBody BookingDto bookingDto) throws TourBookingServiceException {
         log.info("POST /tours/{}/bookings: {}", tourId, bookingDto.toString());
         try {
             tourService.getTourById(tourId);
@@ -57,8 +64,13 @@ public class TourBookingController {
         }
     }
 
+    @ApiOperation(value = "Get all bookings for a tour by tour id")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully getting all bookings for a tour", response = TourBooking.class, responseContainer = "List"),
+            @ApiResponse(code = 400, message = "Failed getting bookings for a tour")
+    })
     @GetMapping("/{tourId}/bookings")
-    public ResponseEntity<?> getAllBookingsForTour(@PathVariable(value = "tourId") int tourId) {
+    public ResponseEntity<List<BookingDto>> getAllBookingsForTour(@PathVariable(value = "tourId") int tourId) {
         log.info("GET /tours/{}/bookings", tourId);
         try {
             tourService.getTourById(tourId);
@@ -79,6 +91,10 @@ public class TourBookingController {
         }
     }
 
+    @ApiOperation(value = "Get all bookings")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully getting all bookings", response = ExpandedBookingDto.class)
+    })
     @GetMapping("/bookings")
     public List<ExpandedBookingDto> getAllBookings() {
         log.info("GET /tours/bookings");
@@ -87,8 +103,13 @@ public class TourBookingController {
         return tourBookings.stream().map(this::toExpandedDto).collect(Collectors.toList());
     }
 
+    @ApiOperation(value = "Update booking by tour id")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully updating existing booking", response = BookingDto.class),
+            @ApiResponse(code = 400, message = "Failed updating existing booking")
+    })
     @PutMapping("/{tourId}/bookings")
-    public ResponseEntity<?> updateBooking(@PathVariable(value = "tourId") int tourId, @Valid @RequestBody BookingPatchDto bookingPatchDto) {
+    public ResponseEntity<BookingDto> updateBooking(@PathVariable(value = "tourId") int tourId, @Valid @RequestBody BookingPatchDto bookingPatchDto) {
         log.info("PUT /tours/{}/bookings: {}", tourId, bookingPatchDto.toString());
         try {
             tourService.getTourById(tourId);
@@ -114,8 +135,13 @@ public class TourBookingController {
         }
     }
 
+    @ApiOperation(value = "Delete all bookings for a tour by tour id")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully deleting all bookings for a tour", response = BookingDto.class, responseContainer = "List"),
+            @ApiResponse(code = 400, message = "Failed deleting all bookings for a tour")
+    })
     @DeleteMapping("/{tourId}/bookings")
-    public ResponseEntity<?> deleteAllBookingsForTour(@PathVariable(value = "tourId") int tourId) {
+    public ResponseEntity<List<BookingDto>> deleteAllBookingsForTour(@PathVariable(value = "tourId") int tourId) {
         log.info("DELETE /tours/{}/bookings", tourId);
         try {
             tourService.getTourById(tourId);
@@ -129,8 +155,13 @@ public class TourBookingController {
         }
     }
 
+    @ApiOperation(value = "Delete all bookings for a tour and a customer")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully deleting all bookings for a tour and a customer", response = ExpandedBookingDto.class, responseContainer = "List"),
+            @ApiResponse(code = 400, message = "Failed deleting bookings for a tour and a customer")
+    })
     @DeleteMapping("/{tourId}/bookings/{customerId}")
-    public ResponseEntity<?> deleteAllBookingsForTourAndCustomer(@PathVariable(value = "tourId") int tourId, @PathVariable(value = "customerId") int customerId) {
+    public ResponseEntity<List<ExpandedBookingDto>> deleteAllBookingsForTourAndCustomer(@PathVariable(value = "tourId") int tourId, @PathVariable(value = "customerId") int customerId) {
         log.info("DELETE /tours/{}/bookings/{}", tourId, customerId);
         try {
             tourService.getTourById(tourId);
@@ -148,8 +179,13 @@ public class TourBookingController {
         }
     }
 
+    @ApiOperation(value = "Delete all bookings for a customer by customer id")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully deleting all bookings for a customer", response = ExpandedBookingDto.class, responseContainer = "List"),
+            @ApiResponse(code = 400, message = "Failed deleting all bookings for a customer")
+    })
     @DeleteMapping("/bookings/{customerId}")
-    public ResponseEntity<?> deleteAllBookingsForCustomer(@PathVariable(value = "customerId") int customerId) {
+    public ResponseEntity<List<ExpandedBookingDto>> deleteAllBookingsForCustomer(@PathVariable(value = "customerId") int customerId) {
         log.info("DELETE /tours/bookings/{}", customerId);
         try {
             final List<TourBooking> bookings = tourBookingService.deleteAllBookingsWithCustomerId(customerId);
@@ -161,6 +197,11 @@ public class TourBookingController {
         }
     }
 
+    @ApiOperation(value = "Delete all bookings")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully deleting all bookings", response = ExpandedBookingDto.class, responseContainer = "List"),
+            @ApiResponse(code = 400, message = "Failed deleting all bookings")
+    })
     @DeleteMapping("/bookings")
     public List<ExpandedBookingDto> deleteAllBookings() {
         log.info("DELETE /tours/bookings");
