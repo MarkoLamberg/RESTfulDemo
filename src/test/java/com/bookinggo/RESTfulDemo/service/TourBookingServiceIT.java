@@ -27,6 +27,8 @@ public class TourBookingServiceIT extends AbstractRestfulDemoIT implements Servi
 
     private static final int CUSTOMER_ID = 4;
     private static final int TOUR_ID = 1;
+    private static final int BOOKING_ID = 3;
+    private static final int NON_EXISTING_BOOKING_ID = 5;
     private static final int PARTICIPANTS = 1;
     private static final int ORIGINAL_PARTICIPANTS = 2;
     private static final LocalDateTime PICKUP_DATE_TIME = LocalDateTime.of(2020, 3, 20, 12, 0);
@@ -206,8 +208,8 @@ public class TourBookingServiceIT extends AbstractRestfulDemoIT implements Servi
         assertThat(filteredBookingsAfter.size()).isEqualTo(0);
     }
 
-    @Sql
     @Test
+    @Sql
     public void shouldDeleteAllBookings_whenDeleteAllBookings_givenBookingsExists() {
         List<TourBooking> bookingsBefore = tourBookingService.getAllBookings();
         assertThat(bookingsBefore.size()).isEqualTo(3);
@@ -217,6 +219,25 @@ public class TourBookingServiceIT extends AbstractRestfulDemoIT implements Servi
 
         List<TourBooking> bookingsAfter = tourBookingService.getAllBookings();
         assertThat(bookingsAfter.size()).isEqualTo(0);
+    }
+
+    @Test
+    @Sql("classpath:com/bookinggo/RESTfulDemo/service/TourBookingServiceIT.shouldDeleteAllBookings_whenDeleteAllBookings_givenBookingsExists.sql")
+    public void shouldDeleteABooking_whenDeleteBookingById_givenBookingExists() {
+        List<TourBooking> bookingsBefore = tourBookingService.getAllBookings();
+        assertThat(bookingsBefore.size()).isEqualTo(3);
+
+        tourBookingService.deleteBookingById(BOOKING_ID);
+
+        List<TourBooking> bookingsAfter = tourBookingService.getAllBookings();
+        assertThat(bookingsAfter.size()).isEqualTo(2);
+    }
+
+    @Test
+    @Sql("classpath:com/bookinggo/RESTfulDemo/service/TourBookingServiceIT.shouldDeleteAllBookings_whenDeleteAllBookings_givenBookingsExists.sql")
+    public void shouldThrowTourBookingServiceException_whenDeleteBookingById_givenBookingDoesntExist() {
+        assertThrows(TourBookingServiceException.class,
+                () -> tourBookingService.deleteBookingById(NON_EXISTING_BOOKING_ID));
     }
 
     private static Stream<Arguments> dateTimeAndLocationAndParticipantsAndBookingProvider() {
