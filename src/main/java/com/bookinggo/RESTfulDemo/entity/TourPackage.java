@@ -1,13 +1,10 @@
 package com.bookinggo.RestfulDemo.entity;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "tour_package")
@@ -18,9 +15,12 @@ import javax.persistence.Table;
 public class TourPackage extends AbstractEntity {
 
     @Id
+    @ApiModelProperty(example = "AA")
     private String code;
 
+    @ApiModelProperty(example = "London Sightseeing")
     private String name;
 
+    @ApiModelProperty(example = "London")
     private String location;
 }

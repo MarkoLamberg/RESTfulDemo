@@ -30,4 +30,5 @@ public interface TourBookingService {
 
     List<TourBooking> deleteAllBookings();
 
+    TourBooking deleteBookingById(int bookingId);
 }

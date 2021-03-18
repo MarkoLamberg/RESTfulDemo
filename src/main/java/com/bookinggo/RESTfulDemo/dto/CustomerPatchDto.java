@@ -1,9 +1,7 @@
 package com.bookinggo.RestfulDemo.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.*;
 
 import javax.validation.constraints.Size;
 
@@ -14,9 +12,11 @@ import javax.validation.constraints.Size;
 public class CustomerPatchDto {
 
     @Size(max = 5)
+    @ApiModelProperty(example = "Mr")
     private String title;
 
     @Size(max = 50)
+    @ApiModelProperty(example = "John Smith")
     private String name;
 
     @Override

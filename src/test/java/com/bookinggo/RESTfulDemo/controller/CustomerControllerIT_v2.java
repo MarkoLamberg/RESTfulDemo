@@ -25,7 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("integratedTest")
-class CustomerControllerITv2 extends AbstractRestfulDemoIT implements ControllerTests {
+class CustomerControllerIT_v2 extends AbstractRestfulDemoIT implements ControllerTests {
 
     @Autowired
     CustomerController customerController;

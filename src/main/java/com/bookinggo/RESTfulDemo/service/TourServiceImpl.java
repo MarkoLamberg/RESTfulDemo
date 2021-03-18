@@ -22,6 +22,9 @@ public class TourServiceImpl implements TourService {
 
     private final TourRepository tourRepository;
     private final TourPackageRepository tourPackageRepository;
+    //private final DynamoDBService dynamoDBService;
+
+    public static final String tourDynamoDBTableName = "RD_Tours_V2";
 
     @Override
     public Tour createTour(String tourPackageCode, String title, String duration, int price) {
@@ -36,7 +39,10 @@ public class TourServiceImpl implements TourService {
                     .price(price)
                     .build();
 
-            return tourRepository.save(tour);
+            final Tour savedTour = tourRepository.save(tour);
+            //dynamoDBService.addToDynamoDB(savedTour.getTitle(), savedTour.getCreatedWhen(), tourDynamoDBTableName, DynamoDBService.DynamoDBUser.TOUR);
+
+            return savedTour;
         }
         throw new TourServiceException("Can't create tour. The Tour Package doesn't exist. Provide correct Tour Package Code.", null);
     }

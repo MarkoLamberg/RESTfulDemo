@@ -1,13 +1,9 @@
 package com.bookinggo.RestfulDemo.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.*;
 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Positive;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -16,18 +12,23 @@ import javax.validation.constraints.Size;
 public class BookingPatchDto {
 
     @Size(max = 255)
+    @ApiModelProperty(example = "2020-05-26T17:30:00")
     private String pickupDateTime;
 
     @Size(max = 255)
+    @ApiModelProperty(example = "Hotel Plaza")
     private String pickupLocation;
 
     @NotNull
     @Positive
+    @ApiModelProperty(example = "1")
     private Integer customerId;
 
     @Positive
+    @ApiModelProperty(example = "2")
     private Integer participants;
 
+    @ApiModelProperty(example = "£20.00")
     private String totalPrice;
 
     @Override

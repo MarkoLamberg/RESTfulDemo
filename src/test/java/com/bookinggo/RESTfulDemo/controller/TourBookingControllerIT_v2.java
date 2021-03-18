@@ -25,7 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("integratedTest")
-public class TourBookingControllerITv2 extends AbstractRestfulDemoIT implements ControllerTests {
+public class TourBookingControllerIT_v2 extends AbstractRestfulDemoIT implements ControllerTests {
 
     @Autowired
     TourBookingController tourBookingController;
@@ -35,7 +35,9 @@ public class TourBookingControllerITv2 extends AbstractRestfulDemoIT implements 
     private ObjectWriter objectWriter;
 
     private static final int CUSTOMER_ID = 4;
+    private static final int BOOKING_ID = 3;
     private static final int NON_EXISTING_CUSTOMER_ID = 123;
+    private static final int NON_EXISTING_BOOKING_ID = 5;
     private static final int TOUR_ID = 1;
     private static final int NON_EXISTING_TOUR_ID = 10;
     private static final int PARTICIPANTS = 1;
@@ -87,11 +89,26 @@ public class TourBookingControllerITv2 extends AbstractRestfulDemoIT implements 
 
     @Sql("classpath:com/bookinggo/RESTfulDemo/controller/TourBookingControllerIT.shouldReturnThreeBookings_whenGetTourBookings_givenBookingsExist.sql")
     @Test
-    public void shouldReturnThreeBookings_whenGetTourBookings_givenBookingsExist() throws Exception {
+    public void shouldReturnThreeBookings_whenGetTourBookings_givenBookingsExists() throws Exception {
         mockMvc.perform(get("/tours/bookings"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(jsonPath("$").isArray())
                 .andExpect(jsonPath("$", Matchers.hasSize(3)));
+    }
+
+    @Sql("classpath:com/bookinggo/RESTfulDemo/controller/TourBookingControllerIT.shouldReturnThreeBookings_whenGetTourBookings_givenBookingsExist.sql")
+    @Test
+    public void shouldReturnABooking_whenGetBookingById_givenBookingsExist() throws Exception {
+        mockMvc.perform(get("/tours/booking/" + BOOKING_ID))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(jsonPath("$.bookingId", Matchers.equalTo(BOOKING_ID)));
+    }
+
+    @Sql("classpath:com/bookinggo/RESTfulDemo/controller/TourBookingControllerIT.shouldReturnThreeBookings_whenGetTourBookings_givenBookingsExist.sql")
+    @Test
+    public void shouldReturn400_whenGetBookingById_givenBookingsDoesntExist() throws Exception {
+        mockMvc.perform(get("/tours/booking/" + NON_EXISTING_BOOKING_ID))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
 
     @Sql("classpath:com/bookinggo/RESTfulDemo/controller/TourBookingControllerIT.shouldReturn200_whenUpdateBooking_givenValidBooking.sql")
@@ -223,6 +240,26 @@ public class TourBookingControllerITv2 extends AbstractRestfulDemoIT implements 
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(jsonPath("$").isArray())
                 .andExpect(jsonPath("$", Matchers.hasSize(0)));
+    }
+
+    @Sql("classpath:com/bookinggo/RESTfulDemo/controller/TourBookingControllerIT.shouldReturnThreeBookings_whenGetTourBookings_givenBookingsExist.sql")
+    @Test
+    public void shouldDeleteABooking_whenDeleteBookingById_givenBookingExists() throws Exception {
+        mockMvc.perform(get("/tours/bookings"))
+                .andExpect(jsonPath("$", Matchers.hasSize(3)));
+
+        mockMvc.perform(delete("/tours/booking/" + BOOKING_ID))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+
+        mockMvc.perform(get("/tours/bookings"))
+                .andExpect(jsonPath("$", Matchers.hasSize(2)));
+    }
+
+    @Sql("classpath:com/bookinggo/RESTfulDemo/controller/TourBookingControllerIT.shouldReturnThreeBookings_whenGetTourBookings_givenBookingsExist.sql")
+    @Test
+    public void shouldReturn400_whenDeleteBookingById_givenBookingDoesntExist() throws Exception {
+        mockMvc.perform(delete("/tours/booking/" + NON_EXISTING_BOOKING_ID))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
 
     private BookingDto buildBookingDto() {

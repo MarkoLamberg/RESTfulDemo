@@ -24,6 +24,7 @@ public class ModelMapperConfig {
                 .addMapping(TourBooking::getTotalPriceString, BookingDto::setTotalPrice);
 
         modelMapper.createTypeMap(TourBooking.class, ExpandedBookingDto.class)
+                .addMapping(src -> src.getId(), ExpandedBookingDto::setBookingId)
                 .addMapping(src -> src.getCustomer().getId(), ExpandedBookingDto::setCustomerId)
                 .addMapping(TourBooking::getTotalPriceString, ExpandedBookingDto::setTotalPrice)
                 .addMapping(src -> src.getTour().getId(), ExpandedBookingDto::setTourId);

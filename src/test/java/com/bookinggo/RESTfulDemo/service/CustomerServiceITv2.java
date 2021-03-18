@@ -18,7 +18,7 @@ import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @Slf4j
-@SpringBootTest(properties = {"user.authenticate=true", "user.authentication.url=http://localhost:8060"})
+@SpringBootTest(properties = {"user.authentication.do=true", "user.authentication.url=http://localhost:8060"})
 @AutoConfigureWireMock(port = 8060, files = "classpath*:/wiremock")
 public class CustomerServiceITv2 extends AbstractRestfulDemoIT implements ServiceTests {
 

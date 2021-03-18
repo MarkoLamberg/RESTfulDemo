@@ -1,13 +1,9 @@
 package com.bookinggo.RestfulDemo.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.*;
 
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -17,17 +13,21 @@ public class TourDto {
 
     @Size(max = 2)
     @NotNull
+    @ApiModelProperty(example = "AA")
     private String tourPackageCode;
 
     @Size(max = 100)
     @NotNull
+    @ApiModelProperty(example = "Wembley Stadium Tour")
     private String title;
 
     @Size(max = 32)
     @NotNull
+    @ApiModelProperty(example = "2 hours")
     private String duration;
 
     @Min(1)
+    @ApiModelProperty(example = "20")
     private Integer price;
 
     @Override

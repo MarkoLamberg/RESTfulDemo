@@ -1,0 +1,31 @@
+spring:
+  flyway:
+    enabled: false
+
+retry:
+  attempts: 3
+  backoff:
+    delay: 500
+
+user:
+  authentication:
+    url: http://localhost:1090
+    do: false
+
+customer:
+  useDynamoDB: false
+
+aws:
+  s3:
+    pricesS3Bucket:
+      name: pluto-search-results-dev/prices
+      reference: 2653b86a-15fc-4135-8cb2-331cb1775b38
+      validate: false
+
+cloud:
+  aws:
+    region:
+      static: us-west-2
+      auto: true
+    stack:
+      auto: false

@@ -24,6 +24,9 @@ public class TourBookingServiceImpl implements TourBookingService {
     private final TourBookingRepository tourBookingRepository;
     private final TourService tourService;
     private final CustomerRepository customerRepository;
+    //private final DynamoDBService dynamoDBService;
+
+    public static final String bookingDynamoDBTableName = "RD_Bookings_V2";
 
     @Override
     public TourBooking createBooking(int tourId, Integer customerId, LocalDateTime pickupDateTime, String pickupLocation, Integer participants) throws TourBookingServiceException {
@@ -47,7 +50,11 @@ public class TourBookingServiceImpl implements TourBookingService {
                     .participants(participants)
                     .build();
 
-            return tourBookingRepository.save(tourBooking);
+            final TourBooking savedBooking = tourBookingRepository.save(tourBooking);
+
+            //dynamoDBService.addToDynamoDB(savedBooking.getId().toString(), savedBooking.getCreatedWhen(), bookingDynamoDBTableName, DynamoDBService.DynamoDBUser.TOURBOOKING);
+
+            return savedBooking;
         }
         throw new TourBookingServiceException("Can't create a booking for this Customer Id. Customer Id doesn't exist.", null);
     }
@@ -168,5 +175,19 @@ public class TourBookingServiceImpl implements TourBookingService {
         tourBookingRepository.deleteAll();
 
         return bookings;
+    }
+
+    @Override
+    public TourBooking deleteBookingById(int bookingId) {
+        log.info("deleteBookingById");
+        final Optional<TourBooking> booking = tourBookingRepository.findById(bookingId);
+
+        if (booking.isPresent()) {
+            tourBookingRepository.deleteById(bookingId);
+
+            return booking.get();
+        }
+
+        throw new TourBookingServiceException("No Tour Booking to delete.", null);
     }
 }

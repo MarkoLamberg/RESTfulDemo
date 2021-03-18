@@ -27,6 +27,7 @@ import java.util.Optional;
 public class CustomerController {
 
     private final CustomerService customerService;
+    //private final DynamoDBService dynamoDBService;
 
     @ApiOperation(value = "Create a new customer")
     @ApiResponses(value = {
@@ -139,6 +140,24 @@ public class CustomerController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
     }
+
+   /*@ApiOperation(value = "Get DynamoDB dump for all customers created")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully getting dump for created customers", response = String.class, responseContainer = "List"),
+            @ApiResponse(code = 400, message = "Failed getting dump for created customers")
+    })
+    @GetMapping(path = "/dump")
+    public ResponseEntity<List<String>> getCustomersDynamoDBTable() {
+        log.info("GET /dump");
+        try {
+            final List<String> list = dynamoDBService.dumpTable(customerDynamoDBTableName);
+            return ResponseEntity
+                    .ok()
+                    .body(list);
+        } catch (TourServiceException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
+    }*/
 
     private Optional<Customer> getCustomerWithNewName(@RequestBody @Valid CustomerPatchDto customerPatchDto, Customer customer) {
         if ((customerPatchDto.getName() == null) || customer.getName().equals(customerPatchDto.getName())) {

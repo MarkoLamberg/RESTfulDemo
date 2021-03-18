@@ -1,10 +1,8 @@
 package com.bookinggo.RestfulDemo.entity;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
@@ -21,10 +19,13 @@ public class Customer extends AbstractEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @ApiModelProperty(example = "1")
     private Integer id;
 
+    @ApiModelProperty(example = "Mr")
     private String title;
 
+    @ApiModelProperty(example = "John Smith")
     private String name;
 
     @JsonManagedReference

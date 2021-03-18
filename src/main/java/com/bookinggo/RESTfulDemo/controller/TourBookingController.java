@@ -18,8 +18,7 @@ import org.springframework.web.server.ResponseStatusException;
 import javax.validation.Valid;
 import java.net.URI;
 import java.time.LocalDateTime;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME;
@@ -33,6 +32,7 @@ public class TourBookingController {
 
     private final TourBookingService tourBookingService;
     private final TourService tourService;
+    //private final DynamoDBService dynamoDBService;
     private final ModelMapper modelMapper;
 
     @ApiOperation(value = "Create a new tour booking")
@@ -42,7 +42,7 @@ public class TourBookingController {
     })
     @PostMapping("/{tourId}/bookings")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<BookingDto> createTourBooking(@PathVariable(value = "tourId") int tourId, @Valid @RequestBody BookingDto bookingDto) throws TourBookingServiceException {
+    public ResponseEntity<ExpandedBookingDto> createTourBooking(@PathVariable(value = "tourId") int tourId, @Valid @RequestBody BookingDto bookingDto) throws TourBookingServiceException {
         log.info("POST /tours/{}/bookings: {}", tourId, bookingDto.toString());
         try {
             tourService.getTourById(tourId);
@@ -58,7 +58,7 @@ public class TourBookingController {
 
             return ResponseEntity
                     .created(URI.create("/tours/" + tourId + "/bookings"))
-                    .body(toDto(createdBooking));
+                    .body(toExpandedDto(createdBooking));
         } catch (TourBookingServiceException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
@@ -101,6 +101,25 @@ public class TourBookingController {
         final List<TourBooking> tourBookings = tourBookingService.getAllBookings();
 
         return tourBookings.stream().map(this::toExpandedDto).collect(Collectors.toList());
+    }
+
+    @ApiOperation(value = "Get booking by id")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully getting bookings by id", response = ExpandedBookingDto.class),
+            @ApiResponse(code = 400, message = "Failed getting booking by id")
+    })
+    @GetMapping("/booking/{bookingId}")
+    public ExpandedBookingDto getBookingById(@PathVariable(value = "bookingId") int bookingId){
+        log.info("GET /tours/booking/{}", bookingId);
+        final List<TourBooking> tourBookings = tourBookingService.getAllBookings();
+
+        ExpandedBookingDto dto =  tourBookings.stream()
+                .filter(booking -> booking.getId().equals(bookingId))
+                .findFirst()
+                .map(this::toExpandedDto)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Can't find booking. Booking with that bookingId doesn't exist."));
+
+        return dto;
     }
 
     @ApiOperation(value = "Update booking by tour id")
@@ -212,6 +231,40 @@ public class TourBookingController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
     }
+
+    @ApiOperation(value = "Delete booking by id")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully deleting booking by id", response = ExpandedBookingDto.class, responseContainer = "List"),
+            @ApiResponse(code = 400, message = "Failed deleting booking by id")
+    })
+    @DeleteMapping("/booking/{bookingId}")
+    public ExpandedBookingDto deleteBookingById(@PathVariable(value = "bookingId") int bookingId) {
+        log.info("DELETE /tours/booking/{}", bookingId);
+        try {
+            final TourBooking booking = tourBookingService.deleteBookingById(bookingId);
+            return toExpandedDto(booking);
+        } catch (TourBookingServiceException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
+    }
+
+    /*@ApiOperation(value = "Get DynamoDB dump for all bookings created")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully getting dump for created bookings", response = String.class, responseContainer = "List"),
+            @ApiResponse(code = 400, message = "Failed getting dump for created bookings")
+    })
+    @GetMapping(path = "/bookings/dump")
+    public ResponseEntity<List<String>> getBookingsDynamoDBTable() {
+        log.info("GET /dump");
+        try {
+            final List<String> list = dynamoDBService.dumpTable(bookingDynamoDBTableName);
+            return ResponseEntity
+                    .ok()
+                    .body(list);
+        } catch (TourServiceException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
+    }*/
 
     private BookingDto toDto(TourBooking tourBooking) {
         return modelMapper.map(tourBooking, BookingDto.class);

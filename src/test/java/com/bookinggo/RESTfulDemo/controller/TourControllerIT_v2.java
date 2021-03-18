@@ -25,7 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("integratedTest")
-public class TourControllerITv2 extends AbstractRestfulDemoIT implements ControllerTests {
+public class TourControllerIT_v2 extends AbstractRestfulDemoIT implements ControllerTests {
 
     private static final int TOUR_ID = 1;
     private static final int NON_EXISTING_TOUR_ID = 10;

@@ -1,9 +1,7 @@
 package com.bookinggo.RestfulDemo.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
@@ -19,12 +17,16 @@ public class Tour extends AbstractEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @ApiModelProperty(example = "1")
     private Integer id;
 
+    @ApiModelProperty(example = "Wembley Stadium Tour")
     private String title;
 
+    @ApiModelProperty(example = "20")
     private Integer price;
 
+    @ApiModelProperty(example = "2.5 hours")
     private String duration;
 
     @ManyToOne

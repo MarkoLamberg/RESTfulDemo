@@ -21,7 +21,9 @@ import static org.springframework.http.HttpStatus.*;
 public class TourBookingControllerIT extends AbstractRestfulDemoIT implements ControllerTests {
 
     private static final int CUSTOMER_ID = 4;
+    private static final int BOOKING_ID = 3;
     private static final int NON_EXISTING_CUSTOMER_ID = 123;
+    private static final int NON_EXISTING_BOOKING_ID = 5;
     private static final int TOUR_ID = 1;
     private static final int NON_EXISTING_TOUR_ID = 10;
     private static final int PARTICIPANTS = 1;
@@ -66,14 +68,32 @@ public class TourBookingControllerIT extends AbstractRestfulDemoIT implements Co
         assertThat(tourBookings.length).isEqualTo(2);
     }
 
+    @Test
+    @Sql("classpath:com/bookinggo/RESTfulDemo/controller/ourBookingControllerIT.shouldReturnTwoBookings_whenGetAllBookingsForTour_givenBookingsExist.sql")
+    public void shouldReturnABooking_whenGetBookingById_givenBookingExists() {
+        ExpandedBookingDto tourBooking = restTemplate
+                .getForEntity("/tours/booking/" + BOOKING_ID, ExpandedBookingDto.class)
+                .getBody();
+
+        assertThat(tourBooking.getBookingId()).isEqualTo(BOOKING_ID);
+    }
+
+    @Test
+    @Sql("classpath:com/bookinggo/RESTfulDemo/controller/ourBookingControllerIT.shouldReturnTwoBookings_whenGetAllBookingsForTour_givenBookingsExist.sql")
+    public void shouldReturn400_whenGetBookingById_givenBookingDoesntExist() {
+        ResponseEntity<String> response = restTemplate
+                .exchange("/tours/booking/" + NON_EXISTING_BOOKING_ID,
+                        HttpMethod.GET, null, String.class);
+
+        assertThat(response.getStatusCodeValue()).isEqualTo(BAD_REQUEST.value());
+    }
+
     @Sql
     @Test
     public void shouldReturn400_whenGetAllBookingsForTour_givenNotValidTourId() {
         ResponseEntity<String> response = restTemplate
                 .exchange("/tours/" + NON_EXISTING_TOUR_ID + "/bookings",
-                        HttpMethod.GET,
-                        null,
-                        String.class);
+                        HttpMethod.GET, null, String.class);
 
         assertThat(response.getStatusCodeValue()).isEqualTo(BAD_REQUEST.value());
     }
@@ -250,6 +270,24 @@ public class TourBookingControllerIT extends AbstractRestfulDemoIT implements Co
                     assert tourBookingsAfter != null;
                     assertThat(tourBookingsAfter.length).isEqualTo(0);
                 });
+    }
+
+    @Test
+    @Sql("classpath:com/bookinggo/RESTfulDemo/controller/ourBookingControllerIT.shouldReturnTwoBookings_whenGetAllBookingsForTour_givenBookingsExist.sql")
+    public void shouldDeleteABooking_whenDeleteBookingById_givenBookingsExist() {
+        ResponseEntity<ExpandedBookingDto> tourBooking = restTemplate.exchange("/tours/booking/" + BOOKING_ID,
+                HttpMethod.DELETE, null, ExpandedBookingDto.class);
+
+        assertThat(tourBooking.getBody().getBookingId()).isEqualTo(BOOKING_ID);
+    }
+
+    @Test
+    @Sql("classpath:com/bookinggo/RESTfulDemo/controller/ourBookingControllerIT.shouldReturnTwoBookings_whenGetAllBookingsForTour_givenBookingsExist.sql")
+    public void shouldReturn400_whenDeleteABooking_givenBookingExists() {
+        ResponseEntity<?> response = restTemplate.exchange("/tours/booking/" + NON_EXISTING_BOOKING_ID,
+                HttpMethod.DELETE, null, String.class);
+
+        assertThat(response.getStatusCodeValue()).isEqualTo(BAD_REQUEST.value());
     }
 
     private BookingDto buildBookingDto() {

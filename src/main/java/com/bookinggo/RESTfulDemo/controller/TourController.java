@@ -29,6 +29,7 @@ public class TourController {
 
     private final TourService tourService;
     private final TourBookingService tourBookingService;
+    //private final DynamoDBService dynamoDBService;
 
     @ApiOperation(value = "Create a new tour")
     @ApiResponses(value = {
@@ -153,6 +154,24 @@ public class TourController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
     }
+
+    /*@ApiOperation(value = "Get DynamoDB dump for all tours created")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully getting dump for created tours", response = String.class, responseContainer = "List"),
+            @ApiResponse(code = 400, message = "Failed getting dump for created tours")
+    })
+    @GetMapping(path = "/dump")
+    public ResponseEntity<List<String>> getToursDynamoDBTable() {
+        log.info("GET /dump");
+        try {
+            final List<String> list = dynamoDBService.dumpTable(tourDynamoDBTableName);
+            return ResponseEntity
+                    .ok()
+                    .body(list);
+        } catch (TourServiceException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
+    }*/
 
     private Optional<Tour> getTourWithNewTitleOrTourPackage(@RequestBody @Valid TourPatchDto tourPatchDto, Tour tour) {
         if (((tourPatchDto.getTitle() == null) || tour.getTitle().equals(tourPatchDto.getTitle())) &&

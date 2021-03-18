@@ -30,6 +30,20 @@ dependencies {
 
 	implementation 'net.logstash.logback:logstash-logback-encoder:5.3'
 
+	def awsSdkVersion = '1.11.890'
+	implementation 'com.amazonaws:aws-java-sdk-core:' + awsSdkVersion
+	implementation 'com.amazonaws:aws-java-sdk-cloudwatch:' + awsSdkVersion
+
+	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.4.RELEASE'
+	implementation 'org.springframework.cloud:spring-cloud-aws-autoconfigure:2.2.4.RELEASE'
+
+	implementation 'com.amazonaws:aws-java-sdk-dynamodb:1.11.379'
+
+	implementation 'com.amazonaws:aws-java-sdk-sns:1.11.379'
+	implementation 'com.amazonaws:aws-java-sdk-sqs:1.11.379'
+
+	implementation 'org.json:json:20090211'
+
 	testImplementation 'com.h2database:h2:1.4.+'
 	testImplementation('org.springframework.boot:spring-boot-starter-test') {
 		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
@@ -85,4 +99,23 @@ task showDate(type: ShowDate)
 
 task customShowDate(type: ShowDate) {
 	dateMessage = "Custom date is: "
+}
+
+task useLogger(dependsOn: ['showDate', 'customShowDate']) {
+	description = "Task to use logger"
+	group = "Logger test"
+
+	doFirst {
+		project.logger.lifecycle description
+	}
+
+	doLast {
+		project.logger.lifecycle "Using logger to print message"
+	}
+}
+
+useLogger.doLast {
+	project.logger.lifecycle "Using logger extra doLast"
+}.doFirst {
+	project.logger.lifecycle "Using logger extra doFirst"
 }
