@@ -7,6 +7,7 @@ import com.bookinggo.RestfulDemo.exception.TourBookingServiceException;
 import com.bookinggo.RestfulDemo.exception.TourServiceException;
 import com.bookinggo.RestfulDemo.service.TourBookingService;
 import com.bookinggo.RestfulDemo.service.TourService;
+import com.bookinggo.RestfulDemo.service.amazon.DynamoDBService;
 import io.swagger.annotations.*;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +21,8 @@ import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
+import static com.bookinggo.RestfulDemo.service.TourServiceImpl.tourDynamoDBTableName;
+
 @RestController
 @RequestMapping("/tours")
 @Api(tags = "Tour")
@@ -29,7 +32,7 @@ public class TourController {
 
     private final TourService tourService;
     private final TourBookingService tourBookingService;
-    //private final DynamoDBService dynamoDBService;
+    private final DynamoDBService dynamoDBService;
 
     @ApiOperation(value = "Create a new tour")
     @ApiResponses(value = {
@@ -155,7 +158,7 @@ public class TourController {
         }
     }
 
-    /*@ApiOperation(value = "Get DynamoDB dump for all tours created")
+    @ApiOperation(value = "Get DynamoDB dump for all tours created")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Successfully getting dump for created tours", response = String.class, responseContainer = "List"),
             @ApiResponse(code = 400, message = "Failed getting dump for created tours")
@@ -171,7 +174,7 @@ public class TourController {
         } catch (TourServiceException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
-    }*/
+    }
 
     private Optional<Tour> getTourWithNewTitleOrTourPackage(@RequestBody @Valid TourPatchDto tourPatchDto, Tour tour) {
         if (((tourPatchDto.getTitle() == null) || tour.getTitle().equals(tourPatchDto.getTitle())) &&

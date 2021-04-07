@@ -6,6 +6,7 @@ import com.bookinggo.RestfulDemo.exception.TourBookingServiceException;
 import com.bookinggo.RestfulDemo.exception.TourServiceException;
 import com.bookinggo.RestfulDemo.service.TourBookingService;
 import com.bookinggo.RestfulDemo.service.TourService;
+import com.bookinggo.RestfulDemo.service.amazon.DynamoDBService;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +22,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static com.bookinggo.RestfulDemo.service.TourBookingServiceImpl.bookingDynamoDBTableName;
 import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 
 @RestController
@@ -32,7 +34,7 @@ public class TourBookingController {
 
     private final TourBookingService tourBookingService;
     private final TourService tourService;
-    //private final DynamoDBService dynamoDBService;
+    private final DynamoDBService dynamoDBService;
     private final ModelMapper modelMapper;
 
     @ApiOperation(value = "Create a new tour booking")
@@ -248,7 +250,7 @@ public class TourBookingController {
         }
     }
 
-    /*@ApiOperation(value = "Get DynamoDB dump for all bookings created")
+    @ApiOperation(value = "Get DynamoDB dump for all bookings created")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Successfully getting dump for created bookings", response = String.class, responseContainer = "List"),
             @ApiResponse(code = 400, message = "Failed getting dump for created bookings")
@@ -264,7 +266,7 @@ public class TourBookingController {
         } catch (TourServiceException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
-    }*/
+    }
 
     private BookingDto toDto(TourBooking tourBooking) {
         return modelMapper.map(tourBooking, BookingDto.class);

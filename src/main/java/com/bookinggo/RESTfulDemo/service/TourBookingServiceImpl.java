@@ -1,10 +1,12 @@
 package com.bookinggo.RestfulDemo.service;
 
+import com.bookinggo.RestfulDemo.entity.Customer;
 import com.bookinggo.RestfulDemo.entity.*;
 import com.bookinggo.RestfulDemo.exception.TourBookingServiceException;
 import com.bookinggo.RestfulDemo.exception.TourServiceException;
 import com.bookinggo.RestfulDemo.repository.CustomerRepository;
 import com.bookinggo.RestfulDemo.repository.TourBookingRepository;
+import com.bookinggo.RestfulDemo.service.amazon.DynamoDBService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.retry.annotation.Recover;
@@ -24,7 +26,7 @@ public class TourBookingServiceImpl implements TourBookingService {
     private final TourBookingRepository tourBookingRepository;
     private final TourService tourService;
     private final CustomerRepository customerRepository;
-    //private final DynamoDBService dynamoDBService;
+    private final DynamoDBService dynamoDBService;
 
     public static final String bookingDynamoDBTableName = "RD_Bookings_V2";
 
@@ -52,7 +54,7 @@ public class TourBookingServiceImpl implements TourBookingService {
 
             final TourBooking savedBooking = tourBookingRepository.save(tourBooking);
 
-            //dynamoDBService.addToDynamoDB(savedBooking.getId().toString(), savedBooking.getCreatedWhen(), bookingDynamoDBTableName, DynamoDBService.DynamoDBUser.TOURBOOKING);
+            dynamoDBService.addToDynamoDB(savedBooking.getId().toString(), savedBooking.getCreatedWhen(), bookingDynamoDBTableName, DynamoDBService.DynamoDBUser.TOURBOOKING);
 
             return savedBooking;
         }

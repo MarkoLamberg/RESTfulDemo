@@ -27,7 +27,7 @@ public class CustomerServiceImpl implements CustomerService {
 
     private final CustomerRepository customerRepository;
     private final AmazonS3Service amazonS3Service;
-    //private final DynamoDBService dynamoDBService;
+    private final DynamoDBService dynamoDBService;
 
     @Value("${user.authentication.do:false}")
     private boolean useAuthentication;
@@ -102,7 +102,7 @@ public class CustomerServiceImpl implements CustomerService {
                 .build();
 
         final Customer savedCustomer = customerRepository.save(customer);
-        //dynamoDBService.addToDynamoDB(savedCustomer.getName(), savedCustomer.getCreatedWhen(), customerDynamoDBTableName, DynamoDBService.DynamoDBUser.CUSTOMER);
+        dynamoDBService.addToDynamoDB(savedCustomer.getName(), savedCustomer.getCreatedWhen(), customerDynamoDBTableName, DynamoDBService.DynamoDBUser.CUSTOMER);
 
         return savedCustomer;
     }
